@@ -7,4 +7,5 @@ import ru.solidtech.website.model.Brand;
 public interface BrandRepository extends JpaRepository<Brand, Long> {
     void deleteById(Long id);
     Brand findBrandByName(String name);
+    Brand findBrandById(Long id);
 }

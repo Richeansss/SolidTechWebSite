@@ -10,4 +10,5 @@ public interface BrandService {
     Brand findBrandByName(String name);
     Brand updateBrand(Brand brand);
     void deleteBrand(Long id);
+    Brand findBrandById(Long id);
 }

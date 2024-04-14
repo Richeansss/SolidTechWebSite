@@ -41,4 +41,10 @@ public class BrandServiceImp implements BrandService {
     public void deleteBrand(Long id) {
         repository.deleteById(id);
     }
+
+    @Override
+    public Brand findBrandById(Long id) {
+        return repository.findBrandById(id);
+    }
+
 }

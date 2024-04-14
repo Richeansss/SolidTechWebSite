@@ -3,7 +3,6 @@ spring:
     url: jdbc:mysql://localhost:3306/pc_db
     username: root
     password: root
-    driver-class-name: com.mysql.jdbc.Driver
   jpa:
     hibernate:
       ddl-auto: update
@@ -13,6 +12,8 @@ spring:
     properties:
       hibernate:
         format_sql: true
+  mvc:
+    static-path-pattern: /static/**
 
 
 

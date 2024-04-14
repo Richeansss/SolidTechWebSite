@@ -26,16 +26,16 @@ public class BrandController {
     }
 
     @GetMapping("/{name}")
-    public Brand findByИame(@PathVariable String name) {
+    public Brand findBrandByИame(@PathVariable String name) {
         return brandService.findBrandByName(name);
     }
 
     @PutMapping("update_brand")
-    public Brand updateStudent(@RequestBody Brand brand) {
+    public Brand updateBrand(@RequestBody Brand brand) {
         return brandService.updateBrand(brand);
     }
 
-    @DeleteMapping("delete_student/{id}")
+    @DeleteMapping("delete_brand/{id}")
     public void deleteBrand(@PathVariable Long id) {
         brandService.deleteBrand(id);
     }
