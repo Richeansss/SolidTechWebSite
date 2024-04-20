@@ -1,14 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState  } from "react";
+import Select  from 'react-select';
 import axios from "axios";
 import { IBrand } from "../data/models";
 
 export function Brand() {
-    const [data, setData] = useState<IBrand[]>([]);
     const [selectedBrand, setSelectedBrand] = useState<string | null>(null);
-    const [newBrandName, setNewBrandName] = useState<string>(''); // Состояние для нового названия бренда
-    const [isAddingBrand, setIsAddingBrand] = useState<boolean>(false); // Состояние для отображения/скрытия поля ввода
-    const [error, setError] = useState<string>(''); // Состояние для сообщения об ошибке
-    const [brands, setBrands] = useState<IBrand[]>([]); // Состояние для хранения данных о брендах
+    const [newBrandName, setNewBrandName] = useState<string>('');
+    const [isAddingBrand, setIsAddingBrand] = useState<boolean>(false);
+    const [error, setError] = useState<string>('');
+    const [brands, setBrands] = useState<IBrand[]>([]);
+
 
 
     useEffect(() => {
@@ -18,10 +19,10 @@ export function Brand() {
     const fetchData = async () => {
         try {
             const response = await axios.get('http://localhost:8080/api/v1/brand');
-            setData(response.data);
             setBrands(response.data);
         } catch (error) {
             console.error('Error fetching data:', error);
+            setError('Ошибка при загрузке данных. Пожалуйста, повторите попытку позже.');
         }
     };
 
@@ -38,9 +39,6 @@ export function Brand() {
         }
     };
 
-    const handleBrandChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        setSelectedBrand(event.target.value);
-    };
 
     const clearError = () => {
         setError('');
@@ -54,14 +52,30 @@ export function Brand() {
         setNewBrandName(event.target.value);
     };
 
+    const checkBrandExists = async (brandName: string) => {
+        try {
+            const response = await axios.get(`http://localhost:8080/api/v1/brand/${brandName}`);
+            return response.data.id !== undefined; // Если существует поле "id" в ответе, значит, бренд существует
+        } catch (error) {
+            console.error('Error checking brand existence:', error);
+            return false;
+        }
+    };
+
     const handleSaveNewBrand = async () => {
         try {
-            // Проверка на пустое поле
             if (!newBrandName.trim()) {
                 setError('Ошибка: пустое поле названия бренда');
-                return; // Прекращаем выполнение функции, если поле пустое
+                return;
             }
 
+            const brandExists = await checkBrandExists(newBrandName);
+            if (brandExists) {
+                setError('Ошибка: бренд с таким именем уже существует');
+                return;
+            }
+
+            // Если бренд с таким именем не существует, сохраняем новый бренд
             const response = await axios.post('http://localhost:8080/api/v1/brand/save_brand', {
                 name: newBrandName
             });
@@ -71,18 +85,24 @@ export function Brand() {
             clearError(); // Очищаем сообщение об ошибке после успешного сохранения
         } catch (error) {
             console.error('Error adding new brand:', error);
+            setError('Ошибка при добавлении нового бренда. Пожалуйста, повторите попытку позже.');
         }
     };
 
+
     return (
         <div className="border p-4 rounded flex flex-col items-center mb-2">
-            {/* Раскрывающийся список с названиями брендов */}
-            <select value={selectedBrand || ''} onChange={handleBrandChange} className="border rounded px-2 py-1 mb-2">
-                <option value="">Выберите бренд</option>
-                {data.map(brand => (
-                    <option key={brand.id} value={brand.name}>{brand.name}</option>
-                ))}
-            </select>
+            <Select
+                options={brands.map(brand => ({ value: brand.name, label: brand.name }))}
+                value={selectedBrand ? { value: selectedBrand, label: selectedBrand } : null}
+                onChange={(selectedOption) => {
+                    if (selectedOption !== null) {
+                        setSelectedBrand(selectedOption.value);
+                    }
+                }}
+                placeholder="Введите или выберите бренд"
+            />
+
             {/* Вывод выбранного бренда */}
             {selectedBrand && <p className="mb-2">Выбранный бренд: {selectedBrand}</p>}
 

@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import {IBrand} from "./data/models";
+import React, { } from 'react';
 import {Brand} from "./components/Brand";
+import {MotherBoard} from "./components/MotherBoard";
+
+
 
 
 
@@ -11,7 +12,7 @@ function App() {
         <div>
             <div className="container mx-auto max-w-2xl pt-5">
                 <Brand />
-                <Brand />
+                <MotherBoard />
             </div>
 
         </div>

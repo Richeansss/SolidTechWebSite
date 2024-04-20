@@ -27,7 +27,6 @@ public class MotherBoardController {
 
         if (brand != null) { // Если бренд найден
             motherBoard.setBrand(brand); // Устанавливаем бренд для материнской платы
-
             motherBoardService.saveMotherBoard(motherBoard); // Сохраняем материнскую плату
             return "Motherboard successfully saved";
         } else { // Если бренд не найден
