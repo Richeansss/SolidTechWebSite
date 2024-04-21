@@ -9,9 +9,17 @@ export function MotherBoard() {
     const [isAddingMotherBoard, setIsAddingMotherBoard] = useState<boolean>(false);
     const [error, setError] = useState<string>('');
     const [motherboards, setMotherBoards] = useState<IMotherBoard[]>([]);
+
     const [selectedBrand, setSelectedBrand] = useState<string | null>(null);
     const [inputMotherBoardName, setInputMotherBoardName] = useState<string | null>(null);
     const [selectedSoket, setSelectedSoket] = useState<string | null>(null);
+    const [selectedChipset, setSelectedChipset] = useState<string | null>(null);
+    const [selectedTypeOfMemory, setSelectedTypeOfMemory] = useState<string | null>(null);
+    const [selectedPci, setSelectedPci] = useState<number | null>(null);
+    const [selectedAmountOfM2, setSelectedAmountOfM2] = useState<number | null>(null);
+    const [inputedUrl, setInputedUrl] = useState<string | null>(null);
+
+
     const [brands, setBrands] = useState<IBrand[]>([]);
 
     useEffect(() => {
@@ -27,6 +35,10 @@ export function MotherBoard() {
             console.error('Error fetching data:', error);
             setError('Ошибка при загрузке данных. Пожалуйста, повторите попытку позже.');
         }
+    };
+
+    const handleUrlInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setInputedUrl(event.target.value);
     };
 
     const fetchBrands = async () => {
@@ -107,8 +119,50 @@ export function MotherBoard() {
         { value: 'am5', label: 'AM5' }
     ];
 
+    const chipsetOptions = [
+        { value: 'h610', label: 'H610' },
+        { value: 'h510', label: 'H510' },
+        { value: 'a620', label: 'A620' }
+    ];
+
+    const typeOfMemoryOptions = [
+        { value: 'ddr3', label: 'DDR3' },
+        { value: 'ddr4', label: 'DDR4' },
+        { value: 'ddr5', label: 'DDR5' }
+    ];
+
+    const pciOptions = [
+        { value: 3, label: '3.0' },
+        { value: 4, label: '4.0' },
+        { value: 5, label: '5.0' }
+    ];
+
+    const amountOfM2Options = [
+        { value: 1, label: '1' },
+        { value: 2, label: '2' },
+        { value: 3, label: '3' },
+        { value: 4, label: '4' },
+        { value: 5, label: '5' }
+    ];
+
     const getSoketOptions = () => {
         return selectedSoket ? soketOptions.find(c => c.value === selectedSoket) : null;
+    }
+
+    const getChipsetOptions = () => {
+        return selectedChipset ? chipsetOptions.find(c => c.value === selectedChipset) : null;
+    }
+
+    const getTypeOfMemoryOptions = () => {
+        return selectedTypeOfMemory ? typeOfMemoryOptions.find(c => c.value === selectedTypeOfMemory) : null;
+    }
+
+    const getPciOptions = () => {
+        return selectedPci ? pciOptions.find(c => c.value === selectedPci) : null;
+    }
+
+    const getAmountOfM2 = () => {
+        return selectedAmountOfM2 ? amountOfM2Options.find(c => c.value === selectedAmountOfM2) : null;
     }
 
     return (
@@ -191,8 +245,9 @@ export function MotherBoard() {
                                         setSelectedBrand(selectedOption.value);
                                     }
                                 }}
-                                placeholder="Выберите бренд"
+                                placeholder="Введите или выберите бренд"
                             />
+
                             {/* Вывод выбранного бренда */}
                             {selectedBrand && <p className="mb-2">Выбранный бренд: {selectedBrand}</p>}
                         </div>
@@ -212,6 +267,78 @@ export function MotherBoard() {
                             {/* Вывод выбранного сокета */}
                             {selectedSoket && <p className="mb-2">Выбранный сокет: {selectedSoket}</p>}
                         </div>
+
+                        {/* Поле выбора чипсета */}
+                        <div className="mr-4">
+                            <Select
+                                options={chipsetOptions}
+                                value={getChipsetOptions()}
+                                onChange={(selectedOption) => {
+                                    if (selectedOption !== null) {
+                                        setSelectedChipset(selectedOption.value);
+                                    }
+                                }}
+                                placeholder="Выберите чипсет"
+                            />
+                            {/* Вывод выбранного чипстеа */}
+                            {selectedChipset && <p className="mb-2">Выбранный сокет: {selectedChipset}</p>}
+                        </div>
+
+                        {/* Поле выбора типа памяти */}
+                        <div className="mr-4">
+                            <Select
+                                options={typeOfMemoryOptions}
+                                value={getTypeOfMemoryOptions()}
+                                onChange={(selectedOption) => {
+                                    if (selectedOption !== null) {
+                                        setSelectedTypeOfMemory(selectedOption.value);
+                                    }
+                                }}
+                                placeholder="Выберите тип памяти"
+                            />
+                            {/* Вывод выбранного чипстеа */}
+                            {selectedTypeOfMemory && <p className="mb-2">Выбранный тип памяти: {selectedTypeOfMemory}</p>}
+                        </div>
+
+                        {/* Поле выбора версии PCI */}
+                        <div className="mr-4">
+                            <Select
+                                options={pciOptions}
+                                value={getPciOptions()}
+                                onChange={(selectedOption) => {
+                                    if (selectedOption !== null) {
+                                        setSelectedPci(selectedOption.value);
+                                    }
+                                }}
+                                placeholder="Выберите версию PCI"
+                            />
+                            {/* Вывод выбранного версии PCI */}
+                            {selectedPci && <p className="mb-2">Выбранная версия PCI: {selectedPci}</p>}
+                        </div>
+
+                        {/* Поле выбора кол-во M2 */}
+                        <div className="mr-4">
+                            <Select
+                                options={amountOfM2Options}
+                                value={getAmountOfM2()}
+                                onChange={(selectedOption) => {
+                                    if (selectedOption !== null) {
+                                        setSelectedAmountOfM2(selectedOption.value);
+                                    }
+                                }}
+                                placeholder="Выберите кол-во M2"
+                            />
+                            {/* Вывод выбранного версии PCI */}
+                            {selectedAmountOfM2 && <p className="mb-2">Выбранно кол-во M2: {selectedAmountOfM2}</p>}
+                        </div>
+
+                        <input
+                            type="text"
+                            value={inputedUrl || ''}
+                            onChange={handleUrlInputChange}
+                            placeholder="Введите URL"
+                        />
+                        {inputedUrl && <p>Введенный URL: {inputedUrl}</p>}
                     </div>
 
                     {error && <p className="text-red-600 mb-2">{error}</p>}

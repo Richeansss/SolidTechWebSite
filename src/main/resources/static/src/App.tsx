@@ -10,7 +10,7 @@ function App() {
 
     return (
         <div>
-            <div className="container mx-auto max-w-2xl pt-5">
+            <div className="container mx-auto max-w-5xl pt-5">
                 <Brand />
                 <MotherBoard />
             </div>
