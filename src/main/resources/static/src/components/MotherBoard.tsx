@@ -10,14 +10,16 @@ export function MotherBoard() {
     const [error, setError] = useState<string>('');
     const [motherboards, setMotherBoards] = useState<IMotherBoard[]>([]);
 
-    const [selectedBrand, setSelectedBrand] = useState<string | null>(null);
-    const [inputMotherBoardName, setInputMotherBoardName] = useState<string | null>(null);
+    const [selectedBrand, setSelectedBrand] = useState<number | null>(null);
+    const [inputMotherBoardName, setInputMotherBoardName] = useState<string>('');
     const [selectedSoket, setSelectedSoket] = useState<string | null>(null);
     const [selectedChipset, setSelectedChipset] = useState<string | null>(null);
     const [selectedTypeOfMemory, setSelectedTypeOfMemory] = useState<string | null>(null);
     const [selectedPci, setSelectedPci] = useState<number | null>(null);
     const [selectedAmountOfM2, setSelectedAmountOfM2] = useState<number | null>(null);
     const [inputedUrl, setInputedUrl] = useState<string | null>(null);
+
+    const [inputValue, setInputValue] = useState<string>(''); // Состояние для хранения текущего введенного значения
 
 
     const [brands, setBrands] = useState<IBrand[]>([]);
@@ -73,9 +75,6 @@ export function MotherBoard() {
         setIsAddingMotherBoard(prevState => !prevState);
     };
 
-    const handleNewMotherBoardNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setNewMotherBoardName(event.target.value);
-    };
 
     const checkMotherBoardExists = async (motherBoardName: string) => {
         try {
@@ -89,19 +88,25 @@ export function MotherBoard() {
 
     const handleSaveNewMotherBoard = async () => {
         try {
-            if (!newMotherBoardName.trim()) {
+            if (!inputMotherBoardName.trim()) {
                 setError('Ошибка: пустое поле названия материнской платы');
                 return;
             }
 
-            const motherBoardExists = await checkMotherBoardExists(newMotherBoardName);
+            const motherBoardExists = await checkMotherBoardExists(inputMotherBoardName);
             if (motherBoardExists) {
                 setError('Ошибка: материнская плата с таким именем уже существует');
                 return;
             }
 
-            const response = await axios.post('http://localhost:8080/api/v1/motherboard/save', {
-                name: newMotherBoardName
+            const response = await axios.post(`http://localhost:8080/api/v1/motherboard/save_motherboard?brand_id=${selectedBrand}`, {
+                name: inputMotherBoardName,
+                soket: selectedSoket,
+                chipset: selectedChipset,
+                type_of_memory: selectedTypeOfMemory,
+                pci: selectedPci,
+                amount_of_mem: selectedAmountOfM2,
+                url: inputedUrl
             });
             console.log('New motherboard added:', response.data);
             setNewMotherBoardName('');
@@ -193,6 +198,13 @@ export function MotherBoard() {
                                 <tr>
                                     <th className="border border-gray-500 px-4 py-2">ID</th>
                                     <th className="border border-gray-500 px-4 py-2">Название</th>
+                                    <th className="border border-gray-500 px-4 py-2">Бренд</th>
+                                    <th className="border border-gray-500 px-4 py-2">Тип памяти</th>
+                                    <th className="border border-gray-500 px-4 py-2">Сокет</th>
+                                    <th className="border border-gray-500 px-4 py-2">Чипсет</th>
+                                    <th className="border border-gray-500 px-4 py-2">Версия PCI</th>
+                                    <th className="border border-gray-500 px-4 py-2">Кол-во M2</th>
+                                    <th className="border border-gray-500 px-4 py-2">URL</th>
                                     <th className="border border-gray-500 px-4 py-2">Действия</th>
                                 </tr>
                                 </thead>
@@ -201,6 +213,13 @@ export function MotherBoard() {
                                     <tr key={mb.id}>
                                         <td className="border border-gray-500 px-4 py-2">{mb.id}</td>
                                         <td className="border border-gray-500 px-4 py-2">{mb.name}</td>
+                                        <td className="border border-gray-500 px-4 py-2">{brands.find(brand => brand.id === mb.brand_id)?.name}</td>
+                                        <td className="border border-gray-500 px-4 py-2">{mb.type_of_memory}</td>
+                                        <td className="border border-gray-500 px-4 py-2">{mb.soket}</td>
+                                        <td className="border border-gray-500 px-4 py-2">{mb.chipset}</td>
+                                        <td className="border border-gray-500 px-4 py-2">{mb.pci}</td>
+                                        <td className="border border-gray-500 px-4 py-2">{mb.amount_of_m2}</td>
+                                        <td className="border border-gray-500 px-4 py-2">{mb.url}</td>
                                         <td className="border border-gray-500 px-4 py-2">
                                             <button
                                                 className="border rounded px-4 py-1 bg-red-500 hover:bg-red-600 transition-colors"
@@ -223,10 +242,21 @@ export function MotherBoard() {
                                     value: inputMotherBoardName,
                                     label: inputMotherBoardName
                                 } : null}
+                                inputValue={inputValue} // Устанавливаем текущее введенное значение
+                                onInputChange={(newValue) => setInputValue(newValue)} // Обновляем состояние введенного значения при изменении ввода
                                 onChange={(selectedOption) => {
                                     if (selectedOption !== null) {
                                         setInputMotherBoardName(selectedOption.value);
+                                    } else {
+                                        setInputMotherBoardName('');
                                     }
+                                    setInputValue(''); // Сбрасываем введенное значение при выборе из списка
+                                }}
+                                onBlur={() => {
+                                    if (inputValue !== "") {
+                                        setInputMotherBoardName(inputValue); // Обновляем выбранное значение при потере фокуса, если введено не пустое значение
+                                    }
+                                    setInputValue(''); // Сбрасываем введенное значение при потере фокуса
                                 }}
                                 placeholder="Введите материнскую плату"
                             />
@@ -235,11 +265,15 @@ export function MotherBoard() {
                                 <p className="mb-2">Выбранная материнская плата: {inputMotherBoardName}</p>}
                         </div>
 
+
                         {/* Поле выбора бренда */}
                         <div className="mr-4">
                             <Select
-                                options={brands.map(brand => ({value: brand.name, label: brand.name}))}
-                                value={selectedBrand ? {value: selectedBrand, label: selectedBrand} : null}
+                                options={brands.map(brand => ({value: brand.id, label: brand.name}))}
+                                value={selectedBrand ? {
+                                    value: selectedBrand,
+                                    label: brands.find(brand => brand.id === selectedBrand)?.name
+                                } : null}
                                 onChange={(selectedOption) => {
                                     if (selectedOption !== null) {
                                         setSelectedBrand(selectedOption.value);
@@ -249,8 +283,10 @@ export function MotherBoard() {
                             />
 
                             {/* Вывод выбранного бренда */}
-                            {selectedBrand && <p className="mb-2">Выбранный бренд: {selectedBrand}</p>}
+                            {selectedBrand && <p className="mb-2">Выбранный
+                                бренд: {brands.find(brand => brand.id === selectedBrand)?.name}</p>}
                         </div>
+
 
                         {/* Поле выбора сокета */}
                         <div className="mr-4">
@@ -297,7 +333,8 @@ export function MotherBoard() {
                                 placeholder="Выберите тип памяти"
                             />
                             {/* Вывод выбранного чипстеа */}
-                            {selectedTypeOfMemory && <p className="mb-2">Выбранный тип памяти: {selectedTypeOfMemory}</p>}
+                            {selectedTypeOfMemory &&
+                                <p className="mb-2">Выбранный тип памяти: {selectedTypeOfMemory}</p>}
                         </div>
 
                         {/* Поле выбора версии PCI */}
