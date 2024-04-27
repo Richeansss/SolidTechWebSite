@@ -4,8 +4,10 @@ import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ru.solidtech.website.model.Brand;
 import ru.solidtech.website.model.MotherBoard;
+import ru.solidtech.website.model.Soket;
 import ru.solidtech.website.service.BrandService;
 import ru.solidtech.website.service.MotherBoardService;
+import ru.solidtech.website.service.SoketService;
 
 import java.util.List;
 
@@ -15,6 +17,7 @@ import java.util.List;
 public class MotherBoardController {
     private final MotherBoardService motherBoardService;
     private final BrandService brandService;
+    private final SoketService soketService;
 
     @GetMapping
     public List<MotherBoard> getAllMotherBoard() {
@@ -22,11 +25,12 @@ public class MotherBoardController {
     }
 
     @PostMapping("save_motherboard")
-    public String saveMotherBoard(@RequestBody MotherBoard motherBoard, @RequestParam("brand_id") Long brandId) {
+    public String saveMotherBoard(@RequestBody MotherBoard motherBoard, @RequestParam("brand_id") Long brandId, @RequestParam("soket_id") Long soketId) {
         Brand brand = brandService.findBrandById(brandId); // Получаем объект Brand по brand_id
-
-        if (brand != null) { // Если бренд найден
-            motherBoard.setBrand(brand); // Устанавливаем бренд для материнской платы
+        Soket soket = soketService.findSoketById(soketId);
+        if (brand != null && soket != null ) { // Если бренд найден
+            motherBoard.setBrand(brand);// Устанавливаем бренд для материнской платы
+            motherBoard.setSoket(soket);
             motherBoardService.saveMotherBoard(motherBoard); // Сохраняем материнскую плату
             return "Motherboard successfully saved";
         } else { // Если бренд не найден
@@ -34,11 +38,9 @@ public class MotherBoardController {
         }
     }
 
-
-
-    @GetMapping("/{brand_id}")
-    public MotherBoard findMotherBoardByBrandId(@PathVariable Long brand_id) {
-        return motherBoardService.findMotherBoardByBrandId(brand_id);
+    @GetMapping("/{name}")
+    public MotherBoard findMotherBoardByName(@PathVariable String name) {
+        return motherBoardService.findMotherBoardByName(name);
     }
 
     @PutMapping("update_motherboard")

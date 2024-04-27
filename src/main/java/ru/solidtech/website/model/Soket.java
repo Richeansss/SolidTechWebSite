@@ -8,7 +8,7 @@ import lombok.Data;
 
 @Data
 @Entity
-public class Brand {
+public class Soket {
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
     private long id;

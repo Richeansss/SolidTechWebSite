@@ -22,11 +22,11 @@ public class BrandController {
     @PostMapping("save_brand")
     public String saveBrand(@RequestBody Brand brand) {
         brandService.saveBrand(brand);
-        return "Student successfully saved";
+        return "Brand successfully saved";
     }
 
     @GetMapping("/{name}")
-    public Brand findBrandByИame(@PathVariable String name) {
+    public Brand findBrandByName(@PathVariable String name) {
         return brandService.findBrandByName(name);
     }
 

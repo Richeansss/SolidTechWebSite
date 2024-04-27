@@ -1,66 +1,84 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import { IBrand, IMotherBoard } from "../data/models";
+import React, {useCallback, useEffect, useState} from "react";
+import axios, {AxiosError} from "axios";
+import {IBrand, IMotherBoard, ISoket} from "../data/models";
 import Select from "react-select";
+import MotherboardsTable from "./Table/MotherBoardTable";
 
 export function MotherBoard() {
     const [selectedMotherBoard, setSelectedMotherBoard] = useState<string | null>(null);
-    const [newMotherBoardName, setNewMotherBoardName] = useState<string>('');
     const [isAddingMotherBoard, setIsAddingMotherBoard] = useState<boolean>(false);
     const [error, setError] = useState<string>('');
-    const [motherboards, setMotherBoards] = useState<IMotherBoard[]>([]);
 
     const [selectedBrand, setSelectedBrand] = useState<number | null>(null);
     const [inputMotherBoardName, setInputMotherBoardName] = useState<string>('');
-    const [selectedSoket, setSelectedSoket] = useState<string | null>(null);
+    const [selectedSoket, setSelectedSoket] = useState<number | null>(null);
     const [selectedChipset, setSelectedChipset] = useState<string | null>(null);
     const [selectedTypeOfMemory, setSelectedTypeOfMemory] = useState<string | null>(null);
     const [selectedPci, setSelectedPci] = useState<number | null>(null);
     const [selectedAmountOfM2, setSelectedAmountOfM2] = useState<number | null>(null);
-    const [inputedUrl, setInputedUrl] = useState<string | null>(null);
+    const [inputedUrl, setInputedUrl] = useState<string>('');
 
-    const [inputValue, setInputValue] = useState<string>(''); // Состояние для хранения текущего введенного значения
-
+    const [inputValue, setInputValue] = useState<string>('');
 
     const [brands, setBrands] = useState<IBrand[]>([]);
+    const [sokets, setSoket] = useState<ISoket[]>([]);
+    const [motherboards, setMotherBoards] = useState<IMotherBoard[]>([]);
+
+    const handleRequestError = useCallback((error: AxiosError) => {
+        if (error.response) {
+            console.error('Server Error:', error.response.status);
+            handleFetchError('Ошибка при загрузке данных. Пожалуйста, повторите попытку позже.');
+        } else if (error.request) {
+            console.error('Request Error:', error.request);
+            handleFetchError('Ошибка при отправке запроса на сервер. Пожалуйста, проверьте ваше интернет-соединение и повторите попытку.');
+        } else {
+            console.error('Error:', error.message);
+            handleFetchError('Произошла ошибка. Пожалуйста, повторите попытку позже.');
+        }
+    }, []);
+
+    const fetchData = useCallback(async () => {
+        try {
+            const response = await axios.get('http://localhost:8080/api/v1/motherboard');
+            setMotherBoards(response.data);
+        } catch (error: any) {
+            handleRequestError(error);
+        }
+    }, [handleRequestError]);
+
+    const fetchBrands = useCallback(async () => {
+        try {
+            const response = await axios.get('http://localhost:8080/api/v1/brand');
+            setBrands(response.data);
+        } catch (error: any) {
+            handleRequestError(error);
+        }
+    }, [handleRequestError]);
+
+    const fetchSoket = useCallback(async () => {
+        try {
+            const response = await axios.get('http://localhost:8080/api/v1/soket');
+            setSoket(response.data);
+        } catch (error: any) {
+            handleRequestError(error);
+        }
+    }, [handleRequestError]);
+
+
+
+    const handleFetchError = (errorMessage: string) => {
+        console.error(errorMessage);
+        setError('Ошибка при загрузке данных. Пожалуйста, повторите попытку позже.');
+    };
 
     useEffect(() => {
         fetchData();
         fetchBrands();
-    }, []);
-
-    const fetchData = async () => {
-        try {
-            const response = await axios.get('http://localhost:8080/api/v1/motherboard');
-            setMotherBoards(response.data);
-        } catch (error) {
-            console.error('Error fetching data:', error);
-            setError('Ошибка при загрузке данных. Пожалуйста, повторите попытку позже.');
-        }
-    };
+        fetchSoket();
+    }, [fetchData, fetchBrands, fetchSoket]);
 
     const handleUrlInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setInputedUrl(event.target.value);
-    };
-
-    const fetchBrands = async () => {
-        try {
-            const response = await axios.get('http://localhost:8080/api/v1/brand');
-            setBrands(response.data);
-        } catch (error) {
-            console.error('Error fetching brands:', error);
-            setError('Ошибка при загрузке данных. Пожалуйста, повторите попытку позже.');
-        }
-    };
-
-    const handleDeleteMotherBoard = async (motherBoardId: number) => {
-        try {
-            await axios.delete(`http://localhost:8080/api/v1/motherboard/delete/${motherBoardId}`);
-            const updatedMotherBoards = motherboards.filter(mb => mb.id !== motherBoardId);
-            setMotherBoards(updatedMotherBoards);
-        } catch (error) {
-            console.error('Error deleting motherboard:', error);
-        }
     };
 
     const handleMotherBoardChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -75,17 +93,6 @@ export function MotherBoard() {
         setIsAddingMotherBoard(prevState => !prevState);
     };
 
-
-    const checkMotherBoardExists = async (motherBoardName: string) => {
-        try {
-            const response = await axios.get(`http://localhost:8080/api/v1/motherboard/${motherBoardName}`);
-            return response.data.id !== undefined;
-        } catch (error) {
-            console.error('Error checking motherboard existence:', error);
-            return false;
-        }
-    };
-
     const handleSaveNewMotherBoard = async () => {
         try {
             if (!inputMotherBoardName.trim()) {
@@ -93,36 +100,33 @@ export function MotherBoard() {
                 return;
             }
 
-            const motherBoardExists = await checkMotherBoardExists(inputMotherBoardName);
-            if (motherBoardExists) {
-                setError('Ошибка: материнская плата с таким именем уже существует');
-                return;
-            }
-
-            const response = await axios.post(`http://localhost:8080/api/v1/motherboard/save_motherboard?brand_id=${selectedBrand}`, {
+            const response = await axios.post(`http://localhost:8080/api/v1/motherboard/save_motherboard?brand_id=${selectedBrand}&soket_id=${selectedSoket}`, {
                 name: inputMotherBoardName,
-                soket: selectedSoket,
                 chipset: selectedChipset,
                 type_of_memory: selectedTypeOfMemory,
                 pci: selectedPci,
                 amount_of_mem: selectedAmountOfM2,
                 url: inputedUrl
             });
+
             console.log('New motherboard added:', response.data);
-            setNewMotherBoardName('');
             fetchData();
             clearError();
+            // Сбрасываем выбранные опции Select на null
+            setSelectedBrand(null);
+            setInputMotherBoardName('');
+            setSelectedSoket(null);
+            setSelectedChipset(null);
+            setSelectedTypeOfMemory(null);
+            setSelectedPci(null);
+            setSelectedAmountOfM2(null);
+            setInputedUrl('');
         } catch (error) {
             console.error('Error adding new motherboard:', error);
             setError('Ошибка при добавлении новой материнской платы. Пожалуйста, повторите попытку позже.');
         }
     };
 
-    const soketOptions = [
-        { value: 'am4', label: 'AM4' },
-        { value: 'lga1700', label: 'LGA1700' },
-        { value: 'am5', label: 'AM5' }
-    ];
 
     const chipsetOptions = [
         { value: 'h610', label: 'H610' },
@@ -150,10 +154,6 @@ export function MotherBoard() {
         { value: 5, label: '5' }
     ];
 
-    const getSoketOptions = () => {
-        return selectedSoket ? soketOptions.find(c => c.value === selectedSoket) : null;
-    }
-
     const getChipsetOptions = () => {
         return selectedChipset ? chipsetOptions.find(c => c.value === selectedChipset) : null;
     }
@@ -164,7 +164,7 @@ export function MotherBoard() {
 
     const getPciOptions = () => {
         return selectedPci ? pciOptions.find(c => c.value === selectedPci) : null;
-    }
+    };
 
     const getAmountOfM2 = () => {
         return selectedAmountOfM2 ? amountOfM2Options.find(c => c.value === selectedAmountOfM2) : null;
@@ -188,125 +188,90 @@ export function MotherBoard() {
                 Добавить новую материнскую плату
             </button>
 
+
             {isAddingMotherBoard && (
                 <div className="border flex flex-col items-center p-4 mt-2">
-                    {motherboards.length > 0 && (
-                        <div>
-                            <h2 className="mt-4">Список материнских плат</h2>
-                            <table className="border-collapse border border-gray-500 mt-2">
-                                <thead>
-                                <tr>
-                                    <th className="border border-gray-500 px-4 py-2">ID</th>
-                                    <th className="border border-gray-500 px-4 py-2">Название</th>
-                                    <th className="border border-gray-500 px-4 py-2">Бренд</th>
-                                    <th className="border border-gray-500 px-4 py-2">Тип памяти</th>
-                                    <th className="border border-gray-500 px-4 py-2">Сокет</th>
-                                    <th className="border border-gray-500 px-4 py-2">Чипсет</th>
-                                    <th className="border border-gray-500 px-4 py-2">Версия PCI</th>
-                                    <th className="border border-gray-500 px-4 py-2">Кол-во M2</th>
-                                    <th className="border border-gray-500 px-4 py-2">URL</th>
-                                    <th className="border border-gray-500 px-4 py-2">Действия</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {motherboards.map(mb => (
-                                    <tr key={mb.id}>
-                                        <td className="border border-gray-500 px-4 py-2">{mb.id}</td>
-                                        <td className="border border-gray-500 px-4 py-2">{mb.name}</td>
-                                        <td className="border border-gray-500 px-4 py-2">{brands.find(brand => brand.id === mb.brand_id)?.name}</td>
-                                        <td className="border border-gray-500 px-4 py-2">{mb.type_of_memory}</td>
-                                        <td className="border border-gray-500 px-4 py-2">{mb.soket}</td>
-                                        <td className="border border-gray-500 px-4 py-2">{mb.chipset}</td>
-                                        <td className="border border-gray-500 px-4 py-2">{mb.pci}</td>
-                                        <td className="border border-gray-500 px-4 py-2">{mb.amount_of_m2}</td>
-                                        <td className="border border-gray-500 px-4 py-2">{mb.url}</td>
-                                        <td className="border border-gray-500 px-4 py-2">
-                                            <button
-                                                className="border rounded px-4 py-1 bg-red-500 hover:bg-red-600 transition-colors"
-                                                onClick={() => handleDeleteMotherBoard(mb.id)}>Удалить
-                                            </button>
-                                        </td>
-                                    </tr>
-                                ))}
-                                </tbody>
-                            </table>
-                        </div>
-                    )}
+                    <MotherboardsTable motherboards={motherboards} />
 
-                    <div className="flex">
+                    <div className="flex flex-wrap justify-center items-center">
+
                         {/* Поле выбора материнской платы */}
-                        <div className="mr-4">
+                        <div className="mb-4 mr-4">
+                            <label htmlFor="motherboard" className="mr-2">Материнская плата:</label>
                             <Select
+                                id="motherboard"
                                 options={motherboards.map(board => ({value: board.name, label: board.name}))}
                                 value={inputMotherBoardName ? {
                                     value: inputMotherBoardName,
                                     label: inputMotherBoardName
                                 } : null}
-                                inputValue={inputValue} // Устанавливаем текущее введенное значение
-                                onInputChange={(newValue) => setInputValue(newValue)} // Обновляем состояние введенного значения при изменении ввода
+                                inputValue={inputValue}
+                                onInputChange={(newValue) => setInputValue(newValue)}
                                 onChange={(selectedOption) => {
                                     if (selectedOption !== null) {
                                         setInputMotherBoardName(selectedOption.value);
                                     } else {
                                         setInputMotherBoardName('');
                                     }
-                                    setInputValue(''); // Сбрасываем введенное значение при выборе из списка
+                                    setInputValue('');
                                 }}
                                 onBlur={() => {
                                     if (inputValue !== "") {
-                                        setInputMotherBoardName(inputValue); // Обновляем выбранное значение при потере фокуса, если введено не пустое значение
+                                        setInputMotherBoardName(inputValue);
                                     }
-                                    setInputValue(''); // Сбрасываем введенное значение при потере фокуса
+                                    setInputValue('');
                                 }}
-                                placeholder="Введите материнскую плату"
+                                placeholder="Выберите или введите"
+                                className="w-full"
                             />
-                            {/* Вывод выбранной материнской платы */}
-                            {inputMotherBoardName &&
-                                <p className="mb-2">Выбранная материнская плата: {inputMotherBoardName}</p>}
                         </div>
 
-
                         {/* Поле выбора бренда */}
-                        <div className="mr-4">
+                        <div className="mb-4 mr-4">
+                            <label htmlFor="brand" className="mr-2">Бренд:</label>
                             <Select
+                                id="brand"
                                 options={brands.map(brand => ({value: brand.id, label: brand.name}))}
                                 value={selectedBrand ? {
                                     value: selectedBrand,
-                                    label: brands.find(brand => brand.id === selectedBrand)?.name
+                                    label: brands.find(brand => brand.id === selectedBrand)?.name // Используйте безопасный доступ ?.name
                                 } : null}
                                 onChange={(selectedOption) => {
                                     if (selectedOption !== null) {
                                         setSelectedBrand(selectedOption.value);
                                     }
                                 }}
-                                placeholder="Введите или выберите бренд"
-                            />
+                                placeholder="Выберите или введите"
+                                className="w-full"
 
-                            {/* Вывод выбранного бренда */}
-                            {selectedBrand && <p className="mb-2">Выбранный
-                                бренд: {brands.find(brand => brand.id === selectedBrand)?.name}</p>}
+                            />
                         </div>
 
-
                         {/* Поле выбора сокета */}
-                        <div className="mr-4">
+                        <div className="mb-4 mr-4">
+                            <label htmlFor="soket" className="mr-2">Сокет:</label>
                             <Select
-                                options={soketOptions}
-                                value={getSoketOptions()}
+                                id="soket"
+                                options={sokets.map(soket => ({value: soket.id, label: soket.name}))}
+                                value={selectedSoket ? {
+                                    value: selectedSoket,
+                                    label: sokets.find(soket => soket.id === selectedSoket)?.name // Замените selectedBrand на selectedOption.value
+                                } : null}
                                 onChange={(selectedOption) => {
                                     if (selectedOption !== null) {
                                         setSelectedSoket(selectedOption.value);
                                     }
                                 }}
-                                placeholder="Выберите сокет"
+                                placeholder="Выберите или введите"
+                                className="w-full"
                             />
-                            {/* Вывод выбранного сокета */}
-                            {selectedSoket && <p className="mb-2">Выбранный сокет: {selectedSoket}</p>}
                         </div>
 
                         {/* Поле выбора чипсета */}
-                        <div className="mr-4">
+                        <div className="mb-4 mr-4">
+                            <label htmlFor="chipset" className="mr-2">Чипсет:</label>
                             <Select
+                                id="chipset"
                                 options={chipsetOptions}
                                 value={getChipsetOptions()}
                                 onChange={(selectedOption) => {
@@ -314,15 +279,16 @@ export function MotherBoard() {
                                         setSelectedChipset(selectedOption.value);
                                     }
                                 }}
-                                placeholder="Выберите чипсет"
+                                placeholder="Выберите"
+                                className="w-full"
                             />
-                            {/* Вывод выбранного чипстеа */}
-                            {selectedChipset && <p className="mb-2">Выбранный сокет: {selectedChipset}</p>}
                         </div>
 
                         {/* Поле выбора типа памяти */}
-                        <div className="mr-4">
+                        <div className="mb-4 mr-4">
+                            <label htmlFor="memory" className="mr-2">Тип памяти:</label>
                             <Select
+                                id="memory"
                                 options={typeOfMemoryOptions}
                                 value={getTypeOfMemoryOptions()}
                                 onChange={(selectedOption) => {
@@ -330,16 +296,16 @@ export function MotherBoard() {
                                         setSelectedTypeOfMemory(selectedOption.value);
                                     }
                                 }}
-                                placeholder="Выберите тип памяти"
+                                placeholder="Выберите"
+                                className="w-full"
                             />
-                            {/* Вывод выбранного чипстеа */}
-                            {selectedTypeOfMemory &&
-                                <p className="mb-2">Выбранный тип памяти: {selectedTypeOfMemory}</p>}
                         </div>
 
                         {/* Поле выбора версии PCI */}
-                        <div className="mr-4">
+                        <div className="mb-4 mr-4">
+                            <label htmlFor="pci" className="mr-2">Версия PCI:</label>
                             <Select
+                                id="pci"
                                 options={pciOptions}
                                 value={getPciOptions()}
                                 onChange={(selectedOption) => {
@@ -347,15 +313,16 @@ export function MotherBoard() {
                                         setSelectedPci(selectedOption.value);
                                     }
                                 }}
-                                placeholder="Выберите версию PCI"
+                                placeholder="Выберите"
+                                className="w-full"
                             />
-                            {/* Вывод выбранного версии PCI */}
-                            {selectedPci && <p className="mb-2">Выбранная версия PCI: {selectedPci}</p>}
                         </div>
 
                         {/* Поле выбора кол-во M2 */}
-                        <div className="mr-4">
+                        <div className="mb-4 mr-4">
+                            <label htmlFor="m2" className="mr-2">Кол-во M2:</label>
                             <Select
+                                id="m2"
                                 options={amountOfM2Options}
                                 value={getAmountOfM2()}
                                 onChange={(selectedOption) => {
@@ -363,20 +330,25 @@ export function MotherBoard() {
                                         setSelectedAmountOfM2(selectedOption.value);
                                     }
                                 }}
-                                placeholder="Выберите кол-во M2"
+                                placeholder="Выберите"
+                                className="w-full"
                             />
-                            {/* Вывод выбранного версии PCI */}
-                            {selectedAmountOfM2 && <p className="mb-2">Выбранно кол-во M2: {selectedAmountOfM2}</p>}
                         </div>
 
-                        <input
-                            type="text"
-                            value={inputedUrl || ''}
-                            onChange={handleUrlInputChange}
-                            placeholder="Введите URL"
-                        />
-                        {inputedUrl && <p>Введенный URL: {inputedUrl}</p>}
+                        <div className="mb-4">
+                            <label htmlFor="url" className="mr-2">URL:</label>
+                            <input
+                                id="url"
+                                type="text"
+                                value={inputedUrl || ''}
+                                onChange={handleUrlInputChange}
+                                placeholder="Введите URL"
+                                className="border rounded px-2 py-1"
+                            />
+                        </div>
+
                     </div>
+
 
                     {error && <p className="text-red-600 mb-2">{error}</p>}
                     <button

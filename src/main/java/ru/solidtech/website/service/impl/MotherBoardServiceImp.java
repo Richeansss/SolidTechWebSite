@@ -27,8 +27,8 @@ public class MotherBoardServiceImp implements MotherBoardService {
     }
 
     @Override
-    public MotherBoard findMotherBoardByBrandId(Long brand_id) {
-        return repository.findMotherBoardByBrandId(brand_id);
+    public MotherBoard findMotherBoardByName(String name) {
+        return repository.findMotherBoardByName(name);
     }
 
     @Override

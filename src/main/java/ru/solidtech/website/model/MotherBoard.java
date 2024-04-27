@@ -16,8 +16,9 @@ public class MotherBoard {
     @JoinColumn(name = "brand_id")
     private Brand brand;
 
-    @Column(columnDefinition = "VARCHAR(255) NOT NULL")
-    private String soket;
+    @ManyToOne
+    @JoinColumn(name = "soket_id")
+    private Soket soket;
 
     @Column(columnDefinition = "VARCHAR(255) NOT NULL")
     private String chipset;
