@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from "react";
 import Select from 'react-select';
 import axios from "axios";
-import { ISoket } from "../data/models";
+import { IChipset } from "../data/models";
 import IdNameTable from "./Table/IdNameTable";
 
-export function Soket() {
-    const [selectedSoket, setSelectedSoket] = useState<string | null>(null);
-    const [newSoketName, setNewSoketName] = useState<string>('');
-    const [isAddingSoket, setIsAddingSoket] = useState<boolean>(false);
+export function Chipset() {
+    const [selectedChipset, setSelectedChipset] = useState<string | null>(null);
+    const [newChipsetName, setNewChipsetName] = useState<string>('');
+    const [isAddingChipset, setIsAddingChipset] = useState<boolean>(false);
     const [error, setError] = useState<string>('');
-    const [sokets, setSokets] = useState<ISoket[]>([]);
+    const [chipsets, setChipsets] = useState<IChipset[]>([]);
 
     useEffect(() => {
         fetchData();
@@ -17,8 +17,8 @@ export function Soket() {
 
     const fetchData = async () => {
         try {
-            const response = await axios.get('http://localhost:8080/api/v1/soket');
-            setSokets(response.data);
+            const response = await axios.get('http://localhost:8080/api/v1/chipset');
+            setChipsets(response.data);
         } catch (error) {
             console.error('Error fetching data:', error);
             setError('Ошибка при загрузке данных. Пожалуйста, повторите попытку позже.');
@@ -29,46 +29,46 @@ export function Soket() {
         setError('');
     };
 
-    const handleAddSoketClick = () => {
-        setIsAddingSoket(prevState => !prevState);
+    const handleAddChipsetClick = () => {
+        setIsAddingChipset(prevState => !prevState);
     };
 
-    const handleNewSoketNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setNewSoketName(event.target.value);
+    const handleNewChipsetNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setNewChipsetName(event.target.value);
     };
 
-    const checkSoketExists = async (soketName: string) => {
+    const checkChipsetExists = async (chipsetName: string) => {
         try {
-            const response = await axios.get(`http://localhost:8080/api/v1/soket/${soketName}`);
+            const response = await axios.get(`http://localhost:8080/api/v1/chipset/${chipsetName}`);
             return response.data.id !== undefined;
         } catch (error) {
-            console.error('Error checking soket existence:', error);
+            console.error('Error checking chipset existence:', error);
             return false;
         }
     };
 
-    const handleSaveNewSoket = async () => {
+    const handleSaveNewChipset = async () => {
         try {
-            if (!newSoketName.trim()) {
+            if (!newChipsetName.trim()) {
                 setError('Ошибка: пустое поле названия сокета');
                 return;
             }
 
-            const soketExists = await checkSoketExists(newSoketName);
-            if (soketExists) {
+            const chipsetExists = await checkChipsetExists(newChipsetName);
+            if (chipsetExists) {
                 setError('Ошибка: сокет с таким именем уже существует');
                 return;
             }
 
-            const response = await axios.post('http://localhost:8080/api/v1/soket/save_soket', {
-                name: newSoketName
+            const response = await axios.post('http://localhost:8080/api/v1/chipset/save_chipset', {
+                name: newChipsetName
             });
-            console.log('New soket added:', response.data);
-            setNewSoketName('');
+            console.log('New chipset added:', response.data);
+            setNewChipsetName('');
             fetchData();
             clearError();
         } catch (error) {
-            console.error('Error adding new soket:', error);
+            console.error('Error adding new chipset:', error);
             setError('Ошибка при добавлении нового сокета. Пожалуйста, повторите попытку позже.');
         }
     };
@@ -76,27 +76,27 @@ export function Soket() {
     return (
         <div className="border p-4 rounded flex flex-col items-center mb-2">
             <button
-                className={`border rounded px-6 py-1 ${isAddingSoket ? "bg-red-500 hover:bg-red-600" : "bg-lime-500 hover:bg-lime-600"} transition-colors`}
-                onClick={handleAddSoketClick}
+                className={`border rounded px-6 py-1 ${isAddingChipset ? "bg-red-500 hover:bg-red-600" : "bg-lime-500 hover:bg-lime-600"} transition-colors`}
+                onClick={handleAddChipsetClick}
             >
                 Добавить новый сокет
             </button>
 
-            {isAddingSoket && (
+            {isAddingChipset && (
                 <div className="border flex flex-col items-center p-4 mt-2">
-                    <IdNameTable data={sokets} tableName={"Список Сокетов"}></IdNameTable>
+                    <IdNameTable data={chipsets} tableName={"Список Чипсетов"}></IdNameTable>
 
                     <input
                         className="border rounded px-2 py-1 mb-2"
                         type="text"
-                        value={newSoketName}
-                        onChange={handleNewSoketNameChange}
+                        value={newChipsetName}
+                        onChange={handleNewChipsetNameChange}
                         placeholder="Введите название сокета"
                     />
                     {error && <p className="text-red-600 mb-2">{error}</p>}
                     <button
                         className="border rounded px-6 py-1 bg-sky-600 hover:bg-sky-700 transition-colors"
-                        onClick={handleSaveNewSoket}
+                        onClick={handleSaveNewChipset}
                     >
                         Сохранить
                     </button>

@@ -20,8 +20,9 @@ public class MotherBoard {
     @JoinColumn(name = "soket_id")
     private Soket soket;
 
-    @Column(columnDefinition = "VARCHAR(255) NOT NULL")
-    private String chipset;
+    @ManyToOne
+    @JoinColumn(name = "chipset_id")
+    private Chipset chipset;
 
     @Column(columnDefinition = "VARCHAR(255) NOT NULL")
     private String type_of_memory;

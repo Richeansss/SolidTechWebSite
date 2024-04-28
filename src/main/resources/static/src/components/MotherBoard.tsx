@@ -3,6 +3,7 @@ import axios, {AxiosError} from "axios";
 import {IBrand, IMotherBoard, ISoket} from "../data/models";
 import Select from "react-select";
 import MotherboardsTable from "./Table/MotherBoardTable";
+import ErrorMessage from "./subcomponents/ErrorMessage";
 
 export function MotherBoard() {
     const [selectedMotherBoard, setSelectedMotherBoard] = useState<string | null>(null);
@@ -12,7 +13,7 @@ export function MotherBoard() {
     const [selectedBrand, setSelectedBrand] = useState<number | null>(null);
     const [inputMotherBoardName, setInputMotherBoardName] = useState<string>('');
     const [selectedSoket, setSelectedSoket] = useState<number | null>(null);
-    const [selectedChipset, setSelectedChipset] = useState<string | null>(null);
+    const [selectedChipset, setSelectedChipset] = useState<number | null>(null);
     const [selectedTypeOfMemory, setSelectedTypeOfMemory] = useState<string | null>(null);
     const [selectedPci, setSelectedPci] = useState<number | null>(null);
     const [selectedAmountOfM2, setSelectedAmountOfM2] = useState<number | null>(null);
@@ -22,20 +23,36 @@ export function MotherBoard() {
 
     const [brands, setBrands] = useState<IBrand[]>([]);
     const [sokets, setSoket] = useState<ISoket[]>([]);
+    const [chipsets, setChipset] = useState<ISoket[]>([]);
     const [motherboards, setMotherBoards] = useState<IMotherBoard[]>([]);
+
+    // Состояния для отслеживания открытия каждого селекта
+    const [selectsOpen, setSelectsOpen] = useState({
+        brand: false,
+        soket: false,
+        chipset: false
+    });
+
 
     const handleRequestError = useCallback((error: AxiosError) => {
         if (error.response) {
-            console.error('Server Error:', error.response.status);
-            handleFetchError('Ошибка при загрузке данных. Пожалуйста, повторите попытку позже.');
+            const status = error.response.status;
+            if (status === 404) {
+                setError('Ошибка: данные не найдены. Пожалуйста, проверьте корректность запроса.');
+            } else if (status === 403) {
+                setError('Ошибка: доступ запрещен. Обратитесь к администратору для получения дополнительной информации.');
+            } else if (status === 500) {
+                setError('Ошибка: внутренняя ошибка сервера. Пожалуйста, повторите попытку позже или обратитесь к администратору.');
+            } else {
+                setError(`Произошла ошибка: ${error.message}`);
+            }
         } else if (error.request) {
-            console.error('Request Error:', error.request);
-            handleFetchError('Ошибка при отправке запроса на сервер. Пожалуйста, проверьте ваше интернет-соединение и повторите попытку.');
+            setError('Ошибка: запрос не был выполнен. Проверьте ваше интернет-соединение и повторите попытку.');
         } else {
-            console.error('Error:', error.message);
-            handleFetchError('Произошла ошибка. Пожалуйста, повторите попытку позже.');
+            setError('Произошла ошибка: ' + error.message);
         }
     }, []);
+
 
     const fetchData = useCallback(async () => {
         try {
@@ -64,18 +81,40 @@ export function MotherBoard() {
         }
     }, [handleRequestError]);
 
+    const fetchChipset = useCallback(async () => {
+        try {
+            const response = await axios.get('http://localhost:8080/api/v1/chipset');
+            setChipset(response.data);
+        } catch (error: any) {
+            handleRequestError(error);
+        }
+    }, [handleRequestError]);
 
+    useEffect(() => {
+        if (selectsOpen.brand) {
+            fetchBrands();
+        }
+    }, [selectsOpen.brand, fetchBrands]);
 
-    const handleFetchError = (errorMessage: string) => {
-        console.error(errorMessage);
-        setError('Ошибка при загрузке данных. Пожалуйста, повторите попытку позже.');
-    };
+    useEffect(() => {
+        if (selectsOpen.soket) {
+            fetchSoket();
+        }
+    }, [selectsOpen.soket, fetchSoket]);
+
+    useEffect(() => {
+        if (selectsOpen.chipset) {
+            fetchChipset();
+        }
+    }, [selectsOpen.chipset, fetchChipset]);
+
 
     useEffect(() => {
         fetchData();
         fetchBrands();
         fetchSoket();
-    }, [fetchData, fetchBrands, fetchSoket]);
+        fetchChipset();
+    }, []);
 
     const handleUrlInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setInputedUrl(event.target.value);
@@ -100,17 +139,16 @@ export function MotherBoard() {
                 return;
             }
 
-            const response = await axios.post(`http://localhost:8080/api/v1/motherboard/save_motherboard?brand_id=${selectedBrand}&soket_id=${selectedSoket}`, {
+            const response = await axios.post(`http://localhost:8080/api/v1/motherboard/save_motherboard?brand_id=${selectedBrand}&soket_id=${selectedSoket}&chipset_id=${selectedChipset}`, {
                 name: inputMotherBoardName,
-                chipset: selectedChipset,
                 type_of_memory: selectedTypeOfMemory,
                 pci: selectedPci,
                 amount_of_mem: selectedAmountOfM2,
                 url: inputedUrl
             });
 
-            console.log('New motherboard added:', response.data);
             fetchData();
+            console.log('New motherboard added:', response.data);
             clearError();
             // Сбрасываем выбранные опции Select на null
             setSelectedBrand(null);
@@ -126,13 +164,6 @@ export function MotherBoard() {
             setError('Ошибка при добавлении новой материнской платы. Пожалуйста, повторите попытку позже.');
         }
     };
-
-
-    const chipsetOptions = [
-        { value: 'h610', label: 'H610' },
-        { value: 'h510', label: 'H510' },
-        { value: 'a620', label: 'A620' }
-    ];
 
     const typeOfMemoryOptions = [
         { value: 'ddr3', label: 'DDR3' },
@@ -153,10 +184,6 @@ export function MotherBoard() {
         { value: 4, label: '4' },
         { value: 5, label: '5' }
     ];
-
-    const getChipsetOptions = () => {
-        return selectedChipset ? chipsetOptions.find(c => c.value === selectedChipset) : null;
-    }
 
     const getTypeOfMemoryOptions = () => {
         return selectedTypeOfMemory ? typeOfMemoryOptions.find(c => c.value === selectedTypeOfMemory) : null;
@@ -241,9 +268,11 @@ export function MotherBoard() {
                                         setSelectedBrand(selectedOption.value);
                                     }
                                 }}
+                                menuIsOpen={selectsOpen.brand}
+                                onMenuOpen={() => setSelectsOpen(prevState => ({ ...prevState, brand: true }))}
+                                onMenuClose={() => setSelectsOpen(prevState => ({ ...prevState, brand: false }))}
                                 placeholder="Выберите или введите"
                                 className="w-full"
-
                             />
                         </div>
 
@@ -255,31 +284,40 @@ export function MotherBoard() {
                                 options={sokets.map(soket => ({value: soket.id, label: soket.name}))}
                                 value={selectedSoket ? {
                                     value: selectedSoket,
-                                    label: sokets.find(soket => soket.id === selectedSoket)?.name // Замените selectedBrand на selectedOption.value
+                                    label: sokets.find(soket => soket.id === selectedSoket)?.name
                                 } : null}
                                 onChange={(selectedOption) => {
                                     if (selectedOption !== null) {
                                         setSelectedSoket(selectedOption.value);
                                     }
                                 }}
+                                menuIsOpen={selectsOpen.soket}
+                                onMenuOpen={() => setSelectsOpen(prevState => ({ ...prevState, soket: true }))}
+                                onMenuClose={() => setSelectsOpen(prevState => ({ ...prevState, soket: false }))}
                                 placeholder="Выберите или введите"
                                 className="w-full"
                             />
                         </div>
 
-                        {/* Поле выбора чипсета */}
+                        {/* Поле выбора чипсета*/}
                         <div className="mb-4 mr-4">
                             <label htmlFor="chipset" className="mr-2">Чипсет:</label>
                             <Select
                                 id="chipset"
-                                options={chipsetOptions}
-                                value={getChipsetOptions()}
+                                options={chipsets.map(chipset => ({value: chipset.id, label: chipset.name}))}
+                                value={selectedChipset ? {
+                                    value: selectedChipset,
+                                    label: chipsets.find(chipset => chipset.id === selectedChipset)?.name
+                                } : null}
                                 onChange={(selectedOption) => {
                                     if (selectedOption !== null) {
                                         setSelectedChipset(selectedOption.value);
                                     }
                                 }}
-                                placeholder="Выберите"
+                                menuIsOpen={selectsOpen.chipset}
+                                onMenuOpen={() => setSelectsOpen(prevState => ({ ...prevState, chipset: true }))}
+                                onMenuClose={() => setSelectsOpen(prevState => ({ ...prevState, chipset: false }))}
+                                placeholder="Выберите или введите"
                                 className="w-full"
                             />
                         </div>
@@ -350,7 +388,7 @@ export function MotherBoard() {
                     </div>
 
 
-                    {error && <p className="text-red-600 mb-2">{error}</p>}
+                    {error && <ErrorMessage error={error} />} {/* Используем компонент ErrorMessage для вывода ошибки */}
                     <button
                         className="border rounded px-6 py-1 bg-sky-600 hover:bg-sky-700 transition-colors"
                         onClick={handleSaveNewMotherBoard}

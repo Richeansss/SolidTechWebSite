@@ -2,6 +2,7 @@ import React, { useEffect, useState  } from "react";
 import Select  from 'react-select';
 import axios from "axios";
 import { IBrand } from "../data/models";
+import IdNameTable from "./Table/IdNameTable";
 
 export function Brand() {
     const [selectedBrand, setSelectedBrand] = useState<string | null>(null);
@@ -25,20 +26,6 @@ export function Brand() {
             setError('Ошибка при загрузке данных. Пожалуйста, повторите попытку позже.');
         }
     };
-
-    const handleDeleteBrand = async (brandId: number) => {
-        try {
-            // Отправляем запрос на удаление бренда с указанным id
-            await axios.delete(`http://localhost:8080/api/v1/brand/delete_brand/${brandId}`);
-
-            // После успешного удаления обновляем список брендов
-            const updatedBrands = brands.filter(brand => brand.id !== brandId);
-            setBrands(updatedBrands);
-        } catch (error) {
-            console.error('Error deleting brand:', error);
-        }
-    };
-
 
     const clearError = () => {
         setError('');
@@ -92,19 +79,6 @@ export function Brand() {
 
     return (
         <div className="border p-4 rounded flex flex-col items-center mb-2">
-            <Select
-                options={brands.map(brand => ({ value: brand.name, label: brand.name }))}
-                value={selectedBrand ? { value: selectedBrand, label: selectedBrand } : null}
-                onChange={(selectedOption) => {
-                    if (selectedOption !== null) {
-                        setSelectedBrand(selectedOption.value);
-                    }
-                }}
-                placeholder="Введите или выберите бренд"
-            />
-
-            {/* Вывод выбранного бренда */}
-            {selectedBrand && <p className="mb-2">Выбранный бренд: {selectedBrand}</p>}
 
             <button
                 className={`border rounded px-6 py-1 ${isAddingBrand ? "bg-red-500 hover:bg-red-600" : "bg-lime-500 hover:bg-lime-600"} transition-colors`}
@@ -116,31 +90,7 @@ export function Brand() {
             {isAddingBrand && (
 
                 <div className="border flex flex-col items-center p-4 mt-2">
-                    {brands.length > 0 && (
-                        <div>
-                            <h2 className="mt-4">Список брендов</h2>
-                            <table className="border-collapse border border-gray-500 mt-2">
-                                <thead>
-                                <tr>
-                                    <th className="border border-gray-500 px-4 py-2">ID</th>
-                                    <th className="border border-gray-500 px-4 py-2">Название</th>
-                                    <th className="border border-gray-500 px-4 py-2">Действия</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {brands.map(brand => (
-                                    <tr key={brand.id}>
-                                        <td className="border border-gray-500 px-4 py-2">{brand.id}</td>
-                                        <td className="border border-gray-500 px-4 py-2">{brand.name}</td>
-                                        <td className="border border-gray-500 px-4 py-2">
-                                            <button className="border rounded px-4 py-1 bg-red-500 hover:bg-red-600 transition-colors" onClick={() => handleDeleteBrand(brand.id)}>Удалить</button>
-                                        </td>
-                                    </tr>
-                                ))}
-                                </tbody>
-                            </table>
-                        </div>
-                    )}
+                    <IdNameTable data={brands} tableName={"Список Брендов"}></IdNameTable>
 
                     <input
                         className="border rounded px-2 py-1 mb-2"
@@ -156,8 +106,7 @@ export function Brand() {
                     >
                         Сохранить
                     </button>
-                </div>
-            )}
+                </div>            )}
         </div>
     )
 }

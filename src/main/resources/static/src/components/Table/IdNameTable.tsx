@@ -1,44 +1,31 @@
 import React, { useMemo, useState } from "react";
 import { useTable, Column, useSortBy, usePagination, useFilters } from 'react-table';
-import { IMotherBoard } from "../../data/models";
 
-interface Props {
-    motherboards: IMotherBoard[];
+// Объединенный интерфейс для всех типов данных
+export interface IData {
+    id: number;
+    name: string;
 }
 
-const MotherboardsTable: React.FC<Props> = ({ motherboards }) => {
+interface Props {
+    data: IData[]; // Поменял имя свойства на data
+    tableName: string; // Название таблицы
+}
+
+const IdNameTable: React.FC<Props> = ({ data, tableName }) => {
     const [searchValue, setSearchValue] = useState<string>("");
 
-    const columns: Column<IMotherBoard>[] = useMemo(() => [
+    const columns: Column<IData>[] = useMemo(() => [
         { Header: 'ID', accessor: 'id' },
         { Header: 'Название', accessor: 'name' },
-        {
-            Header: 'Бренд',
-            accessor: 'brand',
-            Cell: ({ row }: { row: { original: { brand: { name: string } } } }) => <span>{row.original.brand.name}</span>
-        },
-        { Header: 'Тип памяти', accessor: 'type_of_memory' },
-        {
-            Header: 'Чипсет',
-            accessor: 'chipset',
-            Cell: ({ row }: { row: { original: { chipset: { name: string } } } }) => <span>{row.original.chipset.name}</span>
-        },
-        {
-            Header: 'Сокет',
-            accessor: 'soket',
-            Cell: ({ row }: { row: { original: { soket: { name: string } } } }) => <span>{row.original.soket.name}</span>
-        },
-        { Header: 'Версия PCI', accessor: 'pci' },
-        { Header: 'Кол-во M2', accessor: 'amount_of_m2' },
-        { Header: 'URL', accessor: 'url' }
     ], []);
 
-    const filteredMotherboards = useMemo(() => {
-        if (!searchValue) return motherboards; // Если поисковая строка пустая, возвращаем исходный список
-        return motherboards.filter((mb) =>
-            mb.name.toLowerCase().includes(searchValue.toLowerCase())
+    const filteredData = useMemo(() => {
+        if (!searchValue) return data; // Если поисковая строка пустая, возвращаем исходный список
+        return data.filter((item) =>
+            item.name.toLowerCase().includes(searchValue.toLowerCase())
         );
-    }, [motherboards, searchValue]);
+    }, [data, searchValue]);
 
     const {
         getTableProps,
@@ -53,7 +40,7 @@ const MotherboardsTable: React.FC<Props> = ({ motherboards }) => {
         previousPage,
         state: { pageIndex },
     } = useTable(
-        { columns, data: filteredMotherboards },
+        { columns, data: filteredData },
         useFilters,
         useSortBy,
         usePagination
@@ -67,11 +54,11 @@ const MotherboardsTable: React.FC<Props> = ({ motherboards }) => {
     return (
         <div className="border flex flex-col items-center p-4 mt-2">
             <div className="overflow-x-auto">
-                {filteredMotherboards.length === 0 ? null : (
+                {filteredData.length === 0 ? null : (
                     <>
-                        <h2 className="text-3xl font-bold mb-4">Список материнских плат</h2>
+                        <h2 className="text-3xl font-bold mb-4">{tableName}</h2> {/* Добавлено динамическое вывод названия таблицы */}
                         <input
-                            className="border mb-2 p-1 rounded"
+                            className="border mb-2 p-1 pl-6 rounded shadow"
                             type="text"
                             placeholder="Поиск по названию"
                             value={searchValue}
@@ -79,11 +66,11 @@ const MotherboardsTable: React.FC<Props> = ({ motherboards }) => {
                         />
                     </>
                 )}
-                {filteredMotherboards.length === 0 ? (
+                {filteredData.length === 0 ? (
                     <p className="text-red-500">Нет данных для отображения</p>
                 ) : (
                     <table {...getTableProps()} className="border-collapse border border-gray-500 w-full">
-                        <thead>
+                    <thead>
                         {headerGroups.map((headerGroup: any) => (
                             <tr {...headerGroup.getHeaderGroupProps()} className="bg-gray-200">
                                 {headerGroup.headers.map((column: any) => (
@@ -114,7 +101,7 @@ const MotherboardsTable: React.FC<Props> = ({ motherboards }) => {
                         </tbody>
                     </table>
                 )}
-                {filteredMotherboards.length === 0 ? null : (
+                {filteredData.length === 0 ? null : (
                     <>
                         {pageOptions.length > 1 && (
                             <div className="flex justify-between mt-4">
@@ -139,4 +126,4 @@ const MotherboardsTable: React.FC<Props> = ({ motherboards }) => {
     );
 };
 
-export default MotherboardsTable;
+export default IdNameTable;
