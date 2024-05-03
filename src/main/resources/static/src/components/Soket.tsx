@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import Select from 'react-select';
 import axios from "axios";
 import { ISoket } from "../data/models";
 import IdNameTable from "./Table/IdNameTable";

@@ -3,6 +3,7 @@ import {Brand} from "./components/Brand";
 import {MotherBoard} from "./components/MotherBoard";
 import {Soket} from "./components/Soket";
 import {Chipset} from "./components/Chipset";
+import {Game} from "./components/Game";
 
 
 
@@ -20,6 +21,7 @@ function App() {
                     <Soket />
                     <Chipset />
                 </div>
+                <Game />
             </div>
 
         </div>

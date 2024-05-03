@@ -13,7 +13,12 @@ export interface IChipset {
     name: string;
 }
 
-export interface IdNameTable {
+export interface IdName {
+    id: number;
+    name: string;
+}
+
+export interface IGame {
     id: number;
     name: string;
 }

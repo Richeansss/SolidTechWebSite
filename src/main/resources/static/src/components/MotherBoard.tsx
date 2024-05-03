@@ -4,6 +4,11 @@ import {IBrand, IMotherBoard, ISoket} from "../data/models";
 import Select from "react-select";
 import MotherboardsTable from "./Table/MotherBoardTable";
 import ErrorMessage from "./subcomponents/ErrorMessage";
+import UrlInput from "./subcomponents/UrlImput";
+import SelectFormSql from "./subcomponents/SelectFromSql";
+import SelectValueString from "./subcomponents/SelectValueString";
+import SelectValueNumber from "./subcomponents/SelectValueNumber";
+
 
 export function MotherBoard() {
     const [selectedMotherBoard, setSelectedMotherBoard] = useState<string | null>(null);
@@ -116,8 +121,8 @@ export function MotherBoard() {
         fetchChipset();
     }, []);
 
-    const handleUrlInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setInputedUrl(event.target.value);
+    const handleUrlInputChange = (value: string) => {
+        setInputedUrl(value);
     };
 
     const handleMotherBoardChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -253,142 +258,118 @@ export function MotherBoard() {
                             />
                         </div>
 
-                        {/* Поле выбора бренда */}
-                        <div className="mb-4 mr-4">
-                            <label htmlFor="brand" className="mr-2">Бренд:</label>
-                            <Select
-                                id="brand"
-                                options={brands.map(brand => ({value: brand.id, label: brand.name}))}
-                                value={selectedBrand ? {
-                                    value: selectedBrand,
-                                    label: brands.find(brand => brand.id === selectedBrand)?.name // Используйте безопасный доступ ?.name
-                                } : null}
-                                onChange={(selectedOption) => {
-                                    if (selectedOption !== null) {
-                                        setSelectedBrand(selectedOption.value);
-                                    }
-                                }}
-                                menuIsOpen={selectsOpen.brand}
-                                onMenuOpen={() => setSelectsOpen(prevState => ({ ...prevState, brand: true }))}
-                                onMenuClose={() => setSelectsOpen(prevState => ({ ...prevState, brand: false }))}
-                                placeholder="Выберите или введите"
-                                className="w-full"
-                            />
-                        </div>
+                            {/* Поле выбора бренда */}
+                        <SelectFormSql
+                            id="brand"
+                            options={brands.map(brand => ({
+                                value: brand.id,
+                                label: brand.name || ''
+                            }))}
+                            value={selectedBrand ? {
+                                value: selectedBrand,
+                                label: brands.find(brand => brand.id === selectedBrand)?.name || ''
+                            } : null}
+                            onChange={(selectedOption) => {
+                                if (selectedOption !== null) {
+                                    setSelectedBrand(parseInt(selectedOption.value as string, 10)); // Преобразуем значение к числу
+                                }
+                            }}
+                            isOpen={selectsOpen.brand}
+                            onMenuOpen={() => setSelectsOpen(prevState => ({...prevState, brand: true}))}
+                            onMenuClose={() => setSelectsOpen(prevState => ({...prevState, brand: false}))}
+                            placeholder="Бренд"
+                        />
 
-                        {/* Поле выбора сокета */}
-                        <div className="mb-4 mr-4">
-                            <label htmlFor="soket" className="mr-2">Сокет:</label>
-                            <Select
-                                id="soket"
-                                options={sokets.map(soket => ({value: soket.id, label: soket.name}))}
-                                value={selectedSoket ? {
-                                    value: selectedSoket,
-                                    label: sokets.find(soket => soket.id === selectedSoket)?.name
-                                } : null}
-                                onChange={(selectedOption) => {
-                                    if (selectedOption !== null) {
-                                        setSelectedSoket(selectedOption.value);
-                                    }
-                                }}
-                                menuIsOpen={selectsOpen.soket}
-                                onMenuOpen={() => setSelectsOpen(prevState => ({ ...prevState, soket: true }))}
-                                onMenuClose={() => setSelectsOpen(prevState => ({ ...prevState, soket: false }))}
-                                placeholder="Выберите или введите"
-                                className="w-full"
-                            />
-                        </div>
+                        <SelectFormSql
+                            id="soket"
+                            options={sokets.map(soket => ({
+                                value: soket.id,
+                                label: soket.name || ''
+                            }))}
+                            value={selectedSoket ? {
+                                value: selectedSoket,
+                                label: sokets.find(soket => soket.id === selectedSoket)?.name || ''
+                            } : null}
+                            onChange={(selectedOption) => {
+                                if (selectedOption !== null) {
+                                    setSelectedSoket(parseInt(selectedOption.value as string, 10)); // Преобразуем значение к числу
+                                }
+                            }}
+                            isOpen={selectsOpen.soket}
+                            onMenuOpen={() => setSelectsOpen(prevState => ({...prevState, soket: true}))}
+                            onMenuClose={() => setSelectsOpen(prevState => ({...prevState, soket: false}))}
+                            placeholder="Сокет"
+                        />
 
-                        {/* Поле выбора чипсета*/}
-                        <div className="mb-4 mr-4">
-                            <label htmlFor="chipset" className="mr-2">Чипсет:</label>
-                            <Select
-                                id="chipset"
-                                options={chipsets.map(chipset => ({value: chipset.id, label: chipset.name}))}
-                                value={selectedChipset ? {
-                                    value: selectedChipset,
-                                    label: chipsets.find(chipset => chipset.id === selectedChipset)?.name
-                                } : null}
-                                onChange={(selectedOption) => {
-                                    if (selectedOption !== null) {
-                                        setSelectedChipset(selectedOption.value);
-                                    }
-                                }}
-                                menuIsOpen={selectsOpen.chipset}
-                                onMenuOpen={() => setSelectsOpen(prevState => ({ ...prevState, chipset: true }))}
-                                onMenuClose={() => setSelectsOpen(prevState => ({ ...prevState, chipset: false }))}
-                                placeholder="Выберите или введите"
-                                className="w-full"
-                            />
-                        </div>
+
+                        <SelectFormSql
+                            id="chipset"
+                            options={chipsets.map(chipset => ({
+                                value: chipset.id,
+                                label: chipset.name || ''
+                            }))}
+                            value={selectedChipset ? {
+                                value: selectedChipset,
+                                label: chipsets.find(chipset => chipset.id === selectedChipset)?.name || ''
+                            } : null}
+                            onChange={(selectedOption) => {
+                                if (selectedOption !== null) {
+                                    setSelectedChipset(parseInt(selectedOption.value as string, 10)); // Преобразуем значение к числу
+                                }
+                            }}
+                            isOpen={selectsOpen.chipset}
+                            onMenuOpen={() => setSelectsOpen(prevState => ({...prevState, chipset: true}))}
+                            onMenuClose={() => setSelectsOpen(prevState => ({...prevState, chipset: false}))}
+                            placeholder="Чипсет"
+                        />
 
                         {/* Поле выбора типа памяти */}
-                        <div className="mb-4 mr-4">
-                            <label htmlFor="memory" className="mr-2">Тип памяти:</label>
-                            <Select
-                                id="memory"
-                                options={typeOfMemoryOptions}
-                                value={getTypeOfMemoryOptions()}
-                                onChange={(selectedOption) => {
-                                    if (selectedOption !== null) {
-                                        setSelectedTypeOfMemory(selectedOption.value);
-                                    }
-                                }}
-                                placeholder="Выберите"
-                                className="w-full"
-                            />
-                        </div>
+                        <SelectValueString
+                            id="memory"
+                            options={typeOfMemoryOptions}
+                            value={getTypeOfMemoryOptions() ?? null}
+                            onChange={(selectedOption) => {
+                                if (selectedOption !== null) {
+                                    setSelectedTypeOfMemory(selectedOption.value);
+                                }
+                            }}
+                            placeholder="Выберите"
+                            className="w-full"
+                        />
 
                         {/* Поле выбора версии PCI */}
-                        <div className="mb-4 mr-4">
-                            <label htmlFor="pci" className="mr-2">Версия PCI:</label>
-                            <Select
-                                id="pci"
-                                options={pciOptions}
-                                value={getPciOptions()}
-                                onChange={(selectedOption) => {
-                                    if (selectedOption !== null) {
-                                        setSelectedPci(selectedOption.value);
-                                    }
-                                }}
-                                placeholder="Выберите"
-                                className="w-full"
-                            />
-                        </div>
+                        <SelectValueNumber
+                            id="pci"
+                            options={pciOptions}
+                            value={getPciOptions()?? null}
+                            onChange={(selectedOption) => {
+                                if (selectedOption !== null) {
+                                    setSelectedPci(selectedOption.value);
+                                }
+                            }}
+                            placeholder="Выберите"
+                            className="w-full"
+                        />
 
                         {/* Поле выбора кол-во M2 */}
-                        <div className="mb-4 mr-4">
-                            <label htmlFor="m2" className="mr-2">Кол-во M2:</label>
-                            <Select
-                                id="m2"
-                                options={amountOfM2Options}
-                                value={getAmountOfM2()}
-                                onChange={(selectedOption) => {
-                                    if (selectedOption !== null) {
-                                        setSelectedAmountOfM2(selectedOption.value);
-                                    }
-                                }}
-                                placeholder="Выберите"
-                                className="w-full"
-                            />
-                        </div>
+                        <SelectValueNumber
+                            id="m2"
+                            options={amountOfM2Options}
+                            value={getAmountOfM2()?? null}
+                            onChange={(selectedOption) => {
+                                if (selectedOption !== null) {
+                                    setSelectedAmountOfM2(selectedOption.value);
+                                }
+                            }}
+                            placeholder="Выберите"
+                            className="w-full"
+                        />
 
-                        <div className="mb-4">
-                            <label htmlFor="url" className="mr-2">URL:</label>
-                            <input
-                                id="url"
-                                type="text"
-                                value={inputedUrl || ''}
-                                onChange={handleUrlInputChange}
-                                placeholder="Введите URL"
-                                className="border rounded px-2 py-1"
-                            />
-                        </div>
-
+                        <UrlInput value={inputedUrl} onChange={handleUrlInputChange}/>
                     </div>
 
 
-                    {error && <ErrorMessage error={error} />} {/* Используем компонент ErrorMessage для вывода ошибки */}
+                    {error && <ErrorMessage error={error}/>} {/* Используем компонент ErrorMessage для вывода ошибки */}
                     <button
                         className="border rounded px-6 py-1 bg-sky-600 hover:bg-sky-700 transition-colors"
                         onClick={handleSaveNewMotherBoard}
