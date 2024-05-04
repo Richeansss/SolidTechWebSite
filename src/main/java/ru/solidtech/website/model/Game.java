@@ -1,10 +1,9 @@
 package ru.solidtech.website.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
+
+import java.util.List;
 
 @Data
 @Entity
@@ -13,4 +12,7 @@ public class Game {
     @GeneratedValue (strategy = GenerationType.IDENTITY)
     private long id;
     private String name;
+
+    @ManyToMany(mappedBy = "games")
+    private List<FPSBuild> fpsBuilds;
 }
