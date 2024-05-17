@@ -1,11 +1,9 @@
 import React, { useEffect, useState  } from "react";
-import Select  from 'react-select';
 import axios from "axios";
 import { IBrand } from "../data/models";
 import IdNameTable from "./Table/IdNameTable";
 
 export function Brand() {
-    const [selectedBrand, setSelectedBrand] = useState<string | null>(null);
     const [newBrandName, setNewBrandName] = useState<string>('');
     const [isAddingBrand, setIsAddingBrand] = useState<boolean>(false);
     const [error, setError] = useState<string>('');

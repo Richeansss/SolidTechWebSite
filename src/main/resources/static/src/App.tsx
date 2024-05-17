@@ -4,6 +4,9 @@ import {MotherBoard} from "./components/MotherBoard";
 import {Soket} from "./components/Soket";
 import {Chipset} from "./components/Chipset";
 import {Game} from "./components/Game";
+import {FPSBuild} from "./components/FPSBuild";
+import {GameFPSCount} from "./components/GameFPSCount";
+import {Processor} from "./components/Processor";
 
 
 
@@ -22,6 +25,9 @@ function App() {
                     <Chipset />
                 </div>
                 <Game />
+                <FPSBuild />
+                <GameFPSCount />
+                <Processor />
             </div>
 
         </div>

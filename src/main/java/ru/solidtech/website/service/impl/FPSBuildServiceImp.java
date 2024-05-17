@@ -7,9 +7,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.solidtech.website.model.FPSBuild;
 import ru.solidtech.website.model.Game;
+import ru.solidtech.website.model.GameFPSCount;
 import ru.solidtech.website.repository.FPSBuildRepository;
+import ru.solidtech.website.repository.GameFPSCountRepository;
 import ru.solidtech.website.repository.GameRepository;
 import ru.solidtech.website.service.FPSBuildService;
+import ru.solidtech.website.dto.GameFPSCountRequestDTO;
 
 
 
@@ -21,6 +24,7 @@ import java.util.List;
 public class FPSBuildServiceImp implements FPSBuildService {
     private final FPSBuildRepository repository;
     private final GameRepository gameRepository;
+    private final GameFPSCountRepository gameFPSCountRepository;
 
 
     @Override
@@ -33,10 +37,6 @@ public class FPSBuildServiceImp implements FPSBuildService {
         return repository.save(fpsBuild);
     }
 
-    @Override
-    public FPSBuild findFPSBuildByName(String name) {
-        return repository.findFPSBuildByName(name);
-    }
 
     @Override
     public FPSBuild updateFPSBuild(FPSBuild fpsBuild) {
@@ -55,19 +55,23 @@ public class FPSBuildServiceImp implements FPSBuildService {
     }
 
     @Override
-    public void addGameToFPSBuild(Long fpsBuildId, Long gameId) {
-        FPSBuild fpsBuild = repository.findFPSBuildById(fpsBuildId);
-        Game game = gameRepository.findGameById(gameId);
+    public GameFPSCount addGameToGameFPSCountsById(Long fpsBuildId, Long gameId, int fpsCount) {
+        // Получение FPSBuild из базы данных по его идентификатору
+        FPSBuild fpsBuild = repository.findById(fpsBuildId)
+                .orElseThrow(() -> new EntityNotFoundException("FPSBuild not found with id: " + fpsBuildId));
 
-        if (fpsBuild != null && game != null) {
-            List<Game> games = fpsBuild.getGames();
-            games.add(game);
-            fpsBuild.setGames(games);
+        // Получение Game из базы данных по его идентификатору
+        Game game = gameRepository.findById(gameId)
+                .orElseThrow(() -> new EntityNotFoundException("Game not found with id: " + gameId));
 
-            repository.save(fpsBuild);
-        } else {
-            throw new EntityNotFoundException("FPSBuild or Game not found");
-        }
+        // Создание новой записи GameFPSCount
+        GameFPSCount gameFPSCount = new GameFPSCount();
+        gameFPSCount.setFpsCount(fpsCount);
+        gameFPSCount.setGame(game);
+        gameFPSCount.setFpsBuild(fpsBuild);
+
+        // Сохранение записи GameFPSCount в базу данных
+        return gameFPSCountRepository.save(gameFPSCount);
     }
 
 }

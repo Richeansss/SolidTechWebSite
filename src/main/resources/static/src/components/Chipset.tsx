@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from "react";
-import Select from 'react-select';
 import axios from "axios";
 import { IChipset } from "../data/models";
 import IdNameTable from "./Table/IdNameTable";
 
 export function Chipset() {
-    const [selectedChipset, setSelectedChipset] = useState<string | null>(null);
     const [newChipsetName, setNewChipsetName] = useState<string>('');
     const [isAddingChipset, setIsAddingChipset] = useState<boolean>(false);
     const [error, setError] = useState<string>('');

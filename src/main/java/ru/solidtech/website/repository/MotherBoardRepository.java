@@ -7,6 +7,5 @@ import ru.solidtech.website.model.MotherBoard;
 public interface MotherBoardRepository extends JpaRepository<MotherBoard, Long> {
     void deleteById(Long id);
     MotherBoard findMotherBoardByBrandId(Long brand_id);
-
     MotherBoard findMotherBoardByName(String name);
 }

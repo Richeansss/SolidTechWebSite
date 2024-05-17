@@ -1,8 +1,7 @@
 import React, {useCallback, useEffect, useState} from "react";
 import axios, {AxiosError} from "axios";
-import {IBrand, IMotherBoard, ISoket} from "../data/models";
+import {IBrand, IProcessor, ISoket} from "../data/models";
 import Select from "react-select";
-import MotherboardsTable from "./Table/MotherBoardTable";
 import ErrorMessage from "./subcomponents/ErrorMessage";
 import UrlInput from "./subcomponents/UrlImput";
 import SelectFormSql from "./subcomponents/SelectFromSql";
@@ -10,34 +9,32 @@ import SelectValueString from "./subcomponents/SelectValueString";
 import SelectValueNumber from "./subcomponents/SelectValueNumber";
 
 
-export function MotherBoard() {
-    const [selectedMotherBoard, setSelectedMotherBoard] = useState<string | null>(null);
-    const [isAddingMotherBoard, setIsAddingMotherBoard] = useState<boolean>(false);
+export function Processor() {
+    const [selectedProcessor, setSelectedProcessor] = useState<string | null>(null);
+    const [isAddingProcessor, setIsAddingProcessor] = useState<boolean>(false);
     const [error, setError] = useState<string>('');
 
     const [selectedBrand, setSelectedBrand] = useState<number | null>(null);
-    const [inputMotherBoardName, setInputMotherBoardName] = useState<string>('');
     const [selectedSoket, setSelectedSoket] = useState<number | null>(null);
-    const [selectedChipset, setSelectedChipset] = useState<number | null>(null);
-    const [selectedTypeOfMemory, setSelectedTypeOfMemory] = useState<string | null>(null);
-    const [selectedPci, setSelectedPci] = useState<number | null>(null);
-    const [selectedAmountOfM2, setSelectedAmountOfM2] = useState<number | null>(null);
-    const [inputedUrl, setInputedUrl] = useState<string>('');
 
+    const [inputProcessorName, setInputProcessorName] = useState<string>('');
     const [inputValue, setInputValue] = useState<string>('');
+
+    const [selectedTypeOfMemory, setSelectedTypeOfMemory] = useState<string | null>(null);
+    const [selectedCore, setSelectedCore] = useState<number | null>(null);
+    const [selectedThreads, setSelectedThreads] = useState<number | null>(null);
+    const [selectedTurboBust, setSelectedTurboBust] = useState<number | null>(null);
+
+    const [inputedUrl, setInputedUrl] = useState<string>('');
 
     const [brands, setBrands] = useState<IBrand[]>([]);
     const [sokets, setSoket] = useState<ISoket[]>([]);
-    const [chipsets, setChipset] = useState<ISoket[]>([]);
-    const [motherboards, setMotherBoards] = useState<IMotherBoard[]>([]);
+    const [processors, setProcessors] = useState<IProcessor[]>([]);
 
-    // Состояния для отслеживания открытия каждого селекта
     const [selectsOpen, setSelectsOpen] = useState({
         brand: false,
         soket: false,
-        chipset: false
     });
-
 
     const handleRequestError = useCallback((error: AxiosError) => {
         if (error.response) {
@@ -61,8 +58,8 @@ export function MotherBoard() {
 
     const fetchData = useCallback(async () => {
         try {
-            const response = await axios.get('http://localhost:8080/api/v1/motherboard');
-            setMotherBoards(response.data);
+            const response = await axios.get('http://localhost:8080/api/v1/processor');
+            setProcessors(response.data);
         } catch (error: any) {
             handleRequestError(error);
         }
@@ -86,14 +83,6 @@ export function MotherBoard() {
         }
     }, [handleRequestError]);
 
-    const fetchChipset = useCallback(async () => {
-        try {
-            const response = await axios.get('http://localhost:8080/api/v1/chipset');
-            setChipset(response.data);
-        } catch (error: any) {
-            handleRequestError(error);
-        }
-    }, [handleRequestError]);
 
     useEffect(() => {
         if (selectsOpen.brand) {
@@ -107,149 +96,159 @@ export function MotherBoard() {
         }
     }, [selectsOpen.soket, fetchSoket]);
 
-    useEffect(() => {
-        if (selectsOpen.chipset) {
-            fetchChipset();
-        }
-    }, [selectsOpen.chipset, fetchChipset]);
-
 
     useEffect(() => {
         fetchData();
         fetchBrands();
         fetchSoket();
-        fetchChipset();
     }, []);
 
     const handleUrlInputChange = (value: string) => {
         setInputedUrl(value);
     };
 
-    const handleMotherBoardChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        setSelectedMotherBoard(event.target.value);
+    const handleProcessorChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        setSelectedProcessor(event.target.value);
     };
 
     const clearError = () => {
         setError('');
     };
 
-    const handleAddMotherBoardClick = () => {
-        setIsAddingMotherBoard(prevState => !prevState);
+    const handleAddProcessorClick = () => {
+        setIsAddingProcessor(prevState => !prevState);
     };
 
-    const handleSaveNewMotherBoard = async () => {
+    const handleSaveNewProcessor = async () => {
         try {
-            if (!inputMotherBoardName.trim()) {
-                setError('Ошибка: пустое поле названия материнской платы');
+            // Проверка наличия обязательных полей
+            if (!selectedBrand || !selectedSoket || !selectedTypeOfMemory || !selectedCore || !selectedThreads || !inputedUrl) {
+                setError('Ошибка: заполните все обязательные поля');
                 return;
             }
 
-            const response = await axios.post(`http://localhost:8080/api/v1/motherboard/save_motherboard?brand_id=${selectedBrand}&soket_id=${selectedSoket}&chipset_id=${selectedChipset}`, {
-                name: inputMotherBoardName,
-                type_of_memory: selectedTypeOfMemory,
-                pci: selectedPci,
-                amount_of_mem: selectedAmountOfM2,
-                url: inputedUrl
+            const url = `http://localhost:8080/api/v1/processor/save_processor`;
+            const params = new URLSearchParams({
+                brand_id: String(selectedBrand),
+                soket_id: String(selectedSoket),
             });
 
+            const processorData = {
+                name: inputProcessorName, // Предполагается, что у вас есть поле для ввода имени процессора
+                type_of_memory: selectedTypeOfMemory,
+                core: selectedCore,
+                threads: selectedThreads,
+                turbo_bust: selectedTurboBust,
+                url: inputedUrl
+            };
+
+            const response = await axios.post(`${url}?${params}`, processorData);
+
             fetchData();
-            console.log('New motherboard added:', response.data);
+            console.log('New processor added:', response.data);
             clearError();
             // Сбрасываем выбранные опции Select на null
             setSelectedBrand(null);
-            setInputMotherBoardName('');
             setSelectedSoket(null);
-            setSelectedChipset(null);
             setSelectedTypeOfMemory(null);
-            setSelectedPci(null);
-            setSelectedAmountOfM2(null);
+            setSelectedCore(null);
+            setSelectedThreads(null);
+            setSelectedTurboBust(null);
             setInputedUrl('');
         } catch (error) {
-            console.error('Error adding new motherboard:', error);
-            setError('Ошибка при добавлении новой материнской платы. Пожалуйста, повторите попытку позже.');
+            console.error('Error adding new processor:', error);
+            setError('Ошибка при добавлении нового процессора. Пожалуйста, повторите попытку позже.');
         }
     };
 
+
     const typeOfMemoryOptions = [
-        { value: 'ddr3', label: 'DDR3' },
-        { value: 'ddr4', label: 'DDR4' },
-        { value: 'ddr5', label: 'DDR5' }
+        {value: 'ddr3', label: 'DDR3'},
+        {value: 'ddr4', label: 'DDR4'},
+        {value: 'ddr5', label: 'DDR5'}
     ];
 
-    const pciOptions = [
-        { value: 3, label: '3.0' },
-        { value: 4, label: '4.0' },
-        { value: 5, label: '5.0' }
-    ];
+    const coreOptions: { value: number, label: string }[] = [];
+    for (let i = 1; i <= 24; i++) {
+        coreOptions.push({ value: i, label: `${i}` });
+    }
 
-    const amountOfM2Options = [
-        { value: 1, label: '1' },
-        { value: 2, label: '2' },
-        { value: 3, label: '3' },
-        { value: 4, label: '4' },
-        { value: 5, label: '5' }
-    ];
+    const threadsOptions: { value: number, label: string }[] = [];
+    for (let i = 1; i <= 48; i++) {
+        threadsOptions.push({ value: i, label: `${i}` });
+    }
+
+    const turboBustOptions: { value: number, label: string }[] = [];
+    for (let i = 1; i <= 70; i++) {
+        turboBustOptions.push({ value: i / 10, label: `${i / 10}` });
+    }
 
     const getTypeOfMemoryOptions = () => {
         return selectedTypeOfMemory ? typeOfMemoryOptions.find(c => c.value === selectedTypeOfMemory) : null;
     }
 
-    const getPciOptions = () => {
-        return selectedPci ? pciOptions.find(c => c.value === selectedPci) : null;
+    const getCoreOptions = () => {
+        return selectedCore ? coreOptions.find(c => c.value === selectedCore) : null;
     };
 
-    const getAmountOfM2 = () => {
-        return selectedAmountOfM2 ? amountOfM2Options.find(c => c.value === selectedAmountOfM2) : null;
+    const getThreadsOptions = () => {
+        return selectedThreads ? threadsOptions.find(c => c.value === selectedThreads) : null;
+    }
+
+    const getTurboBustOptions = () => {
+        return selectedTurboBust ? turboBustOptions.find(c => c.value === selectedTurboBust) : null;
     }
 
     return (
         <div className="border p-4 rounded flex flex-col items-center mb-2">
-            <select value={selectedMotherBoard || ''} onChange={handleMotherBoardChange}
+            <select value={selectedProcessor || ''} onChange={handleProcessorChange}
                     className="border rounded px-2 py-1 mb-2">
-                <option value="">Выберите материнскую плату</option>
-                {motherboards.map(mb => (
+                <option value="">Выберите процессор</option>
+                {processors.map(mb => (
                     <option key={mb.id} value={mb.name}>{mb.name}</option>
                 ))}
             </select>
-            {selectedMotherBoard && <p className="mb-2">Выбранная материнская плата: {selectedMotherBoard}</p>}
+            {selectedProcessor && <p className="mb-2">Выбранный процессор: {selectedProcessor}</p>}
 
             <button
-                className={`border rounded px-6 py-1 ${isAddingMotherBoard ? "bg-red-500 hover:bg-red-600" : "bg-lime-500 hover:bg-lime-600"} transition-colors`}
-                onClick={handleAddMotherBoardClick}
+                className={`border rounded px-6 py-1 ${isAddingProcessor ? "bg-red-500 hover:bg-red-600" : "bg-lime-500 hover:bg-lime-600"} transition-colors`}
+                onClick={handleAddProcessorClick}
             >
-                Добавить новую материнскую плату
+                Добавить новый процессор
             </button>
 
 
-            {isAddingMotherBoard && (
+            {isAddingProcessor && (
                 <div className="border flex flex-col items-center p-4 mt-2">
-                    <MotherboardsTable motherboards={motherboards} />
 
                     <div className="flex flex-wrap justify-center items-center">
 
                         {/* Поле выбора материнской платы */}
                         <div className="mb-4 mr-4">
-                            <label htmlFor="motherboard" className="mr-2">Материнская плата:</label>
+                            <label htmlFor="processor" className="mr-2">Процессор: </label>
                             <Select
-                                id="motherboard"
-                                options={motherboards.map(board => ({value: board.name, label: board.name}))}
-                                value={inputMotherBoardName ? {
-                                    value: inputMotherBoardName,
-                                    label: inputMotherBoardName
+                                id="processor"
+                                options={processors.map(processor => ({
+                                    value: processor.name,
+                                    label: processor.name
+                                }))}
+                                value={inputProcessorName ? {
+                                    value: inputProcessorName,
+                                    label: inputProcessorName
                                 } : null}
                                 inputValue={inputValue}
                                 onInputChange={(newValue) => setInputValue(newValue)}
                                 onChange={(selectedOption) => {
                                     if (selectedOption !== null) {
-                                        setInputMotherBoardName(selectedOption.value);
+                                        setInputProcessorName(selectedOption.value);
                                     } else {
-                                        setInputMotherBoardName('');
+                                        setInputProcessorName('');
                                     }
                                     setInputValue('');
                                 }}
                                 onBlur={() => {
                                     if (inputValue !== "") {
-                                        setInputMotherBoardName(inputValue);
+                                        setInputProcessorName(inputValue);
                                     }
                                     setInputValue('');
                                 }}
@@ -258,7 +257,7 @@ export function MotherBoard() {
                             />
                         </div>
 
-                            {/* Поле выбора бренда */}
+                        {/* Поле выбора бренда */}
                         <SelectFormSql
                             id="brand"
                             options={brands.map(brand => ({
@@ -302,27 +301,6 @@ export function MotherBoard() {
                         />
 
 
-                        <SelectFormSql
-                            id="chipset"
-                            options={chipsets.map(chipset => ({
-                                value: chipset.id,
-                                label: chipset.name || ''
-                            }))}
-                            value={selectedChipset ? {
-                                value: selectedChipset,
-                                label: chipsets.find(chipset => chipset.id === selectedChipset)?.name || ''
-                            } : null}
-                            onChange={(selectedOption) => {
-                                if (selectedOption !== null) {
-                                    setSelectedChipset(parseInt(selectedOption.value as string, 10)); // Преобразуем значение к числу
-                                }
-                            }}
-                            isOpen={selectsOpen.chipset}
-                            onMenuOpen={() => setSelectsOpen(prevState => ({...prevState, chipset: true}))}
-                            onMenuClose={() => setSelectsOpen(prevState => ({...prevState, chipset: false}))}
-                            placeholder="Чипсет"
-                        />
-
                         {/* Поле выбора типа памяти */}
                         <SelectValueString
                             id="memory"
@@ -337,33 +315,48 @@ export function MotherBoard() {
                             className="w-full"
                         />
 
-                        {/* Поле выбора версии PCI */}
+                        {/* Поле выбора кол-во Core */}
                         <SelectValueNumber
-                            id="pci"
-                            options={pciOptions}
-                            value={getPciOptions()?? null}
+                            id="core"
+                            options={coreOptions}
+                            value={getCoreOptions() ?? null}
                             onChange={(selectedOption) => {
                                 if (selectedOption !== null) {
-                                    setSelectedPci(selectedOption.value);
+                                    setSelectedCore(selectedOption.value);
                                 }
                             }}
                             placeholder="Выберите"
-                            labelText="Версия PCI"
+                            labelText="Кол-во ядер"
                             className="w-full"
                         />
 
-                        {/* Поле выбора кол-во M2 */}
+                        {/* Поле выбора кол-во Threads*/}
                         <SelectValueNumber
                             id="m2"
-                            options={amountOfM2Options}
-                            value={getAmountOfM2()?? null}
+                            options={threadsOptions}
+                            value={getThreadsOptions() ?? null}
                             onChange={(selectedOption) => {
                                 if (selectedOption !== null) {
-                                    setSelectedAmountOfM2(selectedOption.value);
+                                    setSelectedThreads(selectedOption.value);
                                 }
                             }}
                             placeholder="Выберите"
-                            labelText="Кол-во M2"
+                            labelText="Кол-во потоков"
+                            className="w-full"
+                        />
+
+                        {/* Поле выбора кол-во TurboBust*/}
+                        <SelectValueNumber
+                            id="turboBust"
+                            options={turboBustOptions}
+                            value={getTurboBustOptions() ?? null}
+                            onChange={(selectedOption) => {
+                                if (selectedOption !== null) {
+                                    setSelectedTurboBust(selectedOption.value);
+                                }
+                            }}
+                            placeholder="Выберите"
+                            labelText="Частота в турбобусте"
                             className="w-full"
                         />
 
@@ -371,10 +364,11 @@ export function MotherBoard() {
                     </div>
 
 
-                    {error && <ErrorMessage error={error}/>} {/* Используем компонент ErrorMessage для вывода ошибки */}
+                    {error &&
+                        <ErrorMessage error={error}/>} {/* Используем компонент ErrorMessage для вывода ошибки */}
                     <button
                         className="border rounded px-6 py-1 bg-sky-600 hover:bg-sky-700 transition-colors"
-                        onClick={handleSaveNewMotherBoard}
+                        onClick={handleSaveNewProcessor}
                     >
                         Сохранить
                     </button>

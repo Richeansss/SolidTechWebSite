@@ -1,13 +1,14 @@
 package ru.solidtech.website.controller;
 
+import error.ErrorResponse;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.solidtech.website.model.FPSBuild;
-import ru.solidtech.website.model.Game;
-import ru.solidtech.website.repository.FPSBuildRepository;
-import ru.solidtech.website.repository.GameRepository;
+import ru.solidtech.website.model.GameFPSCount;
 import ru.solidtech.website.service.FPSBuildService;
-import ru.solidtech.website.service.GameService;
 
 import java.util.List;
 
@@ -18,28 +19,31 @@ import java.util.List;
 public class FPSBuildController {
 
     private final FPSBuildService fpsBuildService;
-    private final GameService gameService;
 
     @GetMapping
     public List<FPSBuild> getAllFPSBuild() {
         return fpsBuildService.findAllFPSBuild();
     }
 
-    @PostMapping("/{fpsBuildId}/addGame/{gameId}")
-    public String addGameToFPSBuild(@PathVariable Long fpsBuildId, @PathVariable Long gameId) {
-        fpsBuildService.addGameToFPSBuild(fpsBuildId, gameId);
-        return "Game successfully added to FPSBuild";
+
+    @PostMapping("/{fpsBuildId}/games/{gameId}")
+    public ResponseEntity<?> addGameToGameFPSCountsById(@PathVariable Long fpsBuildId, @PathVariable Long gameId, @RequestParam int fpsCount) {
+        try {
+            GameFPSCount gameFPSCount = fpsBuildService.addGameToGameFPSCountsById(fpsBuildId, gameId, fpsCount);
+            return ResponseEntity.ok(gameFPSCount);
+        } catch (EntityNotFoundException e) {
+            ErrorResponse errorResponse = new ErrorResponse("Entity Not Found", e.getMessage(), HttpStatus.NOT_FOUND.value());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+        } catch (Exception e) {
+            ErrorResponse errorResponse = new ErrorResponse("Internal Server Error", e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        }
     }
 
     @PostMapping("save_fpsBuild")
-    public String saveBrand(@RequestBody FPSBuild fpsBuild) {
+    public String saveFPSBuild(@RequestBody FPSBuild fpsBuild) {
         fpsBuildService.saveFPSBuild(fpsBuild);
         return "FPSBuild successfully saved";
-    }
-
-    @GetMapping("/{name}")
-    public FPSBuild findBrandByName(@PathVariable String name) {
-        return fpsBuildService.findFPSBuildByName(name);
     }
 
     @PutMapping("update_fpsBuild")

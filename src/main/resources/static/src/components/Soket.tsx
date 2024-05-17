@@ -4,7 +4,6 @@ import { ISoket } from "../data/models";
 import IdNameTable from "./Table/IdNameTable";
 
 export function Soket() {
-    const [selectedSoket, setSelectedSoket] = useState<string | null>(null);
     const [newSoketName, setNewSoketName] = useState<string>('');
     const [isAddingSoket, setIsAddingSoket] = useState<boolean>(false);
     const [error, setError] = useState<string>('');

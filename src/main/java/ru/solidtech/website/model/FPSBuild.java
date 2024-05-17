@@ -11,11 +11,6 @@ public class FPSBuild {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @ManyToMany
-    @JoinTable(
-            name = "fpsbuild_game",
-            joinColumns = @JoinColumn(name = "fpsbuild_id"),
-            inverseJoinColumns = @JoinColumn(name = "game_id")
-    )
-    private List<Game> games;
+    @OneToMany(mappedBy = "fpsBuild", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<GameFPSCount> gameFPSCounts;
 }

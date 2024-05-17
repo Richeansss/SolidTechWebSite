@@ -7,6 +7,7 @@ interface SelectValueNumberProps {
     value: { value: number; label: string } | null;
     onChange: (selectedOption: { value: number; label: string } | null) => void; // Исправлено на тип number
     placeholder: string;
+    labelText: string; // Добавлено новое свойство для передачи пользовательской метки
     className?: string;
 }
 
@@ -16,11 +17,12 @@ const SelectValueNumber: React.FC<SelectValueNumberProps> = ({
                                                                  value,
                                                                  onChange,
                                                                  placeholder,
+                                                                 labelText,
                                                                  className
                                                              }) => {
     return (
         <div className={`mb-4 mr-4`}>
-            <label htmlFor={id} className="mr-2">Тип памяти:</label>
+            <label htmlFor={id} className="mr-2">{labelText}:</label> {/* Используем переданное пользовательское название */}
             <Select
                 id={id}
                 options={options}

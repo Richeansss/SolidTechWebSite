@@ -4,7 +4,9 @@ import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.solidtech.website.model.FPSBuild;
 import ru.solidtech.website.model.Game;
+import ru.solidtech.website.model.GameFPSCount;
 import ru.solidtech.website.repository.GameRepository;
 import ru.solidtech.website.service.GameService;
 
@@ -26,8 +28,6 @@ public class GameServiceImp implements GameService {
         return repository.save(game);
     }
 
-
-
     @Override
     public Game findGameByName(String name) {
         return repository.findGameByName(name);
@@ -48,5 +48,6 @@ public class GameServiceImp implements GameService {
     public Game findGameById(Long id) {
         return repository.findGameById(id);
     }
+
 
 }

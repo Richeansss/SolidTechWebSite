@@ -23,6 +23,30 @@ export interface IGame {
     name: string;
 }
 
+export interface IFPSBuild {
+    id: number;
+    gameFPSCounts: IGameFPSCount[];
+}
+
+export interface IGameFPSCount {
+    id: number;
+    fpsBuild: IFPSBuild;
+    game: IGame;
+    fpsCount: number;
+}
+
+export interface IProcessor {
+    id: number;
+    name: string;
+    brand: IBrand;
+    soket: ISoket;
+    type_of_memory: string;
+    core: number;
+    threads: number;
+    turbo_bust:number;
+    url:string
+}
+
 export interface IMotherBoard {
     id: number;
     name: string;
