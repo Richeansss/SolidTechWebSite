@@ -36,6 +36,8 @@ export function Processor() {
         soket: false,
     });
 
+    // todo Порешать что-то с дублированием кода
+
     const handleRequestError = useCallback((error: AxiosError) => {
         if (error.response) {
             const status = error.response.status;
@@ -200,6 +202,7 @@ export function Processor() {
     }
 
     return (
+        // todo Добавть табилцу
         <div className="border p-4 rounded flex flex-col items-center mb-2">
             <select value={selectedProcessor || ''} onChange={handleProcessorChange}
                     className="border rounded px-2 py-1 mb-2">
