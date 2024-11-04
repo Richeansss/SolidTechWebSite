@@ -1,58 +1,73 @@
 package ru.solidtech.website.controller;
 
-import error.ErrorResponse;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.solidtech.website.dto.GameFPSCountDTO; // Импортируйте DTO
 import ru.solidtech.website.model.FPSBuild;
-import ru.solidtech.website.model.GameFPSCount;
+import ru.solidtech.website.response.ResponseBuilder;
 import ru.solidtech.website.service.FPSBuildService;
 
 import java.util.List;
-
+import java.util.Map;
 
 @RestController
-@RequestMapping("/api/v1/fpsBuild")
+@RequestMapping("/api/v1/fpsbuild")
 @AllArgsConstructor
 public class FPSBuildController {
-
+    private static final Logger logger = LoggerFactory.getLogger(FPSBuildController.class);
     private final FPSBuildService fpsBuildService;
 
-    @GetMapping
-    public List<FPSBuild> getAllFPSBuild() {
-        return fpsBuildService.findAllFPSBuild();
-    }
-
-
-    @PostMapping("/{fpsBuildId}/games/{gameId}")
-    public ResponseEntity<?> addGameToGameFPSCountsById(@PathVariable Long fpsBuildId, @PathVariable Long gameId, @RequestParam int fpsCount) {
+    @PostMapping
+    public ResponseEntity<Map<String, Object>> createFPSBuild(@RequestBody List<GameFPSCountDTO> gameFPSCountDTOs) { // Изменено на DTO
         try {
-            GameFPSCount gameFPSCount = fpsBuildService.addGameToGameFPSCountsById(fpsBuildId, gameId, fpsCount);
-            return ResponseEntity.ok(gameFPSCount);
-        } catch (EntityNotFoundException e) {
-            ErrorResponse errorResponse = new ErrorResponse("Entity Not Found", e.getMessage(), HttpStatus.NOT_FOUND.value());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+            FPSBuild fpsBuild = fpsBuildService.createFPSBuild(gameFPSCountDTOs); // Передаем DTO в сервис
+            return ResponseBuilder.buildResponse(HttpStatus.CREATED, "FPSBuild успешно создан", fpsBuild);
         } catch (Exception e) {
-            ErrorResponse errorResponse = new ErrorResponse("Internal Server Error", e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+            logger.error("Ошибка при создании FPSBuild", e);
+            return ResponseBuilder.buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Не удалось создать FPSBuild");
         }
     }
 
-    @PostMapping("save_fpsBuild")
-    public String saveFPSBuild(@RequestBody FPSBuild fpsBuild) {
-        fpsBuildService.saveFPSBuild(fpsBuild);
-        return "FPSBuild successfully saved";
+    @GetMapping("/{id}")
+    public ResponseEntity<Map<String, Object>> getFPSBuildById(@PathVariable Long id) {
+        try {
+            FPSBuild fpsBuild = fpsBuildService.findFPSBuildById(id);
+            return ResponseBuilder.buildResponse(HttpStatus.OK, "FPSBuild найден", fpsBuild);
+        } catch (IllegalArgumentException e) {
+            logger.error("FPSBuild не найден с ID: {}", id, e);
+            return ResponseBuilder.buildErrorResponse(HttpStatus.NOT_FOUND, e.getMessage());
+        }
     }
 
-    @PutMapping("update_fpsBuild")
-    public FPSBuild updateFPSBuild(@RequestBody FPSBuild fpsBuild) {
-        return fpsBuildService.updateFPSBuild(fpsBuild);
+    @GetMapping
+    public ResponseEntity<Map<String, Object>> getAllFPSBuilds() {
+        List<FPSBuild> fpsBuilds = fpsBuildService.findAllFPSBuilds();
+        return ResponseBuilder.buildResponse(HttpStatus.OK, "FPSBuilds успешно получены", fpsBuilds);
     }
 
-    @DeleteMapping("delete_fpsBuild/{id}")
-    public void deleteFPSBuild(@PathVariable Long id) {
-        fpsBuildService.deleteFPSBuild(id);
+    @PutMapping
+    public ResponseEntity<Map<String, Object>> updateFPSBuild(@RequestBody FPSBuild fpsBuild) {
+        try {
+            FPSBuild updatedFPSBuild = fpsBuildService.updateFPSBuild(fpsBuild);
+            return ResponseBuilder.buildResponse(HttpStatus.OK, "FPSBuild обновлен", updatedFPSBuild);
+        } catch (IllegalArgumentException e) {
+            logger.error("Не удалось обновить FPSBuild с ID: {}", fpsBuild.getId(), e);
+            return ResponseBuilder.buildErrorResponse(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Map<String, Object>> deleteFPSBuild(@PathVariable Long id) {
+        try {
+            fpsBuildService.deleteFPSBuild(id);
+            return ResponseBuilder.buildResponse(HttpStatus.OK, "FPSBuild успешно удален", null);
+        } catch (IllegalArgumentException e) {
+            logger.error("Не удалось удалить FPSBuild с ID: {}", id, e);
+            return ResponseBuilder.buildErrorResponse(HttpStatus.NOT_FOUND, e.getMessage());
+        }
     }
 }
