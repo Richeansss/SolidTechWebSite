@@ -18,6 +18,6 @@ public class Cooler {
     private Brand brand;
 
     private Integer tdp;
-    private Integer connector;
+    private Integer fun_connector;
     private Long lightType;
 }
