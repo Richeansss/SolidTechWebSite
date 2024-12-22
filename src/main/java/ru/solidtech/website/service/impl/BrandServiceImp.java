@@ -47,4 +47,8 @@ public class BrandServiceImp implements BrandService {
         return repository.findBrandById(id);
     }
 
+    @Override
+    public List<Brand> searchBrandsByName(String name) {
+        return repository.findByNameContainingIgnoreCase(name);
+    }
 }

@@ -11,4 +11,5 @@ public interface BrandService {
     Brand updateBrand(Brand brand);
     void deleteBrand(Long id);
     Brand findBrandById(Long id);
+    List<Brand> searchBrandsByName(String name);
 }
