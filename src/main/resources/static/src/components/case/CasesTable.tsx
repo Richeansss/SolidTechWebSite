@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { DataGrid, GridColDef, GridRowsProp } from '@mui/x-data-grid';
-import { useGetCasesQuery } from '../../store/api/apiCase';
-
+import { DataGrid, GridColDef, GridRowsProp, GridActionsCellItem } from '@mui/x-data-grid';
+import { useGetCasesQuery, useDeleteCaseMutation } from '../../store/api/apiCase';
+import './CasesTable.css';  // Импортируем CSS
 
 const CasesTable = () => {
     const { data, isLoading, isError } = useGetCasesQuery(); // Fetch data using Redux Toolkit Query
     const [rows, setRows] = useState<GridRowsProp>([]);
+    const [deleteCase] = useDeleteCaseMutation(); // Хук для удаления записи
 
     useEffect(() => {
         if (data) {
@@ -36,18 +37,41 @@ const CasesTable = () => {
         { field: 'funConnector', headerName: 'Connector', width: 180 },
         { field: 'color', headerName: 'Color', width: 180 },
         { field: 'glassType', headerName: 'Glass Type', width: 180 },
+        {
+            field: 'actions',
+            headerName: 'Actions',
+            width: 120,
+            renderCell: (params) => (
+                <GridActionsCellItem
+                    icon={
+                        <button className="delete-button">Delete</button>  // Добавляем свой класс кнопки
+                    }
+                    label="Delete"
+                    onClick={() => handleDelete(params.row.id)}
+                />
+            ),
+        },
     ];
 
+    const handleDelete = async (id: number) => {
+        try {
+            await deleteCase(id); // Удаляем запись через API
+            setRows((prevRows) => prevRows.filter((row) => row.id !== id)); // Обновляем состояние таблицы
+        } catch (error) {
+            console.error('Error deleting case:', error);
+        }
+    };
+
     if (isLoading) {
-        return <div>Loading...</div>;
+        return <div className="loading">Loading...</div>;
     }
 
     if (isError) {
-        return <div>Error loading data</div>;
+        return <div className="error">Error loading data</div>;
     }
 
     return (
-        <div style={{ height: 400, width: '100%' }}>
+        <div className="table-container">
             <DataGrid
                 rows={rows}
                 columns={columns}

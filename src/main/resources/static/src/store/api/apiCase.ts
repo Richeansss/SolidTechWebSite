@@ -1,16 +1,9 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { Case } from '../../types/Case';
+import { ApiResponse } from '../../types/Response'; // Импортируем тип ApiResponse
 
-interface ApiResponse<T> {
-    response: {
-        code: number;
-        description: string;
-    };
-    data: T;
-}
-
-export const apiSlice = createApi({
-    reducerPath: 'api',
+export const apiCase = createApi({
+    reducerPath: 'apiCase',  // Уникальное имя для apiCase
     baseQuery: fetchBaseQuery({
         baseUrl: 'http://localhost:8080/api/v1/', // Убедитесь, что это соответствует вашему серверу
         prepareHeaders: (headers, { getState }) => {
@@ -27,12 +20,12 @@ export const apiSlice = createApi({
     endpoints: (builder) => ({
         getCases: builder.query<Case[], void>({
             query: () => 'case',
-            transformResponse: (response: ApiResponse<Case[]>) => response.data, // Преобразование данных
+            transformResponse: (response: ApiResponse<Case[]>) => response.data || [], // Обработка возможного null
             providesTags: ['Case'],
         }),
         getCaseById: builder.query<Case, number>({
             query: (id) => `case/${id}`,
-            transformResponse: (response: ApiResponse<Case>) => response.data,
+            transformResponse: (response: ApiResponse<Case>) => response.data as Case, // Убедитесь, что data не null
             providesTags: (result, error, id) => [{ type: 'Case', id }],
         }),
         createCase: builder.mutation<Case, Partial<Case>>({
@@ -41,7 +34,7 @@ export const apiSlice = createApi({
                 method: 'POST',
                 body: newCase,
             }),
-            transformResponse: (response: ApiResponse<Case>) => response.data,
+            transformResponse: (response: ApiResponse<Case>) => response.data as Case, // Убедитесь, что data не null
             invalidatesTags: ['Case'],
         }),
         updateCase: builder.mutation<Case, Case>({
@@ -50,7 +43,7 @@ export const apiSlice = createApi({
                 method: 'PUT',
                 body: updatedCase,
             }),
-            transformResponse: (response: ApiResponse<Case>) => response.data,
+            transformResponse: (response: ApiResponse<Case>) => response.data as Case,
             invalidatesTags: (result, error, { id }) => [{ type: 'Case', id }],
         }),
         deleteCase: builder.mutation<void, number>({
@@ -69,4 +62,4 @@ export const {
     useCreateCaseMutation,
     useUpdateCaseMutation,
     useDeleteCaseMutation,
-} = apiSlice;
+} = apiCase;

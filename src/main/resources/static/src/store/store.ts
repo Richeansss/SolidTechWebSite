@@ -1,12 +1,19 @@
-import { configureStore } from '@reduxjs/toolkit';
-import { apiSlice } from '../store/api/apiCase';
+import { combineReducers, configureStore } from '@reduxjs/toolkit';
+import { apiCase } from './api/apiCase';
+import { apiBrand } from './api/apiBrand';
+
+// Объединение редьюсеров
+const rootReducer = combineReducers({
+    [apiCase.reducerPath]: apiCase.reducer,
+    [apiBrand.reducerPath]: apiBrand.reducer,
+});
 
 export const store = configureStore({
-    reducer: {
-        [apiSlice.reducerPath]: apiSlice.reducer,
-    },
+    reducer: rootReducer,  // Используем rootReducer, который объединяет редьюсеры
     middleware: (getDefaultMiddleware) =>
-        getDefaultMiddleware().concat(apiSlice.middleware),
+        getDefaultMiddleware()
+            .concat(apiCase.middleware)  // Добавляем middleware для apiCase
+            .concat(apiBrand.middleware),  // Добавляем middleware для apiBrand
 });
 
 // Типы для Store
