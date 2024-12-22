@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useCreateCaseMutation } from '../../store/api/apiCase';
+import { useSearchBrandsByNameQuery } from '../../store/api/apiBrand';
 import { Case } from '../../types/Case';
 import './CreateCase.css'; // Подключение CSS
 
@@ -16,13 +17,31 @@ const AddCaseComponent: React.FC = () => {
     });
 
     const [createCase, { isLoading, isSuccess, isError, error }] = useCreateCaseMutation();
+    const [message, setMessage] = useState<string | null>(null);
+
+    // Поиск брендов по имени
+    const { data: existingBrands, isLoading: isSearching, isError: isSearchError } = useSearchBrandsByNameQuery(newCase.brand?.name || '', {
+        skip: !newCase.brand?.name, // Не выполняем запрос, если имя бренда пустое
+    });
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
-        setNewCase((prevCase) => ({
-            ...prevCase,
-            [name]: value,
-        }));
+
+        if (name === 'brand') {
+            setNewCase((prevCase) => ({
+                ...prevCase,
+                brand: {
+                    ...prevCase.brand,
+                    name: value,
+                    id: existingBrands?.find((brand) => brand.name === value)?.id || prevCase.brand?.id,
+                },
+            }));
+        } else {
+            setNewCase((prevCase) => ({
+                ...prevCase,
+                [name]: value,
+            }));
+        }
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -39,9 +58,37 @@ const AddCaseComponent: React.FC = () => {
                 color: 5,
                 glassType: 2,
             });
+            setMessage('Корпус успешно добавлен!');
         } catch (err) {
             console.error('Error creating case:', err);
+            setMessage('Произошла ошибка при создании корпуса.');
         }
+    };
+
+    const renderSuggestions = () => {
+        if (isSearching) {
+            return <p>Поиск брендов...</p>;
+        }
+
+        if (isSearchError) {
+            console.error('Ошибка при поиске брендов:', existingBrands);
+            return;
+        }
+
+        const filteredBrands = existingBrands?.filter((brand) =>
+            brand.name.toLowerCase().includes(newCase.brand?.name?.toLowerCase() || '')
+        );
+
+        if (filteredBrands && filteredBrands.length > 0) {
+            return (
+                <datalist id="brand-suggestions">
+                    {filteredBrands.map((brand) => (
+                        <option key={brand.id} value={brand.name} />
+                    ))}
+                </datalist>
+            );
+        }
+        return null;
     };
 
     return (
@@ -58,6 +105,19 @@ const AddCaseComponent: React.FC = () => {
                         onChange={handleInputChange}
                         required
                     />
+                </div>
+                <div>
+                    <label htmlFor="brand">Бренд</label>
+                    <input
+                        id="brand"
+                        type="text"
+                        name="brand"
+                        value={newCase.brand?.name || ''}
+                        onChange={handleInputChange}
+                        list="brand-suggestions"
+                        required
+                    />
+                    {newCase.brand?.name && renderSuggestions()}
                 </div>
                 <div>
                     <label htmlFor="formFactor">Форм-фактор</label>
@@ -124,8 +184,7 @@ const AddCaseComponent: React.FC = () => {
                 </button>
             </form>
 
-            {isSuccess && <p>Корпус успешно добавлен!</p>}
-            {isError && <p className="error">Ошибка: {error instanceof Error ? error.message : 'Неизвестная ошибка'}</p>}
+            {message && <p>{message}</p>}
         </div>
     );
 };
