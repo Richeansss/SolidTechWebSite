@@ -6,7 +6,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.solidtech.website.model.Brand;
 import ru.solidtech.website.model.LightType;
 import ru.solidtech.website.response.ResponseBuilder;
 import ru.solidtech.website.service.LightTypeService;
