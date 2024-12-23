@@ -3,6 +3,8 @@ import CreateCase from '../components/case/CreateCase';
 import CreateBrand from "../components/brand/CreateBrand";
 import CasesTable from "../components/case/CasesTable";
 import BrandTable from "../components/brand/BrandTable";
+import CrateLightTable from "../components/light-type/CrateLightTable";
+import LightTypeTable from "../components/light-type/LightTypeTable";
 
 const App: React.FC = () => {
     return (
@@ -12,6 +14,8 @@ const App: React.FC = () => {
             <CasesTable />
             <CreateBrand />
             <BrandTable />
+            <CrateLightTable/>
+            <LightTypeTable/>
         </div>
     );
 };
