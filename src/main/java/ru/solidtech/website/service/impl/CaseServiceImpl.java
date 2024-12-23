@@ -3,11 +3,13 @@ package ru.solidtech.website.service.impl;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import ru.solidtech.website.model.Brand;
 import ru.solidtech.website.model.Case;
 import ru.solidtech.website.repository.BrandRepository;
 import ru.solidtech.website.repository.CaseRepository;
+import ru.solidtech.website.repository.LightTypeRepository;
 import ru.solidtech.website.service.CaseService;
 
 import java.util.List;
@@ -19,6 +21,7 @@ public class CaseServiceImpl implements CaseService {
     private static final Logger logger = LoggerFactory.getLogger(CaseServiceImpl.class);
     private final CaseRepository caseRepository;
     private final BrandRepository brandRepository;
+    private final LightTypeRepository lightTypeRepository;
 
 
     @Override
@@ -34,11 +37,21 @@ public class CaseServiceImpl implements CaseService {
 
     @Override
     public Case createCase(Case caseEntity) {
-        Brand brand = brandRepository.findById(caseEntity.getBrand().getId())
-                .orElseThrow(() -> new IllegalArgumentException("Бренд с ID " + caseEntity.getBrand().getId() + " не найден"));
+        // Загружаем и устанавливаем бренд
+        caseEntity.setBrand(getEntityById(caseEntity.getBrand().getId(), brandRepository, "Бренд"));
 
-        caseEntity.setBrand(brand); // Устанавливаем загруженный Brand в Cooler
-        return caseRepository.save(caseEntity);
+        // Загружаем и устанавливаем тип освещения, если он указан
+        if (caseEntity.getLightType() != null && caseEntity.getLightType().getId() != null) {
+            caseEntity.setLightType(getEntityById(caseEntity.getLightType().getId(), lightTypeRepository, "Тип освещения"));
+        }
+
+        return caseRepository.save(caseEntity); // Сохраняем Case
+    }
+
+    // Универсальный метод для загрузки связанных сущностей
+    private <T> T getEntityById(Long id, JpaRepository<T, Long> repository, String entityName) {
+        return repository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException(entityName + " с ID " + id + " не найден"));
     }
 
     @Override

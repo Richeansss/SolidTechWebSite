@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useCreateCaseMutation } from '../../store/api/apiCase';
 import { useSearchBrandsByNameQuery } from '../../store/api/apiBrand';
+import { useGetLightTypesQuery } from '../../store/api/apiLighttype';
 import { Case } from '../../types/Case';
 import './CreateCase.css'; // Подключение CSS
 
@@ -10,19 +11,22 @@ const AddCaseComponent: React.FC = () => {
         formFactor: 2,
         amountFun: 3,
         name: '',
-        lightType: 1,
+        lightType: { id: 1, name: 'Cooler Master' }, // This should be an object, not just a number
         funConnector: 4,
         color: 5,
         glassType: 2,
     });
 
     const [createCase, { isLoading, isSuccess, isError, error }] = useCreateCaseMutation();
+
     const [message, setMessage] = useState<string | null>(null);
 
     // Поиск брендов по имени
     const { data: existingBrands, isLoading: isSearching, isError: isSearchError } = useSearchBrandsByNameQuery(newCase.brand?.name || '', {
         skip: !newCase.brand?.name, // Не выполняем запрос, если имя бренда пустое
     });
+
+    const { data: lightTypes, isLoading: isLoadingLightTypes, isError: isLightTypesError } = useGetLightTypesQuery();
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
@@ -36,6 +40,12 @@ const AddCaseComponent: React.FC = () => {
                     id: existingBrands?.find((brand) => brand.name === value)?.id || prevCase.brand?.id,
                 },
             }));
+        } else if (name === 'lightType') {
+            // Теперь сохраняем только ID
+            setNewCase((prevCase) => ({
+                ...prevCase,
+                lightType: { id: Number(value) }, // передаем объект с id
+            }));
         } else {
             setNewCase((prevCase) => ({
                 ...prevCase,
@@ -46,18 +56,34 @@ const AddCaseComponent: React.FC = () => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        // Проверка на существование lightType перед отправкой
+        if (!newCase.lightType?.id) {
+            setMessage('Не выбран тип подсветки.');
+            return;
+        }
+
         try {
-            await createCase(newCase).unwrap();
+            // Передаем только id для lightType
+            const caseData = {
+                ...newCase,
+                lightType: { id: newCase.lightType.id, name: newCase.lightType.name }, // передаем объект с id
+            };
+
+            await createCase(caseData).unwrap();
+
+            // Сбрасываем форму после успешного создания корпуса
             setNewCase({
                 brand: { id: 1, name: 'Cooler Master' },
                 formFactor: 2,
                 amountFun: 3,
                 name: '',
-                lightType: 1,
+                lightType: { id: 1, name: 'Cooler Master' },  // передаем только id, не объект
                 funConnector: 4,
                 color: 5,
                 glassType: 2,
             });
+
             setMessage('Корпус успешно добавлен!');
         } catch (err) {
             console.error('Error creating case:', err);
@@ -141,13 +167,23 @@ const AddCaseComponent: React.FC = () => {
                 </div>
                 <div>
                     <label htmlFor="lightType">Тип подсветки</label>
-                    <input
+                    <select
                         id="lightType"
-                        type="number"
                         name="lightType"
-                        value={newCase.lightType || ''}
+                        value={newCase.lightType?.id || ''}
                         onChange={handleInputChange}
-                    />
+                        disabled={isLoadingLightTypes}
+                    >
+                        {isLoadingLightTypes ? (
+                            <option>Загружаем типы подсветки...</option>
+                        ) : (
+                            lightTypes?.map((lightType) => (
+                                <option key={lightType.id} value={lightType.id}>
+                                    {lightType.name}
+                                </option>
+                            ))
+                        )}
+                    </select>
                 </div>
                 <div>
                     <label htmlFor="funConnector">Коннектор для вентиляторов</label>

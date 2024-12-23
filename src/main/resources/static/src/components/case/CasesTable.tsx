@@ -17,7 +17,7 @@ const CasesTable = () => {
                 brand: caseItem.brand ? caseItem.brand.name : 'Not specified',
                 formFactor: caseItem.formFactor || 'Not specified',
                 amountFun: caseItem.amountFun || 'Not specified',
-                lightType: caseItem.lightType || 'Not specified',
+                lightType: caseItem.lightType?.name || 'Not specified',  // Используем name
                 funConnector: caseItem.funConnector || 'Not specified',
                 color: caseItem.color || 'Not specified',
                 glassType: caseItem.glassType || 'Not specified',

@@ -4,7 +4,7 @@ export interface Case {
     brand?: { id: number; name: string };
     formFactor?: number;
     amountFun?: number;
-    lightType?: number;
+    lightType?: { id: number, name: string };
     funConnector?: number;
     color?: number;
     glassType?: number;

@@ -27,8 +27,9 @@ public class Case {
     @Column(name = "name", nullable = false, length = 255)
     private String name;
 
-    @Column(name = "light_type")
-    private Long lightType;
+    @ManyToOne
+    @JoinColumn(name = "light_type_id")
+    private LightType lightType;
 
     @Column(name = "fun_connector")
     private Long funConnector;
