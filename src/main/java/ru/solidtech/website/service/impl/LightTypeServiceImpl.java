@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import ru.solidtech.website.model.Brand;
 import ru.solidtech.website.model.LightType;
 import ru.solidtech.website.repository.LightTypeRepository;
 import ru.solidtech.website.service.LightTypeService;
@@ -52,5 +53,10 @@ public class LightTypeServiceImpl implements LightTypeService {
             throw new IllegalArgumentException("Тип освещения не найден с ID: " + id);
         }
         lightTypeRepository.deleteById(id);
+    }
+
+    @Override
+    public List<LightType> searchLightTypeByName(String name) {
+        return lightTypeRepository.findByNameContainingIgnoreCase(name);
     }
 }

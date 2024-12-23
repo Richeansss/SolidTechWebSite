@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.solidtech.website.model.Brand;
 import ru.solidtech.website.model.LightType;
 import ru.solidtech.website.response.ResponseBuilder;
 import ru.solidtech.website.service.LightTypeService;
@@ -68,5 +69,14 @@ public class LightTypeController {
             logger.error("Не удалось удалить тип освещения с ID: {}", id, e);
             return ResponseBuilder.buildErrorResponse(HttpStatus.NOT_FOUND, e.getMessage());
         }
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<Map<String, Object>> searchBrandsByName(@RequestParam String name) {
+        List<LightType> foundLightType = lightTypeService.searchLightTypeByName(name);
+        if (foundLightType.isEmpty()) {
+            return ResponseBuilder.buildResponse(HttpStatus.NOT_FOUND, "Типы подсветки не найдены", foundLightType);
+        }
+        return ResponseBuilder.buildResponse(HttpStatus.OK, "Типы подсветки найдены", foundLightType);
     }
 }
