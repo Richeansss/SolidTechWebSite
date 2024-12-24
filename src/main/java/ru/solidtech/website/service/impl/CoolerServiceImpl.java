@@ -1,11 +1,14 @@
 package ru.solidtech.website.service.impl;
 
 import lombok.AllArgsConstructor;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import ru.solidtech.website.model.Brand;
 import ru.solidtech.website.model.Cooler;
+import ru.solidtech.website.model.LightType;
 import ru.solidtech.website.repository.BrandRepository;
 import ru.solidtech.website.repository.CoolerRepository;
+import ru.solidtech.website.repository.LightTypeRepository;
 import ru.solidtech.website.service.CoolerService;
 
 import java.util.List;
@@ -16,6 +19,7 @@ public class CoolerServiceImpl implements CoolerService {
 
     private final CoolerRepository coolerRepository;
     private final BrandRepository brandRepository;
+    private final LightTypeRepository lightTypeRepository;
 
     @Override
     public List<Cooler> findAllCoolers() {
@@ -29,14 +33,26 @@ public class CoolerServiceImpl implements CoolerService {
     }
 
     @Override
-    public Cooler createCooler(Cooler cooler) {
-        // Загружаем полный объект Brand перед сохранением Cooler
-        Brand brand = brandRepository.findById(cooler.getBrand().getId())
-                .orElseThrow(() -> new IllegalArgumentException("Бренд с ID " + cooler.getBrand().getId() + " не найден"));
+    public Cooler createCooler(Cooler coolerEntity) {
+        // Загружаем и устанавливаем бренд
+        coolerEntity.setBrand(getEntityById(coolerEntity.getBrand().getId(), brandRepository, "Бренд"));
 
-        cooler.setBrand(brand); // Устанавливаем загруженный Brand в Cooler
-        return coolerRepository.save(cooler);
+        // Загружаем и устанавливаем тип освещения, если он указан
+        coolerEntity.setLightType(
+                (coolerEntity.getLightType() != null && coolerEntity.getLightType().getId() != null) ?
+                        getEntityById(coolerEntity.getLightType().getId(), lightTypeRepository, "Тип освещения") :
+                        null
+        );
+
+        return coolerRepository.save(coolerEntity); // Сохраняем Cooler
     }
+
+    // Универсальный метод для загрузки связанных сущностей
+    private <T> T getEntityById(Long id, JpaRepository<T, Long> repository, String entityName) {
+        return repository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException(entityName + " с ID " + id + " не найден"));
+    }
+
 
     @Override
     public Cooler updateCooler(Cooler cooler) {

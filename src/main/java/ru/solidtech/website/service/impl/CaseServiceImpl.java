@@ -5,7 +5,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
-import ru.solidtech.website.model.Brand;
 import ru.solidtech.website.model.Case;
 import ru.solidtech.website.repository.BrandRepository;
 import ru.solidtech.website.repository.CaseRepository;

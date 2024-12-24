@@ -19,5 +19,7 @@ public class Cooler {
 
     private Integer tdp;
     private Integer fun_connector;
-    private Long lightType;
+    @ManyToOne
+    @JoinColumn(name = "light_type_id")
+    private LightType lightType;
 }
