@@ -18,7 +18,10 @@ public class Cooler {
     private Brand brand;
 
     private Integer tdp;
-    private Integer fun_connector;
+
+    @Column(name = "fun_connector") // Указываем имя поля в базе данных
+    private Integer funConnector;
+
     @ManyToOne
     @JoinColumn(name = "light_type_id")
     private LightType lightType;

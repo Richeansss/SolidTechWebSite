@@ -3,6 +3,8 @@ import { Cooler } from "../../types/Cooler";
 import { useCreateCoolerMutation } from "../../store/api/apiCooler";
 import { useSearchBrandsByNameQuery } from "../../store/api/apiBrand";
 import { useGetLightTypesQuery } from "../../store/api/apiLighttype";
+import '../case/CreateCase.css'; // Подключение CSS
+
 
 const AddCoolerComponent: React.FC = () => {
     const [newCooler, setNewCooler] = useState<Partial<Cooler>>({
@@ -14,32 +16,31 @@ const AddCoolerComponent: React.FC = () => {
 
     const [createCooler, { isLoading, isSuccess, isError }] = useCreateCoolerMutation();
     const { data: lightTypes, isLoading: isLoadingLightTypes } = useGetLightTypesQuery();
-    const { data: existingBrands } = useSearchBrandsByNameQuery(newCooler.brand?.name || "", {
-        skip: !newCooler.brand?.name,
+    const { data: existingBrands, isLoading: isSearching, isError: isSearchError } = useSearchBrandsByNameQuery(newCooler.brand?.name || '', {
+        skip: !newCooler.brand?.name, // Не выполняем запрос, если имя бренда пустое
     });
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
 
         if (name === 'brand') {
-            setNewCooler((prevCase) => ({
-                ...prevCase,
+            setNewCooler((prevCooler) => ({
+                ...prevCooler,
                 brand: {
-                    ...prevCase.brand,
+                    ...prevCooler.brand,
                     name: value,
-                    id: existingBrands?.find((brand) => brand.name === value)?.id ?? prevCase.brand?.id ?? 0,
+                    id: existingBrands?.find((brand) => brand.name === value)?.id ?? prevCooler.brand?.id ?? 0,
                 },
             }));
         } else if (name === 'lightType') {
             const selectedLightType = lightTypes?.find((type) => type.id === Number(value));
-            // Теперь сохраняем только ID
-            setNewCooler((prevCase) => ({
-                ...prevCase,
-                lightType: { id: Number(value), name: selectedLightType?.name || "" },
+            setNewCooler((prevCooler) => ({
+                ...prevCooler,
+                lightType: selectedLightType ? { id: selectedLightType.id, name: selectedLightType.name } : undefined,
             }));
         } else {
-            setNewCooler((prevCase) => ({
-                ...prevCase,
+            setNewCooler((prevCooler) => ({
+                ...prevCooler,
                 [name]: value,
             }));
         }
@@ -48,8 +49,8 @@ const AddCoolerComponent: React.FC = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        if (!newCooler.name) {
-            alert("Название обязательно!");
+        if (!newCooler.name || !newCooler.lightType) {
+            alert("Название и тип подсветки обязательны!");
             return;
         }
 
@@ -61,6 +62,19 @@ const AddCoolerComponent: React.FC = () => {
             funConnector: 4,
             name: "",
         });
+    };
+
+    const renderBrandSuggestions = () => {
+        if (existingBrands) {
+            return (
+                <datalist id="brand-suggestions">
+                    {existingBrands.map((brand) => (
+                        <option key={brand.id} value={brand.name} />
+                    ))}
+                </datalist>
+            );
+        }
+        return null;
     };
 
     return (
@@ -86,11 +100,7 @@ const AddCoolerComponent: React.FC = () => {
                         onChange={handleInputChange}
                         list="brand-suggestions"
                     />
-                    <datalist id="brand-suggestions">
-                        {existingBrands?.map((brand) => (
-                            <option key={brand.id} value={brand.name} />
-                        ))}
-                    </datalist>
+                    {renderBrandSuggestions()}
                 </div>
                 <div>
                     <label>TDP</label>
