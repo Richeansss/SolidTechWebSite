@@ -1,10 +1,14 @@
 package ru.solidtech.website.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import ru.solidtech.website.model.Brand;
+import ru.solidtech.website.model.Cooler;
 import ru.solidtech.website.model.Ram;
 import ru.solidtech.website.repository.BrandRepository;
+import ru.solidtech.website.repository.CoolerRepository;
+import ru.solidtech.website.repository.LightTypeRepository;
 import ru.solidtech.website.repository.RamRepository;
 import ru.solidtech.website.service.RamService;
 
@@ -15,6 +19,7 @@ import java.util.List;
 public class RamServiceImpl implements RamService {
     private final RamRepository ramRepository;
     private final BrandRepository brandRepository;
+    private final LightTypeRepository lightTypeRepository;
 
     @Override
     public List<Ram> findAllRam() {
@@ -28,12 +33,24 @@ public class RamServiceImpl implements RamService {
     }
 
     @Override
-    public Ram createRam(Ram ram) {
-        Brand brand = brandRepository.findById(ram.getBrand().getId())
-                .orElseThrow(() -> new IllegalArgumentException("Бренд с ID " + ram.getBrand().getId() + " не найден"));
+    public Ram createRam(Ram ramEntity) {
+        // Загружаем и устанавливаем бренд
+        ramEntity.setBrand(getEntityById(ramEntity.getBrand().getId(), brandRepository, "Бренд"));
 
-        ram.setBrand(brand); // Устанавливаем загруженный Brand в Cooler
-        return ramRepository.save(ram);
+        // Загружаем и устанавливаем тип освещения, если он указан
+        ramEntity.setLightType(
+                (ramEntity.getLightType() != null && ramEntity.getLightType().getId() != null) ?
+                        getEntityById(ramEntity.getLightType().getId(), lightTypeRepository, "Тип освещения") :
+                        null
+        );
+
+        return ramRepository.save(ramEntity); // Сохраняем Cooler
+    }
+
+    // Универсальный метод для загрузки связанных сущностей
+    private <T> T getEntityById(Long id, JpaRepository<T, Long> repository, String entityName) {
+        return repository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException(entityName + " с ID " + id + " не найден"));
     }
 
     @Override

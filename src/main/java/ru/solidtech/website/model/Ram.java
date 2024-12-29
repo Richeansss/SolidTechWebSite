@@ -33,6 +33,7 @@ public class Ram {
     @Column(nullable = false)
     private Long timing;
 
-    @Column(name = "light_type", nullable = false)
-    private Long lightType;
+    @ManyToOne
+    @JoinColumn(name = "light_type_id")
+    private LightType lightType;
 }
