@@ -1,12 +1,11 @@
 package ru.solidtech.website.service.impl;
 
 import lombok.AllArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
-import ru.solidtech.website.model.Brand;
 import ru.solidtech.website.model.Videocard;
 import ru.solidtech.website.repository.BrandRepository;
+import ru.solidtech.website.repository.LightTypeRepository;
 import ru.solidtech.website.repository.VideocardRepository;
 import ru.solidtech.website.service.VideocardService;
 
@@ -16,9 +15,9 @@ import java.util.List;
 @AllArgsConstructor
 public class VideocardServiceImpl implements VideocardService {
 
-    private static final Logger logger = LoggerFactory.getLogger(VideocardServiceImpl.class);
     private final VideocardRepository videocardRepository;
     private final BrandRepository brandRepository;
+    private final LightTypeRepository lightTypeRepository;
 
     @Override
     public List<Videocard> findAllVideocards() {
@@ -32,12 +31,24 @@ public class VideocardServiceImpl implements VideocardService {
     }
 
     @Override
-    public Videocard createVideocard(Videocard videocard) {
-        Brand brand = brandRepository.findById(videocard.getBrand().getId())
-                .orElseThrow(() -> new IllegalArgumentException("Бренд с ID " + videocard.getBrand().getId() + " не найден"));
+    public Videocard createVideocard(Videocard videocardEntity) {
+        // Загружаем и устанавливаем бренд
+        videocardEntity.setBrand(getEntityById(videocardEntity.getBrand().getId(), brandRepository, "Бренд"));
 
-        videocard.setBrand(brand); // Устанавливаем загруженный бренд для видеокарты
-        return videocardRepository.save(videocard);
+        // Загружаем и устанавливаем тип освещения, если он указан
+        videocardEntity.setLightType(
+                (videocardEntity.getLightType() != null && videocardEntity.getLightType().getId() != null) ?
+                        getEntityById(videocardEntity.getLightType().getId(), lightTypeRepository, "Тип освещения") :
+                        null
+        );
+
+        return videocardRepository.save(videocardEntity); // Сохраняем Cooler
+    }
+
+    // Универсальный метод для загрузки связанных сущностей
+    private <T> T getEntityById(Long id, JpaRepository<T, Long> repository, String entityName) {
+        return repository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException(entityName + " с ID " + id + " не найден"));
     }
 
     @Override

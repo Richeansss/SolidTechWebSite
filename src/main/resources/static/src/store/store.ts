@@ -6,6 +6,7 @@ import { apiCooler} from "./api/apiCooler";
 import { apiPowerSupply } from "./api/apiPowerSupply";
 import { apiStorageDevice} from "./api/apiStorageDevice";
 import {apiRam} from "./api/apiRam";
+import {apiVideocard} from "./api/apiVideoCard";
 
 // Объединение редьюсеров
 const rootReducer = combineReducers({
@@ -15,7 +16,9 @@ const rootReducer = combineReducers({
     [apiCooler.reducerPath]: apiCooler.reducer,
     [apiPowerSupply.reducerPath]: apiPowerSupply.reducer,
     [apiStorageDevice.reducerPath]: apiStorageDevice.reducer,
-    [apiRam.reducerPath]: apiRam.reducer
+    [apiRam.reducerPath]: apiRam.reducer,
+    [apiVideocard.reducerPath]: apiVideocard.reducer
+
 });
 
 export const store = configureStore({
@@ -29,6 +32,7 @@ export const store = configureStore({
             .concat(apiPowerSupply.middleware)
             .concat(apiStorageDevice.middleware)
             .concat(apiRam.middleware)
+            .concat(apiVideocard.middleware)
 });
 
 // Типы для Store
