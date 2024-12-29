@@ -18,7 +18,7 @@ const RamTable = () => {
                 typeRam: ram.typeRam,
                 jdek: ram.jdek,
                 timing: ram.timing,
-                lightType: ram.lightType,
+                lightType: ram.lightType.name,
             }));
             setRows(formattedRows);
         }
@@ -32,7 +32,7 @@ const RamTable = () => {
         { field: 'typeRam', headerName: 'Type', width: 150 },
         { field: 'jdek', headerName: 'Frequency (MHz)', width: 180 },
         { field: 'timing', headerName: 'Timing', width: 180 },
-        { field: 'lightType', headerName: 'Light Type', width: 180 },
+        { field: 'lightType', headerName: 'Light Type', width: 180,  },
         {
             field: 'actions',
             headerName: 'Actions',

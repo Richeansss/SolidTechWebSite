@@ -25,7 +25,8 @@ public class Ram {
     private Long amountRam;
 
     @Column(name = "type_ram", nullable = false)
-    private Long typeRam;
+    @Enumerated(EnumType.STRING)
+    private TypeRam typeRam;
 
     @Column(nullable = false)
     private Long jdek;
@@ -36,4 +37,23 @@ public class Ram {
     @ManyToOne
     @JoinColumn(name = "light_type_id")
     private LightType lightType;
+
+    public enum TypeRam {
+
+        DDR,
+
+        DDR2,
+
+        DDR3,
+
+        DDR4,
+
+        DDR5,
+
+        LPDDR,
+
+        GDDR,
+
+        HBM
+    }
 }
