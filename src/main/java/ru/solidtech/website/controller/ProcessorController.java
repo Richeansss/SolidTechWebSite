@@ -1,60 +1,72 @@
 package ru.solidtech.website.controller;
 
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.solidtech.website.model.Brand;
 import ru.solidtech.website.model.Processor;
-import ru.solidtech.website.model.Soket;
-import ru.solidtech.website.service.BrandService;
+import ru.solidtech.website.response.ResponseBuilder;
 import ru.solidtech.website.service.ProcessorService;
-import ru.solidtech.website.service.SoketService;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/processor")
 @AllArgsConstructor
 public class ProcessorController {
+    private static final Logger logger = LoggerFactory.getLogger(ProcessorController.class);
     private final ProcessorService processorService;
-    private final BrandService brandService;
-    private final SoketService soketService;
 
     @GetMapping
-    public List<Processor> getAllProcessor() {
-        return processorService.findAllProcessor();
+    public ResponseEntity<Map<String, Object>> findAllProcessors() {
+        List<Processor> processorList = processorService.findAllProcessors();
+        return ResponseBuilder.buildResponse(HttpStatus.OK, "Список процессоров успешно получен", processorList);
     }
 
-    @PostMapping("save_processor")
-    public String saveProcessor(@RequestBody Processor processor, @RequestParam("brand_id") Long brandId, @RequestParam("soket_id") Long soketId) {
-        if (processor != null) {
-            Brand brand = brandService.findBrandById(brandId); // Получаем объект Brand по brand_id
-            Soket soket = soketService.findSoketById(soketId);
-            if (brand != null && soket != null) { // Если бренд найден
-                processor.setBrand(brand);// Устанавливаем бренд для процессора
-                processor.setSoket(soket);// Устанавливаем сокет для процессора
-                processorService.saveProcessor(processor); // Сохраняем процессор
-                return "Processor successfully saved";
-            } else { // Если бренд не найден
-                return "Brand not found for the given brand_id";
-            }
-        } else { // Если процессор равен null
-            return "Processor object is null";
+    @GetMapping("/{id}")
+    public ResponseEntity<Map<String, Object>> getProcessorById(@PathVariable Long id) {
+        try {
+            Processor foundProcessor = processorService.findProcessorById(id);
+            return ResponseBuilder.buildResponse(HttpStatus.OK, "Процессор найден", foundProcessor);
+        } catch (IllegalArgumentException e) {
+            logger.error("Процессор не найден с ID: {}", id, e);
+            return ResponseBuilder.buildErrorResponse(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
 
-
-    @GetMapping("/{name}")
-    public Processor findProcessorByName(@PathVariable String name) {
-        return processorService.findProcessorByName(name);
+    @PostMapping
+    public ResponseEntity<Map<String, Object>> createProcessor(@RequestBody Processor processor) {
+        try {
+            Processor createdProcessor = processorService.createProcessor(processor);
+            return ResponseBuilder.buildResponse(HttpStatus.CREATED, "Процессор успешно создан", createdProcessor);
+        } catch (Exception e) {
+            logger.error("Ошибка при создании процессора", e);
+            return ResponseBuilder.buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Не удалось создать процессор");
+        }
     }
 
-    @PutMapping("update_processor")
-    public Processor updateProcessor(@RequestBody Processor processor) {
-        return processorService.updateProcessor(processor);
+    @PutMapping
+    public ResponseEntity<Map<String, Object>> updateProcessor(@RequestBody Processor processor) {
+        try {
+            Processor updatedProcessor = processorService.updateProcessor(processor);
+            return ResponseBuilder.buildResponse(HttpStatus.OK, "Процессор обновлён", updatedProcessor);
+        } catch (IllegalArgumentException e) {
+            logger.error("Не удалось обновить процессор с ID: {}", processor.getId(), e);
+            return ResponseBuilder.buildErrorResponse(HttpStatus.NOT_FOUND, e.getMessage());
+        }
     }
 
-    @DeleteMapping("delete_processor/{id}")
-    public void deleteProcessor(@PathVariable Long id) {
-        processorService.deleteProcessor(id);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Map<String, Object>> deleteProcessor(@PathVariable Long id) {
+        try {
+            processorService.deleteProcessor(id);
+            return ResponseBuilder.buildResponse(HttpStatus.OK, "Процессор успешно удалён", null);
+        } catch (IllegalArgumentException e) {
+            logger.error("Не удалось удалить процессор с ID: {}", id, e);
+            return ResponseBuilder.buildErrorResponse(HttpStatus.NOT_FOUND, e.getMessage());
+        }
     }
 }

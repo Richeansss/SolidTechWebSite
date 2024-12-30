@@ -21,8 +21,9 @@ public class Processor {
     @JoinColumn(name = "soket_id")
     private Soket soket;
 
-    @Column(columnDefinition = "VARCHAR(255) NOT NULL")
-    private String type_of_memory;
+    @Column(name = "type_ram", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Ram.TypeRam typeRam;
 
     @Column(columnDefinition = "BIGINT NOT NULL")
     private int  core;
