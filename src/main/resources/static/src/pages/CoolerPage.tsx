@@ -15,6 +15,8 @@ import CreateSocket from "../components/socket/CreateSocket";
 import SocketTable from "../components/socket/SocketTable";
 import CreateChipset from "../components/chipset/CreateChipset";
 import ChipsetTable from "../components/chipset/ChipsetTable";
+import CreateMotherBoard from "../components/mother-board/CreateMotherBoard";
+import MotherBoardTable from "../components/mother-board/MotherBoardTable";
 
 const App: React.FC = () => {
     return (
@@ -36,6 +38,8 @@ const App: React.FC = () => {
             <SocketTable/>
             <CreateChipset/>
             <ChipsetTable/>
+            <CreateMotherBoard/>
+            <MotherBoardTable/>
         </div>
     );
 };
