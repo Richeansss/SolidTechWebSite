@@ -7,6 +7,10 @@ import { apiPowerSupply } from "./api/apiPowerSupply";
 import { apiStorageDevice} from "./api/apiStorageDevice";
 import {apiRam} from "./api/apiRam";
 import {apiVideocard} from "./api/apiVideoCard";
+import {apiProcessor} from "./api/apiProcessor";
+import {apiSocket} from "./api/apiSocket";
+import {apiChipset} from "./api/apiChipset";
+import {apiMotherBoard} from "./api/apiMotherBoard";
 
 // Объединение редьюсеров
 const rootReducer = combineReducers({
@@ -17,8 +21,11 @@ const rootReducer = combineReducers({
     [apiPowerSupply.reducerPath]: apiPowerSupply.reducer,
     [apiStorageDevice.reducerPath]: apiStorageDevice.reducer,
     [apiRam.reducerPath]: apiRam.reducer,
-    [apiVideocard.reducerPath]: apiVideocard.reducer
-
+    [apiVideocard.reducerPath]: apiVideocard.reducer,
+    [apiProcessor.reducerPath]: apiProcessor.reducer,
+    [apiSocket.reducerPath]: apiSocket.reducer,
+    [apiChipset.reducerPath]: apiChipset.reducer,
+    [apiMotherBoard.reducerPath]: apiMotherBoard.reducer
 });
 
 export const store = configureStore({
@@ -33,6 +40,10 @@ export const store = configureStore({
             .concat(apiStorageDevice.middleware)
             .concat(apiRam.middleware)
             .concat(apiVideocard.middleware)
+            .concat(apiProcessor.middleware)
+            .concat(apiSocket.middleware)
+            .concat(apiChipset.middleware)
+            .concat(apiMotherBoard.middleware)
 });
 
 // Типы для Store

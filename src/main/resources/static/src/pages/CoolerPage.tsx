@@ -9,6 +9,12 @@ import RamTable from "../components/ram/RamTable";
 import CreateRam from "../components/ram/CreateRam";
 import CreateVidoCard from "../components/video-card/CreateVidoCard";
 import VideoCardTable from "../components/video-card/VideoCardTable";
+import ProcessorTable from "../components/processor/ProcessorTable";
+import CreateProcessor from "../components/processor/CreateProcessor";
+import CreateSocket from "../components/socket/CreateSocket";
+import SocketTable from "../components/socket/SocketTable";
+import CreateChipset from "../components/chipset/CreateChipset";
+import ChipsetTable from "../components/chipset/ChipsetTable";
 
 const App: React.FC = () => {
     return (
@@ -24,6 +30,12 @@ const App: React.FC = () => {
             <RamTable/>
             <CreateVidoCard/>
             <VideoCardTable/>
+            <CreateProcessor/>
+            <ProcessorTable/>
+            <CreateSocket/>
+            <SocketTable/>
+            <CreateChipset/>
+            <ChipsetTable/>
         </div>
     );
 };
