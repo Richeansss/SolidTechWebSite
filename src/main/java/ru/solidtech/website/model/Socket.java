@@ -8,7 +8,7 @@ import lombok.Data;
 
 @Data
 @Entity
-public class Soket {
+public class Socket {
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
     private long id;
