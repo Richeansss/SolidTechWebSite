@@ -18,14 +18,15 @@ public class MotherBoard {
 
     @ManyToOne
     @JoinColumn(name = "soket_id")
-    private Soket soket;
+    private Socket socket;
 
     @ManyToOne
     @JoinColumn(name = "chipset_id")
     private Chipset chipset;
 
-    @Column(columnDefinition = "VARCHAR(255) NOT NULL")
-    private String type_of_memory;
+    @Column(name = "type_ram", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Ram.TypeRam typeRam;
 
     @Column(columnDefinition = "BIGINT NOT NULL")
     private int  pci;

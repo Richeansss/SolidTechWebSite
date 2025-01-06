@@ -1,60 +1,72 @@
 package ru.solidtech.website.controller;
 
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.solidtech.website.model.Brand;
-import ru.solidtech.website.model.Chipset;
 import ru.solidtech.website.model.MotherBoard;
-import ru.solidtech.website.model.Soket;
-import ru.solidtech.website.service.BrandService;
+import ru.solidtech.website.response.ResponseBuilder;
 import ru.solidtech.website.service.MotherBoardService;
-import ru.solidtech.website.service.SoketService;
-import ru.solidtech.website.service.ChipsetService;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/motherboard")
 @AllArgsConstructor
 public class MotherBoardController {
+    private static final Logger logger = LoggerFactory.getLogger(MotherBoardController.class);
     private final MotherBoardService motherBoardService;
-    private final BrandService brandService;
-    private final SoketService soketService;
-    private final ChipsetService chipsetService;
 
     @GetMapping
-    public List<MotherBoard> getAllMotherBoard() {
-        return motherBoardService.findAllMotherBoard();
+    public ResponseEntity<Map<String, Object>> findAllMotherBoards() {
+        List<MotherBoard> motherBoardList = motherBoardService.findAllMotherBoards();
+        return ResponseBuilder.buildResponse(HttpStatus.OK, "Список материнских плат успешно получен", motherBoardList);
     }
 
-    @PostMapping("save_motherboard")
-    public String saveMotherBoard(@RequestBody MotherBoard motherBoard, @RequestParam("brand_id") Long brandId, @RequestParam("soket_id") Long soketId, @RequestParam("chipset_id") Long chipsetId) {
-        Brand brand = brandService.findBrandById(brandId); // Получаем объект Brand по brand_id
-        Soket soket = soketService.findSoketById(soketId);
-        Chipset chipset = chipsetService.findChipsetById(chipsetId);
-        if (brand != null && soket != null ) { // Если бренд найден
-            motherBoard.setBrand(brand);// Устанавливаем бренд для материнской платы
-            motherBoard.setSoket(soket);// Устанавливаем сокет для материнской платы
-            motherBoard.setChipset(chipset); // Устанавливаем чипсет для материнской платы
-            motherBoardService.saveMotherBoard(motherBoard); // Сохраняем материнскую плату
-            return "Motherboard successfully saved";
-        } else { // Если бренд не найден
-            return "Brand not found for the given brand_id";
+    @GetMapping("/{id}")
+    public ResponseEntity<Map<String, Object>> getMotherBoardById(@PathVariable Long id) {
+        try {
+            MotherBoard foundMotherBoard = motherBoardService.findMotherBoardById(id);
+            return ResponseBuilder.buildResponse(HttpStatus.OK, "Материнская плата найдена", foundMotherBoard);
+        } catch (IllegalArgumentException e) {
+            logger.error("Материнская плата не найдена с ID: {}", id, e);
+            return ResponseBuilder.buildErrorResponse(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
 
-    @GetMapping("/{name}")
-    public MotherBoard findMotherBoardByName(@PathVariable String name) {
-        return motherBoardService.findMotherBoardByName(name);
+    @PostMapping
+    public ResponseEntity<Map<String, Object>> createMotherBoard(@RequestBody MotherBoard motherBoard) {
+        try {
+            MotherBoard createdMotherBoard = motherBoardService.createMotherBoard(motherBoard);
+            return ResponseBuilder.buildResponse(HttpStatus.CREATED, "Материнская плата успешно создана", createdMotherBoard);
+        } catch (Exception e) {
+            logger.error("Ошибка при создании материнской платы", e);
+            return ResponseBuilder.buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Не удалось создать материнскую плату");
+        }
     }
 
-    @PutMapping("update_motherboard")
-    public MotherBoard updateMotherBoard(@RequestBody MotherBoard motherBoard) {
-        return motherBoardService.updateMotherBoard(motherBoard);
+    @PutMapping
+    public ResponseEntity<Map<String, Object>> updateMotherBoard(@RequestBody MotherBoard motherBoard) {
+        try {
+            MotherBoard updatedMotherBoard = motherBoardService.updateMotherBoard(motherBoard);
+            return ResponseBuilder.buildResponse(HttpStatus.OK, "Материнская плата обновлена", updatedMotherBoard);
+        } catch (IllegalArgumentException e) {
+            logger.error("Не удалось обновить материнскую плату с ID: {}", motherBoard.getId(), e);
+            return ResponseBuilder.buildErrorResponse(HttpStatus.NOT_FOUND, e.getMessage());
+        }
     }
 
-    @DeleteMapping("delete_motherboard/{id}")
-    public void deleteMotherBoard(@PathVariable Long id) {
-        motherBoardService.deleteMotherBoard(id);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Map<String, Object>> deleteMotherBoard(@PathVariable Long id) {
+        try {
+            motherBoardService.deleteMotherBoard(id);
+            return ResponseBuilder.buildResponse(HttpStatus.OK, "Материнская плата успешно удалена", null);
+        } catch (IllegalArgumentException e) {
+            logger.error("Не удалось удалить материнскую плату с ID: {}", id, e);
+            return ResponseBuilder.buildErrorResponse(HttpStatus.NOT_FOUND, e.getMessage());
+        }
     }
 }
