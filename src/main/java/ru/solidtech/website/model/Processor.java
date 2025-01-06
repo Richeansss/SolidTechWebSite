@@ -19,7 +19,7 @@ public class Processor {
 
     @ManyToOne
     @JoinColumn(name = "soket_id")
-    private Soket soket;
+    private Socket socket;
 
     @Column(name = "type_ram", nullable = false)
     @Enumerated(EnumType.STRING)
@@ -34,6 +34,4 @@ public class Processor {
     @Column(columnDefinition = "FLOAT NOT NULL")
     private float turbo_bust;
 
-    @Column(columnDefinition = "VARCHAR(255) NOT NULL")
-    private String url;
 }
