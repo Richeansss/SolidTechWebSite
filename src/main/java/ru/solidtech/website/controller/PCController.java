@@ -18,21 +18,21 @@ import java.util.Map;
 @AllArgsConstructor
 public class PCController {
     private static final Logger logger = LoggerFactory.getLogger(PCController.class);
-    private final PCService servicePC;
+    private final PCService pcService;
 
     @GetMapping
-    public ResponseEntity<Map<String, Object>> findAllPC() {
-        List<PC> pcs = servicePC.findAllPC();
-        return ResponseBuilder.buildResponse(HttpStatus.OK, "Список PC успешно получен", pcs);
+    public ResponseEntity<Map<String, Object>> findAllPCs() {
+        List<PC> pcList = pcService.findAllPCs();
+        return ResponseBuilder.buildResponse(HttpStatus.OK, "Список ПК успешно получен", pcList);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Map<String, Object>> getPCById(@PathVariable Long id) {
         try {
-            PC pc = servicePC.findPCById(id);
-            return ResponseBuilder.buildResponse(HttpStatus.OK, "PC найден", pc);
+            PC foundPC = pcService.findPCById(id);
+            return ResponseBuilder.buildResponse(HttpStatus.OK, "ПК найден", foundPC);
         } catch (IllegalArgumentException e) {
-            logger.error("PC не найден с ID: {}", id, e);
+            logger.error("ПК не найден с ID: {}", id, e);
             return ResponseBuilder.buildErrorResponse(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
@@ -40,21 +40,21 @@ public class PCController {
     @PostMapping
     public ResponseEntity<Map<String, Object>> createPC(@RequestBody PC pc) {
         try {
-            PC createdPC = servicePC.createPC(pc);
-            return ResponseBuilder.buildResponse(HttpStatus.CREATED, "PC успешно создан", createdPC);
+            PC createdPC = pcService.createPC(pc);
+            return ResponseBuilder.buildResponse(HttpStatus.CREATED, "ПК успешно создан", createdPC);
         } catch (Exception e) {
-            logger.error("Ошибка при создании PC", e);
-            return ResponseBuilder.buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Не удалось создать PC");
+            logger.error("Ошибка при создании ПК", e);
+            return ResponseBuilder.buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Не удалось создать ПК");
         }
     }
 
     @PutMapping
     public ResponseEntity<Map<String, Object>> updatePC(@RequestBody PC pc) {
         try {
-            PC updatedPC = servicePC.updatePC(pc);
-            return ResponseBuilder.buildResponse(HttpStatus.OK, "PC обновлен", updatedPC);
+            PC updatedPC = pcService.updatePC(pc);
+            return ResponseBuilder.buildResponse(HttpStatus.OK, "ПК обновлён", updatedPC);
         } catch (IllegalArgumentException e) {
-            logger.error("Не удалось обновить PC с ID: {}", pc.getId(), e);
+            logger.error("Не удалось обновить ПК с ID: {}", pc.getId(), e);
             return ResponseBuilder.buildErrorResponse(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
@@ -62,10 +62,10 @@ public class PCController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Map<String, Object>> deletePC(@PathVariable Long id) {
         try {
-            servicePC.deletePC(id);
-            return ResponseBuilder.buildResponse(HttpStatus.OK, "PC успешно удален", null);
+            pcService.deletePC(id);
+            return ResponseBuilder.buildResponse(HttpStatus.OK, "ПК успешно удалён", null);
         } catch (IllegalArgumentException e) {
-            logger.error("Не удалось удалить PC с ID: {}", id, e);
+            logger.error("Не удалось удалить ПК с ID: {}", id, e);
             return ResponseBuilder.buildErrorResponse(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
