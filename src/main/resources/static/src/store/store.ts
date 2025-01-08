@@ -11,6 +11,7 @@ import {apiProcessor} from "./api/apiProcessor";
 import {apiSocket} from "./api/apiSocket";
 import {apiChipset} from "./api/apiChipset";
 import {apiMotherBoard} from "./api/apiMotherBoard";
+import {apiPC} from "./api/apiPC";
 
 // Объединение редьюсеров
 const rootReducer = combineReducers({
@@ -25,7 +26,8 @@ const rootReducer = combineReducers({
     [apiProcessor.reducerPath]: apiProcessor.reducer,
     [apiSocket.reducerPath]: apiSocket.reducer,
     [apiChipset.reducerPath]: apiChipset.reducer,
-    [apiMotherBoard.reducerPath]: apiMotherBoard.reducer
+    [apiMotherBoard.reducerPath]: apiMotherBoard.reducer,
+    [apiPC.reducerPath]: apiPC.reducer
 });
 
 export const store = configureStore({
@@ -44,6 +46,7 @@ export const store = configureStore({
             .concat(apiSocket.middleware)
             .concat(apiChipset.middleware)
             .concat(apiMotherBoard.middleware)
+            .concat(apiPC.middleware)
 });
 
 // Типы для Store

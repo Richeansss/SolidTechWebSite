@@ -17,6 +17,8 @@ import CreateChipset from "../components/chipset/CreateChipset";
 import ChipsetTable from "../components/chipset/ChipsetTable";
 import CreateMotherBoard from "../components/mother-board/CreateMotherBoard";
 import MotherBoardTable from "../components/mother-board/MotherBoardTable";
+import PCTable from "../components/pc/PCTable";
+import CreatePC from "../components/pc/CreatePC";
 
 const App: React.FC = () => {
     return (
@@ -40,6 +42,8 @@ const App: React.FC = () => {
             <ChipsetTable/>
             <CreateMotherBoard/>
             <MotherBoardTable/>
+            <CreatePC/>
+            <PCTable/>
         </div>
     );
 };
