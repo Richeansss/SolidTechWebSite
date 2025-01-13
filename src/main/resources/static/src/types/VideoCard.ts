@@ -1,5 +1,5 @@
-import {Brand} from "./Brand";
-import {LightType} from "./LightType";
+import { Brand } from "./Brand";
+import { LightType } from "./LightType";
 
 export interface Videocard {
     id?: number;
@@ -11,4 +11,5 @@ export interface Videocard {
     pci: number;
     color: number;
     lightType: LightType;
+    imageUrl?: string;  // Добавляем поле для хранения URL изображения
 }

@@ -43,4 +43,7 @@ public class Videocard {
     @ManyToOne
     @JoinColumn(name = "light_type_id")
     private LightType lightType;
+
+    @Column(name = "image_url")
+    private String imageUrl;
 }
