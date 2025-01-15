@@ -3,7 +3,7 @@ import Select from "react-select";
 import { Videocard } from "../../types/VideoCard"; // Импортируем интерфейсы
 import { useCreateVideocardMutation } from "../../store/api/apiVideoCard";
 import { useUploadImageMutation } from "../../store/api/apiVideoCard"; // Импортируем мутацию загрузки изображения
-import { useSearchBrandsByNameQuery } from "../../store/api/apiBrand";
+import {useGetBrandsQuery} from "../../store/api/apiBrand";
 import { useGetLightTypesQuery } from "../../store/api/apiLighttype";
 import { LightType } from "../../types/LightType";
 
@@ -23,9 +23,10 @@ const AddVideocardComponent: React.FC = () => {
     const [image, setImage] = useState<File | null>(null);
 
     const [createVideocard, { isLoading, isSuccess, isError }] = useCreateVideocardMutation();
-    const { data: existingBrands, isLoading: isSearching } = useSearchBrandsByNameQuery(newVideocard.brand?.name || "", {
-        skip: false,
-    });
+    // const { data: existingBrands, isLoading: isSearching } = useSearchBrandsByNameQuery(newVideocard.brand?.name || "", {
+    //     skip: false,
+    // });
+    const { data: existingBrands } = useGetBrandsQuery();
     const { data: lightTypes } = useGetLightTypesQuery();
 
     const [uploadImage, { isLoading: isUploading }] = useUploadImageMutation(); // Мутация для загрузки изображения
@@ -141,9 +142,9 @@ const AddVideocardComponent: React.FC = () => {
                     <label>Бренд</label>
                     <Select
                         options={brandOptions}
-                        isLoading={isSearching}
                         onChange={handleBrandChange}
                         placeholder="Выберите бренд"
+                        required
                     />
                 </div>
                 <div>

@@ -2,7 +2,7 @@ import React, { useState, useMemo } from "react";
 import Select from "react-select";
 import { Processor } from "../../types/Processor"; // Импортируем интерфейс Processor и RamType
 import { useCreateProcessorMutation } from "../../store/api/apiProcessor";
-import { useSearchBrandsByNameQuery } from "../../store/api/apiBrand";
+import { useGetBrandsQuery } from "../../store/api/apiBrand";
 import { useGetSocketsQuery } from "../../store/api/apiSocket";
 import "../case/CreateCase.css";
 import {RamType} from "../../types/Ram";
@@ -19,9 +19,7 @@ const AddProcessorComponent: React.FC = () => {
     });
 
     const [createProcessor, { isLoading, isSuccess, isError }] = useCreateProcessorMutation();
-    const { data: existingBrands, isLoading: isSearchingBrands } = useSearchBrandsByNameQuery(newProcessor.brand?.name || '', {
-        skip: false,
-    });
+    const { data: existingBrands } = useGetBrandsQuery();
     const { data: socketTypes, isLoading: isSearchingSockets } = useGetSocketsQuery();
 
     const brandOptions = useMemo(() =>
@@ -125,9 +123,9 @@ const AddProcessorComponent: React.FC = () => {
                     <label>Бренд</label>
                     <Select
                         options={brandOptions}
-                        isLoading={isSearchingBrands}
                         onChange={handleBrandChange}
                         placeholder="Выберите бренд"
+                        required
                     />
                 </div>
                 <div>

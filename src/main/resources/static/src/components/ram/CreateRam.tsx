@@ -2,7 +2,7 @@ import React, { useState, useMemo, useEffect } from "react";
 import Select from "react-select";
 import { Ram, RamType } from "../../types/Ram"; // Импортируем интерфейсы
 import { useCreateRamMutation } from "../../store/api/apiRam";
-import { useSearchBrandsByNameQuery } from "../../store/api/apiBrand";
+import { useGetBrandsQuery } from "../../store/api/apiBrand";
 import { useGetLightTypesQuery } from "../../store/api/apiLighttype";
 import "../case/CreateCase.css";
 import {LightType} from "../../types/LightType";
@@ -19,9 +19,8 @@ const AddRamComponent: React.FC = () => {
     });
 
     const [createRam, { isLoading, isSuccess, isError }] = useCreateRamMutation();
-    const { data: existingBrands, isLoading: isSearching, isError: isSearchError } = useSearchBrandsByNameQuery(newRam.brand?.name || '', {
-        skip: false,
-    });
+    const { data: existingBrands } = useGetBrandsQuery();
+
 
     // Запрашиваем доступные типы подсветки
     const { data: lightTypes } = useGetLightTypesQuery();
@@ -111,9 +110,9 @@ const AddRamComponent: React.FC = () => {
                     <label>Бренд</label>
                     <Select
                         options={brandOptions}
-                        isLoading={isSearching}
                         onChange={handleBrandChange}
                         placeholder="Выберите бренд"
+                        required
                     />
                 </div>
                 <div>

@@ -7,7 +7,7 @@ import CreateStorageDevice from "../components/storage-device/CreateStorageDevic
 import StorageDevicesTable from "../components/storage-device/StorageDevicesTable";
 import RamTable from "../components/ram/RamTable";
 import CreateRam from "../components/ram/CreateRam";
-import CreateVidoCard from "../components/video-card/CreateVidoCard";
+import CreateVidoCard from "../components/video-card/CreateVideoCard";
 import VideoCardTable from "../components/video-card/VideoCardTable";
 import ProcessorTable from "../components/processor/ProcessorTable";
 import CreateProcessor from "../components/processor/CreateProcessor";

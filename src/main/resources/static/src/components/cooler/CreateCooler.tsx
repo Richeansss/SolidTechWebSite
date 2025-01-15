@@ -2,9 +2,10 @@ import React, { useState, useMemo } from "react";
 import Select from "react-select";
 import { Cooler } from "../../types/Cooler";
 import { useCreateCoolerMutation } from "../../store/api/apiCooler";
-import { useSearchBrandsByNameQuery } from "../../store/api/apiBrand";
+import { useGetBrandsQuery } from "../../store/api/apiBrand";
 import { useGetLightTypesQuery } from "../../store/api/apiLighttype";
-import "../case/CreateCase.css"; // Подключение CSS
+import "../case/CreateCase.css";
+import {LightType} from "../../types/LightType"; // Подключение CSS
 
 const AddCoolerComponent: React.FC = () => {
     const [newCooler, setNewCooler] = useState<Partial<Cooler>>({
@@ -16,9 +17,7 @@ const AddCoolerComponent: React.FC = () => {
 
     const [createCooler, { isLoading, isSuccess, isError }] = useCreateCoolerMutation();
     const { data: lightTypes, isLoading: isLoadingLightTypes } = useGetLightTypesQuery();
-    const { data: existingBrands, isLoading: isSearching, isError: isSearchError } = useSearchBrandsByNameQuery(newCooler.brand?.name || '', {
-        skip: false, // Запрос всегда выполняется
-    });
+    const { data: existingBrands } = useGetBrandsQuery();
 
     // Мемоизация списка брендов
     const brandOptions = useMemo(() =>
@@ -52,6 +51,22 @@ const AddCoolerComponent: React.FC = () => {
             setNewCooler((prevCooler) => ({
                 ...prevCooler,
                 brand: { id: selectedOption.value, name: selectedOption.label },
+            }));
+        }
+    };
+
+    const lightTypeOptions = useMemo(() =>
+        lightTypes?.map((lightType: LightType) => ({
+            value: lightType.id,
+            label: lightType.name,
+        })), [lightTypes]
+    );
+
+    const handleLightTypeChange = (selectedOption: { value: number; label: string } | null) => {
+        if (selectedOption) {
+            setNewCooler((prevCooler) => ({
+                ...prevCooler,
+                lightType: { id: selectedOption.value, name: selectedOption.label },
             }));
         }
     };
@@ -97,9 +112,9 @@ const AddCoolerComponent: React.FC = () => {
                     <label>Бренд</label>
                     <Select
                         options={brandOptions}
-                        isLoading={isSearching}
                         onChange={handleBrandChange}
                         placeholder="Выберите бренд"
+                        required
                     />
                 </div>
                 <div>
@@ -123,25 +138,13 @@ const AddCoolerComponent: React.FC = () => {
                     />
                 </div>
                 <div>
-                    <label>Тип подсветки</label>
-                    <select
-                        name="lightType"
-                        value={newCooler.lightType?.id || ""}
-                        onChange={handleInputChange}
-                        disabled={isLoadingLightTypes}
-                    >
-                        <option value="" disabled>Выберите тип подсветки</option>
-                        {/* Это по умолчанию будет выбранным элементом */}
-                        {isLoadingLightTypes ? (
-                            <option>Загрузка...</option>
-                        ) : (
-                            lightTypes?.map((type) => (
-                                <option key={type.id} value={type.id}>
-                                    {type.name}
-                                </option>
-                            ))
-                        )}
-                    </select>
+                    <label htmlFor="lightType">Тип подсветки</label>
+                    <Select
+                        options={lightTypeOptions}
+                        onChange={handleLightTypeChange}
+                        placeholder="Выберите тип подсветки"
+                        required
+                    />
                 </div>
                 <button type="submit" disabled={isLoading}>
                     {isLoading ? "Добавление..." : "Добавить кулер"}

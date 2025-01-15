@@ -3,7 +3,7 @@ import Select from "react-select";
 import { MotherBoard } from "../../types/MotherBoard";
 import { RamType } from "../../types/Ram";
 import { useCreateMotherBoardMutation } from "../../store/api/apiMotherBoard";
-import { useSearchBrandsByNameQuery } from "../../store/api/apiBrand";
+import { useGetBrandsQuery } from "../../store/api/apiBrand";
 import { useGetSocketsQuery } from "../../store/api/apiSocket";
 import { useGetChipsetsQuery } from "../../store/api/apiChipset";
 import "../case/CreateCase.css";
@@ -21,9 +21,7 @@ const AddMotherBoardComponent: React.FC = () => {
     });
 
     const [createMotherBoard, { isLoading, isSuccess, isError }] = useCreateMotherBoardMutation();
-    const { data: existingBrands, isLoading: isSearchingBrands } = useSearchBrandsByNameQuery(newMotherBoard.brand?.name || "", {
-        skip: false,
-    });
+    const { data: existingBrands } = useGetBrandsQuery();
     const { data: socketTypes, isLoading: isSearchingSockets } = useGetSocketsQuery();
     const { data: chipsetTypes, isLoading: isSearchingChipsets } = useGetChipsetsQuery();
 
@@ -160,9 +158,9 @@ const AddMotherBoardComponent: React.FC = () => {
                     <label>Бренд</label>
                     <Select
                         options={brandOptions}
-                        isLoading={isSearchingBrands}
                         onChange={handleBrandChange}
                         placeholder="Выберите бренд"
+                        required
                     />
                 </div>
                 <div>

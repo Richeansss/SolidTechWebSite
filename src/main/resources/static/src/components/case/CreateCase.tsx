@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, {useMemo, useState} from 'react';
 import { useCreateCaseMutation } from '../../store/api/apiCase';
-import { useSearchBrandsByNameQuery } from '../../store/api/apiBrand';
+import { useGetBrandsQuery } from '../../store/api/apiBrand';
 import { useGetLightTypesQuery } from '../../store/api/apiLighttype';
 import { Case } from '../../types/Case';
-import './CreateCase.css'; // Подключение CSS
+import './CreateCase.css';
+import Select from "react-select";
+import {LightType} from "../../types/LightType"; // Подключение CSS
 
 const AddCaseComponent: React.FC = () => {
     const [newCase, setNewCase] = useState<Partial<Case>>({
@@ -22,11 +24,8 @@ const AddCaseComponent: React.FC = () => {
     const [message, setMessage] = useState<string | null>(null);
 
     // Поиск брендов по имени
-    const { data: existingBrands, isLoading: isSearching, isError: isSearchError } = useSearchBrandsByNameQuery(newCase.brand?.name || '', {
-        skip: !newCase.brand?.name, // Не выполняем запрос, если имя бренда пустое
-    });
-
-    const { data: lightTypes, isLoading: isLoadingLightTypes, isError: isLightTypesError } = useGetLightTypesQuery();
+    const { data: existingBrands } = useGetBrandsQuery();
+    const { data: lightTypes, isLoading: isLoadingLightTypes } = useGetLightTypesQuery();
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
@@ -91,30 +90,36 @@ const AddCaseComponent: React.FC = () => {
         }
     };
 
-    const renderSuggestions = () => {
-        if (isSearching) {
-            return <p>Поиск брендов...</p>;
-        }
+    const brandOptions = useMemo(() =>
+        existingBrands?.map((brand) => ({
+            value: brand.id,
+            label: brand.name,
+        })), [existingBrands]
+    );
 
-        if (isSearchError) {
-            console.error('Ошибка при поиске брендов:', existingBrands);
-            return;
+    const handleBrandChange = (selectedOption: { value: number; label: string } | null) => {
+        if (selectedOption) {
+            setNewCase((prevCase) => ({
+                ...prevCase,
+                brand: { id: selectedOption.value, name: selectedOption.label },
+            }));
         }
+    };
 
-        const filteredBrands = existingBrands?.filter((brand) =>
-            brand.name.toLowerCase().includes(newCase.brand?.name?.toLowerCase() || '')
-        );
+    const lightTypeOptions = useMemo(() =>
+        lightTypes?.map((lightType: LightType) => ({
+            value: lightType.id,
+            label: lightType.name,
+        })), [lightTypes]
+    );
 
-        if (filteredBrands && filteredBrands.length > 0) {
-            return (
-                <datalist id="brand-suggestions">
-                    {filteredBrands.map((brand) => (
-                        <option key={brand.id} value={brand.name} />
-                    ))}
-                </datalist>
-            );
+    const handleLightTypeChange = (selectedOption: { value: number; label: string } | null) => {
+        if (selectedOption) {
+            setNewCase((prevCase) => ({
+                ...prevCase,
+                lightType: { id: selectedOption.value, name: selectedOption.label },
+            }));
         }
-        return null;
     };
 
     return (
@@ -133,17 +138,13 @@ const AddCaseComponent: React.FC = () => {
                     />
                 </div>
                 <div>
-                    <label htmlFor="brand">Бренд</label>
-                    <input
-                        id="brand"
-                        type="text"
-                        name="brand"
-                        value={newCase.brand?.name || ''}
-                        onChange={handleInputChange}
-                        list="brand-suggestions"
+                    <label>Бренд</label>
+                    <Select
+                        options={brandOptions}
+                        onChange={handleBrandChange}
+                        placeholder="Выберите бренд"
                         required
                     />
-                    {newCase.brand?.name && renderSuggestions()}
                 </div>
                 <div>
                     <label htmlFor="formFactor">Форм-фактор</label>
@@ -167,23 +168,12 @@ const AddCaseComponent: React.FC = () => {
                 </div>
                 <div>
                     <label htmlFor="lightType">Тип подсветки</label>
-                    <select
-                        id="lightType"
-                        name="lightType"
-                        value={newCase.lightType?.id || ''}
-                        onChange={handleInputChange}
-                        disabled={isLoadingLightTypes}
-                    >
-                        {isLoadingLightTypes ? (
-                            <option>Загружаем типы подсветки...</option>
-                        ) : (
-                            lightTypes?.map((lightType) => (
-                                <option key={lightType.id} value={lightType.id}>
-                                    {lightType.name}
-                                </option>
-                            ))
-                        )}
-                    </select>
+                    <Select
+                        options={lightTypeOptions}
+                        onChange={handleLightTypeChange}
+                        placeholder="Выберите тип подсветки"
+                        required
+                    />
                 </div>
                 <div>
                     <label htmlFor="funConnector">Коннектор для вентиляторов</label>

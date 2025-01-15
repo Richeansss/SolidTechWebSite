@@ -2,7 +2,7 @@ import React, { useState, useMemo } from "react";
 import Select from "react-select";
 import {FormFactor, InterfaceType, StorageDevice, StorageType} from "../../types/StorageDevice"; // Тип StorageDevice
 import { useCreateStorageDeviceMutation } from "../../store/api/apiStorageDevice";
-import { useSearchBrandsByNameQuery } from "../../store/api/apiBrand";
+import { useGetBrandsQuery } from "../../store/api/apiBrand";
 import "../case/CreateCase.css"; // Подключение CSS
 
 const AddStorageDeviceComponent: React.FC = () => {
@@ -17,10 +17,59 @@ const AddStorageDeviceComponent: React.FC = () => {
         writeSpeedMbps: 0,
     });
 
+    const storageTypeOptions = useMemo(
+        () => [
+            { value: StorageType.HDD, label: "HDD" },
+            { value: StorageType.SSD, label: "SSD" },
+        ],
+        []
+    );
+
+    const interfaceTypeOptions = useMemo(
+        () => [
+            { value: InterfaceType.SATA, label: "SATA" },
+            { value: InterfaceType.USB, label: "USB" },
+            { value: InterfaceType.SATA_III, label: "SATA III" },
+            { value: InterfaceType.PCIE_4_0, label: "PCIe 4.0" },
+            { value: InterfaceType.PCIE_3_0, label: "PCIe 3.0" },
+        ],
+        []
+    );
+
+    const handleInterfaceTypeChange = (selectedOption: { value: InterfaceType; label: string } | null) => {
+        setNewStorageDevice((prevDevice) => ({
+            ...prevDevice,
+            interfaceType: selectedOption ? selectedOption.value : InterfaceType.SATA_III, // Значение по умолчанию
+        }));
+    };
+
+    const handleTypeChange = (selectedOption: { value: StorageType; label: string } | null) => {
+        setNewStorageDevice((prevDevice) => ({
+            ...prevDevice,
+            type: selectedOption ? selectedOption.value : StorageType.SSD, // Значение по умолчанию
+        }));
+    };
+
+    const formFactorOptions = useMemo(
+        () => [
+            { value: FormFactor.PCIE_CARD, label: "PCIe Card" },
+            { value: FormFactor.FORM_2_5, label: "2.5\" Form" },
+            { value: FormFactor.FORM_3_5, label: "3.5\" Form" },
+            { value: FormFactor.M_2, label: "M.2" },
+        ],
+        []
+    );
+
+    const handleFormFactorChange = (selectedOption: { value: FormFactor; label: string } | null) => {
+        setNewStorageDevice((prevDevice) => ({
+            ...prevDevice,
+            formFactor: selectedOption ? selectedOption.value : FormFactor.PCIE_CARD, // Значение по умолчанию
+        }));
+    };
+
     const [createStorageDevice, { isLoading, isSuccess, isError }] = useCreateStorageDeviceMutation();
-    const { data: existingBrands, isLoading: isSearching, isError: isSearchError } = useSearchBrandsByNameQuery(newStorageDevice.brand?.name || '', {
-        skip: false, // Запрос всегда выполняется
-    });
+    const { data: existingBrands } = useGetBrandsQuery();
+
 
     // Мемоизация списка брендов
     const brandOptions = useMemo(() =>
@@ -94,22 +143,20 @@ const AddStorageDeviceComponent: React.FC = () => {
                     <label>Бренд</label>
                     <Select
                         options={brandOptions}
-                        isLoading={isSearching}
                         onChange={handleBrandChange}
                         placeholder="Выберите бренд"
+                        required
                     />
                 </div>
                 <div>
                     <label>Тип</label>
-                    <select
-                        name="type"
-                        value={newStorageDevice.type || StorageType.SSD}
-                        onChange={handleInputChange}
-                        required
-                    >
-                        <option value={StorageType.HDD}>HDD</option>
-                        <option value={StorageType.SSD}>SSD</option>
-                    </select>
+                    <Select
+                        options={storageTypeOptions}
+                        value={storageTypeOptions.find((option) => option.value === newStorageDevice.type)}
+                        onChange={handleTypeChange}
+                        placeholder="Выберите тип"
+                        isClearable={false} // Запрещаем очищать выбор
+                    />
                 </div>
                 <div>
                     <label>Емкость (ГБ)</label>
@@ -123,32 +170,23 @@ const AddStorageDeviceComponent: React.FC = () => {
                 </div>
                 <div>
                     <label>Форм-фактор</label>
-                    <select
-                        name="formFactor"
-                        value={newStorageDevice.formFactor || FormFactor.PCIE_CARD} // Значение по умолчанию
-                        onChange={handleInputChange}
-                        required
-                    >
-                        <option value={FormFactor.PCIE_CARD}>PCIe Card</option>
-                        <option value={FormFactor.FORM_2_5}>2.5" Form</option>
-                        <option value={FormFactor.FORM_3_5}>3.5" Form</option>
-                        <option value={FormFactor.M_2}>M.2</option>
-                    </select>
+                    <Select
+                        options={formFactorOptions}
+                        value={formFactorOptions.find((option) => option.value === newStorageDevice.formFactor)}
+                        onChange={handleFormFactorChange}
+                        placeholder="Выберите форм-фактор"
+                        isClearable={false} // Запрещаем очищать выбор
+                    />
                 </div>
                 <div>
                     <label>Тип интерфейса</label>
-                    <select
-                        name="interfaceType"
-                        value={newStorageDevice.interfaceType || InterfaceType.SATA_III} // Значение по умолчанию
-                        onChange={handleInputChange}
-                        required
-                    >
-                    <option value={InterfaceType.SATA}>SATA</option>
-                        <option value={InterfaceType.USB}>USB</option>
-                        <option value={InterfaceType.SATA_III}>SATA III</option>
-                        <option value={InterfaceType.PCIE_4_0}>PCIe 4.0</option>
-                        <option value={InterfaceType.PCIE_3_0}>PCIe 3.0</option>
-                    </select>
+                    <Select
+                        options={interfaceTypeOptions}
+                        value={interfaceTypeOptions.find((option) => option.value === newStorageDevice.interfaceType)}
+                        onChange={handleInterfaceTypeChange}
+                        placeholder="Выберите тип интерфейса"
+                        isClearable={false} // Запрещаем очищать выбор
+                    />
                 </div>
                 <div>
                     <label>Скорость чтения (МБ/с)</label>

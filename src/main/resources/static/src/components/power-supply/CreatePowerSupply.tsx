@@ -2,7 +2,7 @@ import React, { useState, useMemo } from "react";
 import Select from "react-select";
 import { PowerSupply } from "../../types/PowerSupply"; // Тип PowerSupply
 import { useCreatePowerSupplyMutation } from "../../store/api/apiPowerSupply";
-import { useSearchBrandsByNameQuery } from "../../store/api/apiBrand";
+import { useGetBrandsQuery } from "../../store/api/apiBrand";
 import "../case/CreateCase.css"; // Подключение CSS
 
 const AddPowerSupplyComponent: React.FC = () => {
@@ -15,9 +15,7 @@ const AddPowerSupplyComponent: React.FC = () => {
     });
 
     const [createPowerSupply, { isLoading, isSuccess, isError }] = useCreatePowerSupplyMutation();
-    const { data: existingBrands, isLoading: isSearching, isError: isSearchError } = useSearchBrandsByNameQuery(newPowerSupply.brand?.name || '', {
-        skip: false, // Запрос всегда выполняется
-    });
+    const { data: existingBrands } = useGetBrandsQuery();
 
     // Мемоизация списка брендов
     const brandOptions = useMemo(() =>
@@ -87,9 +85,9 @@ const AddPowerSupplyComponent: React.FC = () => {
                     <label>Бренд</label>
                     <Select
                         options={brandOptions}
-                        isLoading={isSearching}
                         onChange={handleBrandChange}
                         placeholder="Выберите бренд"
+                        required
                     />
                 </div>
                 <div>
