@@ -122,7 +122,7 @@ const AddPowerSupplyComponent: React.FC = () => {
                         <option value="false">Нет</option>
                     </select>
                 </div>
-                <button type="submit" disabled={isLoading}>
+                <button className="button-primary" type="submit" disabled={isLoading}>
                     {isLoading ? "Добавление..." : "Добавить блок питания"}
                 </button>
             </form>

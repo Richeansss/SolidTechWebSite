@@ -213,7 +213,7 @@ const AddVideocardComponent: React.FC = () => {
                         onChange={handleImageChange}
                     />
                 </div>
-                <button type="submit" disabled={isLoading || isUploading}>
+                <button className="button-primary" type="submit" disabled={isLoading}>
                     {isLoading || isUploading ? "Добавление..." : "Добавить видеокарту"}
                 </button>
             </form>

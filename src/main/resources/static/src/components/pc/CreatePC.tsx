@@ -183,12 +183,14 @@ const AddPCComponent: React.FC = () => {
                         onChange={(option) => handleSelectChange("motherBoard", option)}
                         placeholder="Выберите материнскую плату"
                     />
+                    <label>Гарантия</label>
                     <input
                         type="number"
                         placeholder="Гарантия материнской платы"
                         value={newPC.motherBoardWarranty}
                         onChange={(e) => handleInputChange("motherBoardWarranty", e.target.value)}
                     />
+                    <label>Магазин</label>
                     <Select
                         options={storeOptions}
                         onChange={(option) => handleStoreSelectChange("motherBoardStore", option)}
@@ -204,12 +206,14 @@ const AddPCComponent: React.FC = () => {
                         onChange={(option) => handleSelectChange("processor", option)}
                         placeholder="Выберите процессор"
                     />
+                    <label>Гарантия</label>
                     <input
                         type="number"
                         placeholder="Гарантия процессора"
                         value={newPC.processorWarranty}
                         onChange={(e) => handleInputChange("processorWarranty", e.target.value)}
                     />
+                    <label>Магазин</label>
                     <Select
                         options={storeOptions}
                         onChange={(option) => handleStoreSelectChange("processorStore", option)}
@@ -225,12 +229,14 @@ const AddPCComponent: React.FC = () => {
                         onChange={(option) => handleSelectChange("ram", option)}
                         placeholder="Выберите оперативную память"
                     />
+                    <label>Гарантия</label>
                     <input
                         type="number"
                         placeholder="Гарантия оперативной памяти"
                         value={newPC.ramWarranty}
                         onChange={(e) => handleInputChange("ramWarranty", e.target.value)}
                     />
+                    <label>Магазин</label>
                     <Select
                         options={storeOptions}
                         onChange={(option) => handleStoreSelectChange("ramStore", option)}
@@ -246,12 +252,14 @@ const AddPCComponent: React.FC = () => {
                         onChange={(option) => handleSelectChange("cooler", option)}
                         placeholder="Выберите кулер"
                     />
+                    <label>Гарантия</label>
                     <input
                         type="number"
                         placeholder="Гарантия кулера"
                         value={newPC.coolerWarranty}
                         onChange={(e) => handleInputChange("coolerWarranty", e.target.value)}
                     />
+                    <label>Магазин</label>
                     <Select
                         options={storeOptions}
                         onChange={(option) => handleStoreSelectChange("coolerStore", option)}
@@ -267,12 +275,14 @@ const AddPCComponent: React.FC = () => {
                         onChange={(option) => handleSelectChange("case_pc", option)}
                         placeholder="Выберите корпус"
                     />
+                    <label>Гарантия</label>
                     <input
                         type="number"
                         placeholder="Гарантия корпуса"
                         value={newPC.caseWarranty}
                         onChange={(e) => handleInputChange("caseWarranty", e.target.value)}
                     />
+                    <label>Магазин</label>
                     <Select
                         options={storeOptions}
                         onChange={(option) => handleStoreSelectChange("caseStore", option)}
@@ -288,12 +298,14 @@ const AddPCComponent: React.FC = () => {
                         onChange={(option) => handleSelectChange("videocard", option)}
                         placeholder="Выберите видеокарту"
                     />
+                    <label>Гарантия</label>
                     <input
                         type="number"
                         placeholder="Гарантия видеокарты"
                         value={newPC.videocardWarranty}
                         onChange={(e) => handleInputChange("videocardWarranty", e.target.value)}
                     />
+                    <label>Магазин</label>
                     <Select
                         options={storeOptions}
                         onChange={(option) => handleStoreSelectChange("videocardStore", option)}
@@ -309,12 +321,14 @@ const AddPCComponent: React.FC = () => {
                         onChange={(option) => handleSelectChange("storageDevice", option)}
                         placeholder="Выберите накопительное устройство"
                     />
+                    <label>Гарантия</label>
                     <input
                         type="number"
                         placeholder="Гарантия накопительного устройства"
                         value={newPC.storageDeviceWarranty}
                         onChange={(e) => handleInputChange("storageDeviceWarranty", e.target.value)}
                     />
+                    <label>Магазин</label>
                     <Select
                         options={storeOptions}
                         onChange={(option) => handleStoreSelectChange("storageDeviceStore", option)}
@@ -330,12 +344,14 @@ const AddPCComponent: React.FC = () => {
                         onChange={(option) => handleSelectChange("powerSupply", option)}
                         placeholder="Выберите блок питания"
                     />
+                    <label>Гарантия</label>
                     <input
                         type="number"
                         placeholder="Гарантия источника питания"
                         value={newPC.powerSupplyWarranty}
                         onChange={(e) => handleInputChange("powerSupplyWarranty", e.target.value)}
                     />
+                    <label>Магазин</label>
                     <Select
                         options={storeOptions}
                         onChange={(option) => handleStoreSelectChange("powerSupplyStore", option)}
@@ -354,7 +370,7 @@ const AddPCComponent: React.FC = () => {
                     />
                 </div>
 
-                <button type="submit" disabled={isLoading}>
+                <button className="button-primary" type="submit" disabled={isLoading}>
                     {isLoading ? "Добавление..." : "Добавить ПК"}
                 </button>
 

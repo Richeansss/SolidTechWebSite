@@ -1,0 +1,39 @@
+/* Стили для вкладок */
+.tab-list {
+    display: flex;
+    justify-content: space-evenly; /* Для равномерного распределения */
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    list-style-type: none; /* Убираем маркеры у списка */
+    background-color: #f5f5f5;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.tab {
+    padding: 12px 24px;
+    cursor: pointer;
+    border: 2px solid transparent;
+    border-radius: 30px; /* Скругление для более современного вида */
+    background-color: #f5f5f5; /* Цвет фона для вкладки */
+    font-size: 16px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.tab:hover {
+    background-color: #007bff; /* Цвет фона при наведении */
+    color: white;
+    border-color: #007bff; /* Цвет бордера при наведении */
+    box-shadow: 0 2px 8px rgba(0, 123, 255, 0.3); /* Легкая тень при наведении */
+}
+
+.tab[aria-selected="true"] {
+    background-color: #007bff; /* Цвет фона для активной вкладки */
+    color: white;
+    font-weight: 600; /* Жирный текст для активной вкладки */
+    border-color: #007bff; /* Цвет бордера для активной вкладки */
+    box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3); /* Тень для активной вкладки */
+}
+
+

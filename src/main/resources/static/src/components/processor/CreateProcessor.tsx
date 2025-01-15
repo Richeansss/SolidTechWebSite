@@ -178,7 +178,7 @@ const AddProcessorComponent: React.FC = () => {
                         required
                     />
                 </div>
-                <button type="submit" disabled={isLoading}>
+                <button className="button-primary" type="submit" disabled={isLoading}>
                     {isLoading ? "Добавление..." : "Добавить процессор"}
                 </button>
             </form>

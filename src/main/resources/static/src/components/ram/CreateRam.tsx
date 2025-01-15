@@ -177,7 +177,7 @@ const AddRamComponent: React.FC = () => {
                         required
                     />
                 </div>
-                <button type="submit" disabled={isLoading}>
+                <button className="button-primary" type="submit" disabled={isLoading}>
                     {isLoading ? "Добавление..." : "Добавить оперативную память"}
                 </button>
             </form>
