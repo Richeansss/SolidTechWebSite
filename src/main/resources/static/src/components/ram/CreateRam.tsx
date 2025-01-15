@@ -1,11 +1,11 @@
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo } from "react";
 import Select from "react-select";
 import { Ram, RamType } from "../../types/Ram"; // Импортируем интерфейсы
 import { useCreateRamMutation } from "../../store/api/apiRam";
 import { useGetBrandsQuery } from "../../store/api/apiBrand";
 import { useGetLightTypesQuery } from "../../store/api/apiLighttype";
 import "../case/CreateCase.css";
-import {LightType} from "../../types/LightType";
+import { LightType } from "../../types/LightType";
 
 const AddRamComponent: React.FC = () => {
     const [newRam, setNewRam] = useState<Partial<Ram>>({
@@ -20,9 +20,6 @@ const AddRamComponent: React.FC = () => {
 
     const [createRam, { isLoading, isSuccess, isError }] = useCreateRamMutation();
     const { data: existingBrands } = useGetBrandsQuery();
-
-
-    // Запрашиваем доступные типы подсветки
     const { data: lightTypes } = useGetLightTypesQuery();
 
     const brandOptions = useMemo(() =>
@@ -38,6 +35,12 @@ const AddRamComponent: React.FC = () => {
             label: lightType.name,
         })), [lightTypes]
     );
+
+    const ramTypeOptions = [
+        { value: RamType.DDR3, label: RamType.DDR3 },
+        { value: RamType.DDR4, label: RamType.DDR4 },
+        { value: RamType.DDR5, label: RamType.DDR5 }
+    ];
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
@@ -62,6 +65,15 @@ const AddRamComponent: React.FC = () => {
             setNewRam((prevRam) => ({
                 ...prevRam,
                 lightType: { id: selectedOption.value, name: selectedOption.label },
+            }));
+        }
+    };
+
+    const handleRamTypeChange = (selectedOption: { value: RamType; label: string } | null) => {
+        if (selectedOption) {
+            setNewRam((prevRam) => ({
+                ...prevRam,
+                typeRam: selectedOption.value,
             }));
         }
     };
@@ -117,16 +129,14 @@ const AddRamComponent: React.FC = () => {
                 </div>
                 <div>
                     <label>Тип RAM</label>
-                    <select
+                    <Select
                         name="typeRam"
-                        value={newRam.typeRam || RamType.DDR4}
-                        onChange={handleInputChange}
+                        options={ramTypeOptions}
+                        value={ramTypeOptions.find(option => option.value === newRam.typeRam) || null}
+                        onChange={handleRamTypeChange}
+                        placeholder="Выберите тип RAM"
                         required
-                    >
-                        <option value={RamType.DDR3}>{RamType.DDR3}</option>
-                        <option value={RamType.DDR4}>{RamType.DDR4}</option>
-                        <option value={RamType.DDR5}>{RamType.DDR5}</option>
-                    </select>
+                    />
                 </div>
                 <div>
                     <label>Объем RAM (ГБ)</label>

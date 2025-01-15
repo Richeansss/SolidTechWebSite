@@ -3,7 +3,7 @@ import Select from "react-select";
 import { Videocard } from "../../types/VideoCard"; // Импортируем интерфейсы
 import { useCreateVideocardMutation } from "../../store/api/apiVideoCard";
 import { useUploadImageMutation } from "../../store/api/apiVideoCard"; // Импортируем мутацию загрузки изображения
-import {useGetBrandsQuery} from "../../store/api/apiBrand";
+import { useGetBrandsQuery } from "../../store/api/apiBrand";
 import { useGetLightTypesQuery } from "../../store/api/apiLighttype";
 import { LightType } from "../../types/LightType";
 
@@ -23,12 +23,8 @@ const AddVideocardComponent: React.FC = () => {
     const [image, setImage] = useState<File | null>(null);
 
     const [createVideocard, { isLoading, isSuccess, isError }] = useCreateVideocardMutation();
-    // const { data: existingBrands, isLoading: isSearching } = useSearchBrandsByNameQuery(newVideocard.brand?.name || "", {
-    //     skip: false,
-    // });
     const { data: existingBrands } = useGetBrandsQuery();
     const { data: lightTypes } = useGetLightTypesQuery();
-
     const [uploadImage, { isLoading: isUploading }] = useUploadImageMutation(); // Мутация для загрузки изображения
 
     const brandOptions = useMemo(() =>
@@ -99,15 +95,17 @@ const AddVideocardComponent: React.FC = () => {
         try {
             // Создаем видеокарту
             const createdVideocard = await createVideocard(newVideocard).unwrap();
-            alert("Видеокарта успешно добавлена!");
 
             // Если изображение выбрано, загружаем его
             if (image) {
                 // @ts-ignore
-                const imageUrl = await uploadImage({ id: createdVideocard.id, file: image }).unwrap();
-                alert("Изображение успешно загружено!");
+                await uploadImage({ id: createdVideocard.id, file: image }).unwrap();
             }
 
+            // Общее уведомление
+            alert("Видеокарта успешно добавлена и изображение загружено!");
+
+            // Сброс формы
             setNewVideocard({
                 brand: { id: 0, name: "" },
                 name: "",
@@ -118,6 +116,7 @@ const AddVideocardComponent: React.FC = () => {
                 color: 0,
                 lightType: undefined,
             });
+
         } catch (error) {
             console.error("Ошибка добавления видеокарты:", error);
             alert("Произошла ошибка при добавлении видеокарты.");
