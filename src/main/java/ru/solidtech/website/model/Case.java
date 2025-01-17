@@ -39,4 +39,7 @@ public class Case {
 
     @Column(name = "glass_type", nullable = false)
     private Long glassType;
+
+    @Column(name = "image_url")
+    private String imageUrl;
 }

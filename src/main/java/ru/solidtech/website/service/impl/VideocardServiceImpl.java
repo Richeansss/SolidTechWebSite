@@ -15,7 +15,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
-import java.util.Objects;
 
 @Service
 @AllArgsConstructor
@@ -91,15 +90,30 @@ public class VideocardServiceImpl implements VideocardService {
                 : "unknown_card"; // Если имя видеокарты null, использовать "unknown_card"
 
         // Название папки для сохранения
-        Path folderPath = Paths.get("images/videocards/" + cardName);
+        Path folderPath = Paths.get("src/main/resources/static/public/images/" + cardName);
 
         // Создание папки, если её ещё нет
         if (!Files.exists(folderPath)) {
             Files.createDirectories(folderPath);
         }
 
-        // Генерация уникального имени файла (brandName + cardName + оригинальное имя файла)
-        String fileName = brandName + "_" + cardName;
+        // Получаем оригинальное имя файла
+        String originalFileName = file.getOriginalFilename();
+        if (originalFileName == null || originalFileName.isEmpty()) {
+            throw new IllegalArgumentException("Оригинальное имя файла отсутствует");
+        }
+
+        // Извлечение формата файла (расширения)
+        String fileExtension;
+        int dotIndex = originalFileName.lastIndexOf('.');
+        if (dotIndex != -1 && dotIndex < originalFileName.length() - 1) {
+            fileExtension = originalFileName.substring(dotIndex);
+        } else {
+            throw new IllegalArgumentException("Формат файла отсутствует");
+        }
+
+        // Генерация уникального имени файла (brandName + cardName)
+        String fileName = brandName + "_" + cardName + fileExtension;
         Path filePath = folderPath.resolve(fileName);
 
         // Сохранение файла
@@ -112,7 +126,4 @@ public class VideocardServiceImpl implements VideocardService {
 
         return imageUrl;
     }
-
-
-
 }

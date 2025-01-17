@@ -42,6 +42,9 @@ public class StorageDevice {
     @Column(name = "write_speed_mbps", nullable = false)
     private Integer writeSpeedMbps;
 
+    @Column(name = "image_url")
+    private String imageUrl;
+
     public enum StorageType {
         SSD,
         HDD

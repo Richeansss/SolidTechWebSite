@@ -34,4 +34,6 @@ public class Processor {
     @Column(columnDefinition = "FLOAT NOT NULL")
     private float turbo_bust;
 
+    @Column(name = "image_url")
+    private String imageUrl;
 }

@@ -20,6 +20,7 @@ const VideocardTable = () => {
                 pci: videocard.pci,
                 color: videocard.color,
                 lightType: videocard.lightType.name,
+                imageUrl: videocard.imageUrl, // Используем URL из базы данных
             }));
             setRows(formattedRows);
         }
@@ -35,6 +36,18 @@ const VideocardTable = () => {
         { field: 'pci', headerName: 'PCI Version', width: 150 },
         { field: 'color', headerName: 'Color', width: 150 },
         { field: 'lightType', headerName: 'Light Type', width: 180 },
+        {
+            field: 'imageUrl',
+            headerName: 'Image',
+            width: 200,
+            renderCell: (params) => (
+                <img
+                    src={params.value}
+                    alt="Videocard"
+                    style={{ width: '100px', height: 'auto', objectFit: 'contain' }}
+                />
+            ),
+        },
         {
             field: 'actions',
             headerName: 'Actions',

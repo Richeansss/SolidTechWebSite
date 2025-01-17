@@ -31,4 +31,7 @@ public class PowerSupply {
 
     @Column(nullable = false)
     private Boolean modular;
+
+    @Column(name = "image_url")
+    private String imageUrl;
 }

@@ -1,0 +1,83 @@
+.videocard-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Автоматическая настройка столбцов */
+    gap: 20px; /* Отступы между карточками */
+    padding: 20px; /* Отступы от краев контейнера */
+    justify-items: center; /* Центрирование карточек */
+}
+
+.videocard-card {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    overflow: hidden;
+    width: 100%; /* Использует всю доступную ширину ячейки */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Легкая тень для карточки */
+    background-color: #fff; /* Белый фон */
+}
+
+.image-container {
+    width: 100%;
+    height: 256px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f4f4f4;
+}
+
+.videocard-image {
+    width: 256px;
+    height: 256px;
+    object-fit: contain;
+    display: block;
+    margin: 0 auto;
+}
+
+.text-container {
+    padding: 10px;
+    text-align: center;
+}
+
+h3 {
+    font-size: 1.2em;
+    margin: 0;
+}
+
+p {
+    margin: 5px 0 0;
+}
+
+/* Адаптивные стили */
+
+/* Для экранов меньше 768px (мобильные устройства) */
+@media (max-width: 768px) {
+    .videocard-list {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Уменьшаем минимальный размер */
+    }
+
+    .videocard-image {
+        width: 200px;
+        height: 200px;
+    }
+}
+
+/* Для экранов меньше 480px (очень маленькие экраны, например, телефоны) */
+@media (max-width: 480px) {
+    .videocard-list {
+        grid-template-columns: 1fr; /* Одна колонка */
+    }
+
+    .videocard-image {
+        width: 150px;
+        height: 150px;
+    }
+
+    h3 {
+        font-size: 1em; /* Меньший размер шрифта на маленьких экранах */
+    }
+
+    p {
+        font-size: 0.9em; /* Меньший размер шрифта для текста */
+    }
+}

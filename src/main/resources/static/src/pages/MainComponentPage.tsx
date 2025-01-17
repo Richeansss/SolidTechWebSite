@@ -13,21 +13,19 @@ import CreateVidoCard from "../components/video-card/CreateVideoCard";
 import VideoCardTable from "../components/video-card/VideoCardTable";
 import ProcessorTable from "../components/processor/ProcessorTable";
 import CreateProcessor from "../components/processor/CreateProcessor";
-import CreateSocket from "../components/socket/CreateSocket";
-import SocketTable from "../components/socket/SocketTable";
-import CreateChipset from "../components/chipset/CreateChipset";
-import ChipsetTable from "../components/chipset/ChipsetTable";
 import CreateMotherBoard from "../components/mother-board/CreateMotherBoard";
 import MotherBoardTable from "../components/mother-board/MotherBoardTable";
 import PCTable from "../components/pc/PCTable";
 import CreatePC from "../components/pc/CreatePC";
 
-import './Page.css';  // Подключаем файл со стилями
+import './Page.css';
+import VideocardList from "../components/video-card/VideocardList";  // Подключаем файл со стилями
 
 const App: React.FC = () => {
         return (
             <div>
                     <h1>Магазин компьютеров</h1>
+                    <VideocardList/>
                     <Tabs>
                             <TabList className="tab-list">
                                     <Tab className="tab">Охлаждения</Tab>

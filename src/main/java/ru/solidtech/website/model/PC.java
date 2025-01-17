@@ -61,6 +61,9 @@ public class PC {
     private TypeStore powerSupplyStore;
 
     private int price;
+    @Column(name = "image_url")
+    private String imageUrl;
+    private Boolean isForSale;
 
     public enum TypeStore {
 

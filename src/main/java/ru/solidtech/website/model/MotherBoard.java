@@ -34,6 +34,6 @@ public class MotherBoard {
     @Column(columnDefinition = "BIGINT NOT NULL")
     private int  amount_of_m2;
 
-    @Column(columnDefinition = "VARCHAR(255) NOT NULL")
-    private String url;
+    @Column(name = "image_url")
+    private String imageUrl;
 }

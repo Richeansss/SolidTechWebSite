@@ -17,7 +17,7 @@ const AddMotherBoardComponent: React.FC = () => {
         typeRam: RamType.DDR4, // Default RAM type
         pci: 0,
         amount_of_m2: 0,
-        url: "",
+        imageUrl: "",
     });
 
     const [createMotherBoard, { isLoading, isSuccess, isError }] = useCreateMotherBoardMutation();
@@ -115,7 +115,7 @@ const AddMotherBoardComponent: React.FC = () => {
             !newMotherBoard.chipset ||
             !newMotherBoard.pci ||
             !newMotherBoard.amount_of_m2 ||
-            !newMotherBoard.url
+            !newMotherBoard.imageUrl
         ) {
             alert("Все поля обязательны для заполнения!");
             return;
@@ -132,7 +132,7 @@ const AddMotherBoardComponent: React.FC = () => {
                 typeRam: RamType.DDR4,
                 pci: 0,
                 amount_of_m2: 0,
-                url: "",
+                imageUrl: "",
             });
         } catch (error) {
             console.error("Ошибка добавления материнской платы:", error);
@@ -218,7 +218,7 @@ const AddMotherBoardComponent: React.FC = () => {
                     <input
                         type="url"
                         name="url"
-                        value={newMotherBoard.url || ""}
+                        value={newMotherBoard.imageUrl || ""}
                         onChange={handleInputChange}
                         required
                     />

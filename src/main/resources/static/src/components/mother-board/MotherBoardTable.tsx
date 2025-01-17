@@ -19,7 +19,7 @@ const MotherBoardTable = () => {
                 typeRam: motherBoard.typeRam,
                 pci: motherBoard.pci,
                 amount_of_m2: motherBoard.amount_of_m2,
-                url: motherBoard.url,
+                url: motherBoard.imageUrl,
             }));
             setRows(formattedRows);
         }
