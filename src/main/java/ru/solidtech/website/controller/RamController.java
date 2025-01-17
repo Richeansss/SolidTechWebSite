@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import ru.solidtech.website.model.Ram;
 import ru.solidtech.website.response.ResponseBuilder;
 import ru.solidtech.website.service.RamService;
@@ -67,6 +68,19 @@ public class RamController {
         } catch (IllegalArgumentException e) {
             logger.error("Не удалось удалить оперативную память с ID: {}", id, e);
             return ResponseBuilder.buildErrorResponse(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
+
+    @PostMapping("/{id}/upload-image")
+    public ResponseEntity<Map<String, Object>> uploadImage(
+            @PathVariable Long id,
+            @RequestParam("file") MultipartFile file) {
+        try {
+            String imageUrl = ramService.saveImage(id, file);
+            return ResponseBuilder.buildResponse(HttpStatus.OK, "Изображение успешно загружено", imageUrl);
+        } catch (Exception e) {
+            logger.error("Ошибка при загрузке изображения для видеокарты с ID: {}", id, e);
+            return ResponseBuilder.buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Не удалось загрузить изображение");
         }
     }
 }

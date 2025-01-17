@@ -1,7 +1,9 @@
 package ru.solidtech.website.service;
 
+import org.springframework.web.multipart.MultipartFile;
 import ru.solidtech.website.model.StorageDevice;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface StorageDeviceService {
@@ -46,4 +48,6 @@ public interface StorageDeviceService {
      * @throws IllegalArgumentException если накопитель не найден
      */
     void deleteStorageDevice(Long id);
+
+    String saveImage(Long id, MultipartFile file) throws IOException;
 }

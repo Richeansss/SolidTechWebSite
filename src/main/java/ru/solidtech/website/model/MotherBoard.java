@@ -36,4 +36,5 @@ public class MotherBoard {
 
     @Column(name = "image_url")
     private String imageUrl;
+
 }

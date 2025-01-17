@@ -1,7 +1,9 @@
 package ru.solidtech.website.service;
 
+import org.springframework.web.multipart.MultipartFile;
 import ru.solidtech.website.model.Ram;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface RamService {
@@ -14,4 +16,6 @@ public interface RamService {
     Ram updateRam(Ram ram);
 
     void deleteRam(Long id);
+
+    String saveImage(Long id, MultipartFile file) throws IOException;
 }
