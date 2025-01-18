@@ -53,6 +53,21 @@ export const apiPowerSupply = createApi({
             }),
             invalidatesTags: (result, error, id) => [{ type: 'PowerSupply', id }],
         }),
+        uploadImage: builder.mutation<string, { id: number; file: File }>({
+            query: ({ id, file }) => {
+                const formData = new FormData();
+                formData.append('file', file);
+
+                return {
+                    url: `${id}/upload-image`, // Убедитесь, что URL правильный, включая слеш в конце
+                    method: 'POST',
+                    body: formData,
+                    // Content-Type будет установлен автоматически для multipart запросов
+                };
+            },
+            transformResponse: (response: ApiResponse<string>) => response.data as string,
+            invalidatesTags: (result, error, { id }) => [{ type: 'PowerSupply', id }],
+        }),
     }),
 });
 
@@ -62,4 +77,5 @@ export const {
     useCreatePowerSupplyMutation,
     useUpdatePowerSupplyMutation,
     useDeletePowerSupplyMutation,
+    useUploadImageMutation
 } = apiPowerSupply;

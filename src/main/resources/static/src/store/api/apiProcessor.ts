@@ -53,6 +53,21 @@ export const apiProcessor = createApi({
             }),
             invalidatesTags: (result, error, id) => [{ type: 'Processor', id }],
         }),
+        uploadImage: builder.mutation<string, { id: number; file: File }>({
+            query: ({ id, file }) => {
+                const formData = new FormData();
+                formData.append('file', file);
+
+                return {
+                    url: `${id}/upload-image`, // Убедитесь, что URL правильный, включая слеш в конце
+                    method: 'POST',
+                    body: formData,
+                    // Content-Type будет установлен автоматически для multipart запросов
+                };
+            },
+            transformResponse: (response: ApiResponse<string>) => response.data as string,
+            invalidatesTags: (result, error, { id }) => [{ type: 'Processor', id }],
+        }),
     }),
 });
 
@@ -62,4 +77,5 @@ export const {
     useCreateProcessorMutation,
     useUpdateProcessorMutation,
     useDeleteProcessorMutation,
+    useUploadImageMutation
 } = apiProcessor;

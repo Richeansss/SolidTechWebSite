@@ -11,5 +11,5 @@ export interface Processor {
     core: number; // Количество ядер
     threads: number; // Количество потоков
     turbo_bust: number; // Наличие турбо-буста (1 или 0)
-    url: string; // URL изображения или документации
+    imageUrl?: string;  // Добавляем поле для хранения URL изображения
 }

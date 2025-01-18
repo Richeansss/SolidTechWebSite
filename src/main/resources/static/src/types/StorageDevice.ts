@@ -30,5 +30,6 @@ export interface StorageDevice {
     interfaceType: InterfaceType; // Например, SATA_III, NVMe и т.д.
     readSpeedMbps: number; // Скорость чтения в мегабайтах в секунду
     writeSpeedMbps: number; // Скорость записи в мегабайтах в секунду
+    imageUrl?: string;  // Добавляем поле для хранения URL изображения
 }
 

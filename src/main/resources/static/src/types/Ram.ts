@@ -18,5 +18,6 @@ export interface Ram {
     jdek: number;     // Частота (например, 3200 МГц)
     timing: number;   // Тайминги
     lightType: LightType; // Тип подсветки
+    imageUrl?: string;  // Добавляем поле для хранения URL изображения
 }
 

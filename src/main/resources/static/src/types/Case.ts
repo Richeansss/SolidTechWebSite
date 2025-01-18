@@ -8,5 +8,6 @@ export interface Case {
     funConnector?: number;
     color?: number;
     glassType?: number;
+    imageUrl?: string;
     [key: string]: any; // Для добавления дополнительных полей, если потребуется
 }

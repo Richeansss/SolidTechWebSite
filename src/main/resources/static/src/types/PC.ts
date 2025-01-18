@@ -42,6 +42,8 @@ export interface PC {
     powerSupplyStore: TypeStore;
 
     price: number;
+
+    imageUrl?: string;  // Добавляем поле для хранения URL изображения
 }
 
 export enum TypeStore {
