@@ -1,11 +1,12 @@
 import React, { useState, useMemo } from "react";
 import Select from "react-select";
 import { Ram, RamType } from "../../types/Ram"; // Импортируем интерфейсы
-import { useCreateRamMutation } from "../../store/api/apiRam";
+import {useCreateRamMutation, useUploadImageMutation} from "../../store/api/apiRam";
 import { useGetBrandsQuery } from "../../store/api/apiBrand";
 import { useGetLightTypesQuery } from "../../store/api/apiLighttype";
 import "../case/CreateCase.css";
 import { LightType } from "../../types/LightType";
+
 
 const AddRamComponent: React.FC = () => {
     const [newRam, setNewRam] = useState<Partial<Ram>>({
@@ -18,9 +19,13 @@ const AddRamComponent: React.FC = () => {
         lightType: undefined, // Пока нет выбора подсветки
     });
 
+    const [image, setImage] = useState<File | null>(null);
+
     const [createRam, { isLoading, isSuccess, isError }] = useCreateRamMutation();
     const { data: existingBrands } = useGetBrandsQuery();
     const { data: lightTypes } = useGetLightTypesQuery();
+    const [uploadImage, { isLoading: isUploading }] = useUploadImageMutation(); // Мутация для загрузки изображения
+
 
     const brandOptions = useMemo(() =>
         existingBrands?.map((brand) => ({
@@ -78,6 +83,13 @@ const AddRamComponent: React.FC = () => {
         }
     };
 
+    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files ? e.target.files[0] : null;
+        if (file) {
+            setImage(file);
+        }
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
@@ -87,7 +99,13 @@ const AddRamComponent: React.FC = () => {
         }
 
         try {
-            await createRam(newRam).unwrap();
+            const createdRam = await createRam(newRam).unwrap();
+
+            if (image) {
+                // @ts-ignore
+                await uploadImage({ id: createdRam.id, file: image }).unwrap();
+            }
+
             alert("Оперативная память успешно добавлена!");
             setNewRam({
                 brand: { id: 0, name: "" },
@@ -177,9 +195,15 @@ const AddRamComponent: React.FC = () => {
                         required
                     />
                 </div>
-                <button className="button-primary" type="submit" disabled={isLoading}>
-                    {isLoading ? "Добавление..." : "Добавить оперативную память"}
-                </button>
+                <div>
+                    <label>Изображение</label>
+                    <input type="file" accept="image/*" onChange={handleImageChange}/>
+                </div>
+                <div>
+                    <button className="button-primary" type="submit" disabled={isLoading || isUploading}>
+                        {isLoading ? "Добавление..." : "Добавить оперативную память"}
+                    </button>
+                </div>
             </form>
         </div>
     );

@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from "react";
 import Select from "react-select";
 import {FormFactor, InterfaceType, StorageDevice, StorageType} from "../../types/StorageDevice"; // Тип StorageDevice
-import { useCreateStorageDeviceMutation } from "../../store/api/apiStorageDevice";
+import {useCreateStorageDeviceMutation, useUploadImageMutation} from "../../store/api/apiStorageDevice";
 import { useGetBrandsQuery } from "../../store/api/apiBrand";
 import "../case/CreateCase.css"; // Подключение CSS
 
@@ -16,6 +16,9 @@ const AddStorageDeviceComponent: React.FC = () => {
         readSpeedMbps: 0,
         writeSpeedMbps: 0,
     });
+
+    const [image, setImage] = useState<File | null>(null);
+
 
     const storageTypeOptions = useMemo(
         () => [
@@ -68,6 +71,7 @@ const AddStorageDeviceComponent: React.FC = () => {
     };
 
     const [createStorageDevice, { isLoading, isSuccess, isError }] = useCreateStorageDeviceMutation();
+    const [uploadImage, { isLoading: isUploading }] = useUploadImageMutation(); // Мутация для загрузки изображения
     const { data: existingBrands } = useGetBrandsQuery();
 
 
@@ -98,6 +102,13 @@ const AddStorageDeviceComponent: React.FC = () => {
         }
     };
 
+    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files ? e.target.files[0] : null;
+        if (file) {
+            setImage(file);
+        }
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
@@ -107,7 +118,14 @@ const AddStorageDeviceComponent: React.FC = () => {
         }
 
         try {
-            await createStorageDevice(newStorageDevice).unwrap();
+            const createdStorageDevice = await createStorageDevice(newStorageDevice).unwrap();
+
+            // Если изображение выбрано, загружаем его
+            if (image) {
+                // @ts-ignore
+                await uploadImage({ id: createdStorageDevice.id, file: image }).unwrap();
+            }
+
             alert("Накопитель успешно добавлен!");
             setNewStorageDevice({
                 brand: { id: 0, name: "" },
@@ -208,9 +226,15 @@ const AddStorageDeviceComponent: React.FC = () => {
                         required
                     />
                 </div>
-                <button className="button-primary" type="submit" disabled={isLoading}>
-                    {isLoading ? "Добавление..." : "Добавить накопитель"}
-                </button>
+                <div>
+                    <label>Изображение</label>
+                    <input type="file" accept="image/*" onChange={handleImageChange}/>
+                </div>
+                <div>
+                    <button className="button-primary" type="submit" disabled={isLoading || isUploading}>
+                        {isLoading || isUploading ? "Добавление..." : "Добавить накопитель"}
+                    </button>
+                </div>
             </form>
         </div>
     );

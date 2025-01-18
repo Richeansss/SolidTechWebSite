@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 
 import CreateCooler from "../components/cooler/CreateCooler";
@@ -19,14 +19,27 @@ import PCTable from "../components/pc/PCTable";
 import CreatePC from "../components/pc/CreatePC";
 
 import './Page.css';
-import VideocardList from "../components/video-card/VideocardList";  // Подключаем файл со стилями
+import VideocardList from "../components/video-card/VideocardList";
 
 const App: React.FC = () => {
+        // Храним индекс активной вкладки в useState
+        const [activeTabIndex, setActiveTabIndex] = useState<number>(0);
+        // Используем useRef для сохранения текущего индекса вне рендера
+        const activeTabRef = useRef<number>(0);
+
+        const handleTabChange = (index: number) => {
+                setActiveTabIndex(index);
+                activeTabRef.current = index; // Сохраняем в ref
+        };
+
         return (
             <div>
                     <h1>Магазин компьютеров</h1>
-                    <VideocardList/>
-                    <Tabs>
+                    <VideocardList />
+                    <Tabs
+                        selectedIndex={activeTabRef.current} // Устанавливаем сохраненное значение
+                        onSelect={handleTabChange}
+                    >
                             <TabList className="tab-list">
                                     <Tab className="tab">Охлаждения</Tab>
                                     <Tab className="tab">Блоки питания</Tab>
