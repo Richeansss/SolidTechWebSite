@@ -81,7 +81,7 @@ public class StorageDeviceServiceImpl implements StorageDeviceService {
                 : "unknown_card"; // Если имя видеокарты null, использовать "unknown_card"
 
         // Название папки для сохранения
-        Path folderPath = Paths.get("src/main/resources/static/public/images/" + storageDeviceName);
+        Path folderPath = Paths.get("src/main/resources/static/public/images/storage_device/" + storageDeviceName);
 
         // Создание папки, если её ещё нет
         if (!Files.exists(folderPath)) {

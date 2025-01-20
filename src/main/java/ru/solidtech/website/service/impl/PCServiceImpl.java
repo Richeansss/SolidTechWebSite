@@ -89,7 +89,7 @@ public class PCServiceImpl implements PCService {
                 : "unknown_id"; // Если ID равен 0, использовать "unknown_id"
 
         // Название папки для сохранения
-        Path folderPath = Paths.get("src/main/resources/static/public/images/" + pcID);
+        Path folderPath = Paths.get("src/main/resources/static/public/images/pc/" + pcID);
 
         // Создание папки, если её ещё нет
         if (!Files.exists(folderPath)) {
@@ -119,7 +119,7 @@ public class PCServiceImpl implements PCService {
         Files.write(filePath, file.getBytes());
 
         // Сохранение ссылки на изображение в БД
-        String imageUrl = "/images/processor/" + pcID + "/" + fileName;
+        String imageUrl = "/images/pc/" + pcID + "/" + fileName;
         pc.setImageUrl(imageUrl);
         pcRepository.save(pc);
 

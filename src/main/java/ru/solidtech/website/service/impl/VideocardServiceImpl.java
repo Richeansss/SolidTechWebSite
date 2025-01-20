@@ -90,7 +90,7 @@ public class VideocardServiceImpl implements VideocardService {
                 : "unknown_card"; // Если имя видеокарты null, использовать "unknown_card"
 
         // Название папки для сохранения
-        Path folderPath = Paths.get("src/main/resources/static/public/images/" + cardName);
+        Path folderPath = Paths.get("src/main/resources/static/public/images/videocards/" + cardName);
 
         // Создание папки, если её ещё нет
         if (!Files.exists(folderPath)) {

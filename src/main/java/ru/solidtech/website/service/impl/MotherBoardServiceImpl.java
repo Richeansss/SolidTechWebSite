@@ -92,7 +92,7 @@ public class MotherBoardServiceImpl implements MotherBoardService {
                 : "unknown_card"; // Если имя видеокарты null, использовать "unknown_card"
 
         // Название папки для сохранения
-        Path folderPath = Paths.get("src/main/resources/static/public/images/" + motherBoardName);
+        Path folderPath = Paths.get("src/main/resources/static/public/images/mother_board/" + motherBoardName);
 
         // Создание папки, если её ещё нет
         if (!Files.exists(folderPath)) {

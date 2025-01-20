@@ -77,7 +77,7 @@ public class PowerSupplyServiceImpl implements PowerSupplyService {
                 : "unknown_card"; // Если имя видеокарты null, использовать "unknown_card"
 
         // Название папки для сохранения
-        Path folderPath = Paths.get("src/main/resources/static/public/images/" + powerSupplyName);
+        Path folderPath = Paths.get("src/main/resources/static/public/images/power_supply/" + powerSupplyName);
 
         // Создание папки, если её ещё нет
         if (!Files.exists(folderPath)) {

@@ -77,7 +77,7 @@ public class ProcessorServiceImpl implements ProcessorService {
                 : "unknown_card"; // Если имя видеокарты null, использовать "unknown_card"
 
         // Название папки для сохранения
-        Path folderPath = Paths.get("src/main/resources/static/public/images/" + processorName);
+        Path folderPath = Paths.get("src/main/resources/static/public/images/processor/" + processorName);
 
         // Создание папки, если её ещё нет
         if (!Files.exists(folderPath)) {
