@@ -18,6 +18,7 @@ const CoolersTable = () => {
                 tdp: cooler.tdp || 'Not specified',
                 funConnector: cooler.funConnector || 'Not specified',
                 lightType: cooler.lightType?.name || 'Not specified',
+                imageUrl: cooler.imageUrl, // Используем URL из базы данных
             }));
             setRows(formattedRows);
         }
@@ -31,6 +32,18 @@ const CoolersTable = () => {
         { field: 'tdp', headerName: 'TDP', width: 150 },
         { field: 'funConnector', headerName: 'Connector', width: 180 },
         { field: 'lightType', headerName: 'Light Type', width: 180 },
+        {
+            field: 'imageUrl',
+            headerName: 'Image',
+            width: 200,
+            renderCell: (params) => (
+                <img
+                    src={params.value}
+                    alt="Cooler"
+                    style={{ width: '100px', height: 'auto', objectFit: 'contain' }}
+                />
+            ),
+        },
         {
             field: 'actions',
             headerName: 'Actions',

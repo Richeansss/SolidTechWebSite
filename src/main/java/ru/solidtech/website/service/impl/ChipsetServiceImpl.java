@@ -27,7 +27,11 @@ public class ChipsetServiceImpl implements ChipsetService {
 
     @Override
     public Chipset createChipset(Chipset chipsetEntity) {
-        return chipsetRepository.save(chipsetEntity); // Сохраняем Chipset
+        if (chipsetEntity.getSocket() == null || chipsetEntity.getSocket().getId() == 0) {
+            throw new IllegalArgumentException("Socket не указан или не содержит корректный ID");
+        }
+
+        return chipsetRepository.save(chipsetEntity);
     }
 
     @Override
@@ -35,6 +39,10 @@ public class ChipsetServiceImpl implements ChipsetService {
         if (!chipsetRepository.existsById(chipset.getId())) {
             throw new IllegalArgumentException("Chipset с ID " + chipset.getId() + " не найден");
         }
+        if (chipset.getSocket() == null || chipset.getSocket().getId() == 0) {
+            throw new IllegalArgumentException("Socket не указан или не содержит корректный ID");
+        }
+
         return chipsetRepository.save(chipset);
     }
 

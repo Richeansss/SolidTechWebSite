@@ -19,6 +19,7 @@ const RamTable = () => {
                 jdek: ram.jdek,
                 timing: ram.timing,
                 lightType: ram.lightType.name,
+                imageUrl: ram.imageUrl,
             }));
             setRows(formattedRows);
         }
@@ -33,6 +34,18 @@ const RamTable = () => {
         { field: 'jdek', headerName: 'Frequency (MHz)', width: 180 },
         { field: 'timing', headerName: 'Timing', width: 180 },
         { field: 'lightType', headerName: 'Light Type', width: 180,  },
+        {
+            field: 'imageUrl',
+            headerName: 'Image',
+            width: 200,
+            renderCell: (params) => (
+                <img
+                    src={params.value}
+                    alt="Ram"
+                    style={{ width: '100px', height: 'auto', objectFit: 'contain' }}
+                />
+            ),
+        },
         {
             field: 'actions',
             headerName: 'Actions',

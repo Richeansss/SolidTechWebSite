@@ -19,7 +19,7 @@ const MotherBoardTable = () => {
                 typeRam: motherBoard.typeRam,
                 pci: motherBoard.pci,
                 amount_of_m2: motherBoard.amount_of_m2,
-                url: motherBoard.imageUrl,
+                imageUrl: motherBoard.imageUrl,
             }));
             setRows(formattedRows);
         }
@@ -35,6 +35,18 @@ const MotherBoardTable = () => {
         { field: 'pci', headerName: 'PCI Slots', width: 100 },
         { field: 'amount_of_m2', headerName: 'M.2 Slots', width: 120 },
         { field: 'url', headerName: 'URL', width: 250, renderCell: (params) => <a href={params.value} target="_blank" rel="noopener noreferrer">{params.value}</a> },
+        {
+            field: 'imageUrl',
+            headerName: 'Image',
+            width: 200,
+            renderCell: (params) => (
+                <img
+                    src={params.value}
+                    alt="StorageDevices"
+                    style={{ width: '100px', height: 'auto', objectFit: 'contain' }}
+                />
+            ),
+        },
         {
             field: 'actions',
             headerName: 'Actions',

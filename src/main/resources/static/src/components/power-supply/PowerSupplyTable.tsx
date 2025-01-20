@@ -18,6 +18,7 @@ const PowerSuppliesTable = () => {
                 certificate: powerSupply.certificate || 'Not specified',
                 power: powerSupply.power || 'Not specified',
                 modular: powerSupply.modular ? 'Yes' : 'No',
+                imageUrl: powerSupply.imageUrl, // Используем URL из базы данных
             }));
             setRows(formattedRows);
         }
@@ -31,6 +32,18 @@ const PowerSuppliesTable = () => {
         { field: 'certificate', headerName: 'Certificate', width: 150 },
         { field: 'power', headerName: 'Power (W)', width: 180 },
         { field: 'modular', headerName: 'Modular', width: 180 },
+        {
+            field: 'imageUrl',
+            headerName: 'Image',
+            width: 200,
+            renderCell: (params) => (
+                <img
+                    src={params.value}
+                    alt="Power-Supply"
+                    style={{ width: '100px', height: 'auto', objectFit: 'contain' }}
+                />
+            ),
+        },
         {
             field: 'actions',
             headerName: 'Actions',

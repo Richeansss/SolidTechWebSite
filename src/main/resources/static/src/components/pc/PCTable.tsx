@@ -37,6 +37,7 @@ const PCTable = () => {
                 powerSupplyWarranty: pc.powerSupplyWarranty,
                 powerSupplyStore: pc.powerSupplyStore,
                 price: pc.price,
+                imageUrl: pc.imageUrl, // Используем URL из базы данных
             }));
             setRows(formattedRows);
         }
@@ -69,6 +70,18 @@ const PCTable = () => {
         { field: 'powerSupplyWarranty', headerName: 'Гарантия блока питания', width: 250 },
         { field: 'powerSupplyStore', headerName: 'Магазин блока питания', width: 250 },
         { field: 'price', headerName: 'Цена', width: 120 },
+        {
+            field: 'imageUrl',
+            headerName: 'Image',
+            width: 200,
+            renderCell: (params) => (
+                <img
+                    src={params.value}
+                    alt="PC"
+                    style={{ width: '100px', height: 'auto', objectFit: 'contain' }}
+                />
+            ),
+        },
         {
             field: 'actions',
             headerName: 'Actions',

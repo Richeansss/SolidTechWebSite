@@ -21,6 +21,7 @@ const CasesTable = () => {
                 funConnector: caseItem.funConnector || 'Not specified',
                 color: caseItem.color || 'Not specified',
                 glassType: caseItem.glassType || 'Not specified',
+                imageUrl: caseItem.imageUrl, // Используем URL из базы данных
             }));
             setRows(formattedRows);
         }
@@ -37,6 +38,18 @@ const CasesTable = () => {
         { field: 'funConnector', headerName: 'Connector', width: 180 },
         { field: 'color', headerName: 'Color', width: 180 },
         { field: 'glassType', headerName: 'Glass Type', width: 180 },
+        {
+            field: 'imageUrl',
+            headerName: 'Image',
+            width: 200,
+            renderCell: (params) => (
+                <img
+                    src={params.value}
+                    alt="StorageDevices"
+                    style={{ width: '100px', height: 'auto', objectFit: 'contain' }}
+                />
+            ),
+        },
         {
             field: 'actions',
             headerName: 'Actions',
