@@ -5,7 +5,8 @@ import { useCreateCoolerMutation } from "../../store/api/apiCooler";
 import { useGetBrandsQuery } from "../../store/api/apiBrand";
 import { useGetLightTypesQuery } from "../../store/api/apiLighttype";
 import "../case/CreateCase.css";
-import {LightType} from "../../types/LightType"; // Подключение CSS
+import {LightType} from "../../types/LightType";
+import {useUploadImageMutation} from "../../store/api/apiCase"; // Подключение CSS
 
 const AddCoolerComponent: React.FC = () => {
     const [newCooler, setNewCooler] = useState<Partial<Cooler>>({
@@ -14,6 +15,15 @@ const AddCoolerComponent: React.FC = () => {
         funConnector: undefined,
         name: "",
     });
+    const [image, setImage] = useState<File | null>(null);
+    const [uploadImage, { isLoading: isUploading }] = useUploadImageMutation(); // Мутация для загрузки изображения
+
+    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files ? e.target.files[0] : null;
+        if (file) {
+            setImage(file);
+        }
+    };
 
     const [createCooler, { isLoading, isSuccess, isError }] = useCreateCoolerMutation();
     const { data: lightTypes, isLoading: isLoadingLightTypes } = useGetLightTypesQuery();
@@ -80,7 +90,13 @@ const AddCoolerComponent: React.FC = () => {
         }
 
         try {
-            await createCooler(newCooler).unwrap();
+            const createdCooler = await createCooler(newCooler).unwrap();
+
+            if (image) {
+                // @ts-ignore
+                await uploadImage({ id: createdCooler.id, file: image }).unwrap();
+            }
+
             alert("Кулер успешно добавлен!");
             setNewCooler({
                 brand: { id: 1, name: "Noctua" },
@@ -145,6 +161,10 @@ const AddCoolerComponent: React.FC = () => {
                         placeholder="Выберите тип подсветки"
                         required
                     />
+                </div>
+                <div>
+                    <label>Изображение</label>
+                    <input type="file" accept="image/*" onChange={handleImageChange}/>
                 </div>
                 <button className="button-primary" type="submit" disabled={isLoading}>
                     {isLoading ? "Добавление..." : "Добавить кулер"}

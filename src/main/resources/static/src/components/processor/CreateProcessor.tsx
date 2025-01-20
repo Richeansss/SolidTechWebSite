@@ -6,6 +6,7 @@ import { useGetBrandsQuery } from "../../store/api/apiBrand";
 import { useGetSocketsQuery } from "../../store/api/apiSocket";
 import "../case/CreateCase.css";
 import {RamType} from "../../types/Ram";
+import {useUploadImageMutation} from "../../store/api/apiProcessor";
 
 const AddProcessorComponent: React.FC = () => {
     const [newProcessor, setNewProcessor] = useState<Partial<Processor>>({
@@ -18,9 +19,12 @@ const AddProcessorComponent: React.FC = () => {
         turbo_bust: 0,
     });
 
+    const [image, setImage] = useState<File | null>(null);
+
     const [createProcessor, { isLoading, isSuccess, isError }] = useCreateProcessorMutation();
     const { data: existingBrands } = useGetBrandsQuery();
     const { data: socketTypes, isLoading: isSearchingSockets } = useGetSocketsQuery();
+    const [uploadImage, { isLoading: isUploading }] = useUploadImageMutation(); // Мутация для загрузки изображения
 
     const brandOptions = useMemo(() =>
         existingBrands?.map((brand) => ({
@@ -79,6 +83,13 @@ const AddProcessorComponent: React.FC = () => {
         }
     };
 
+    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files ? e.target.files[0] : null;
+        if (file) {
+            setImage(file);
+        }
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
@@ -88,6 +99,13 @@ const AddProcessorComponent: React.FC = () => {
         }
 
         try {
+            const createdProcessor = await createProcessor(newProcessor).unwrap();
+
+            if (image) {
+                // @ts-ignore
+                await uploadImage({ id: createdProcessor.id, file: image }).unwrap();
+            }
+
             await createProcessor(newProcessor).unwrap();
             alert("Процессор успешно добавлен!");
             setNewProcessor({
@@ -178,7 +196,11 @@ const AddProcessorComponent: React.FC = () => {
                         required
                     />
                 </div>
-                <button className="button-primary" type="submit" disabled={isLoading}>
+                <div>
+                    <label>Изображение</label>
+                    <input type="file" accept="image/*" onChange={handleImageChange}/>
+                </div>
+                <button className="button-primary" type="submit" disabled={isLoading || isUploading}>
                     {isLoading ? "Добавление..." : "Добавить процессор"}
                 </button>
             </form>

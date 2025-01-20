@@ -7,7 +7,6 @@ export const apiCase = createApi({
     baseQuery: fetchBaseQuery({
         baseUrl: 'http://localhost:8080/api/v1/', // Убедитесь, что это соответствует вашему серверу
         prepareHeaders: (headers, { getState }) => {
-            headers.set('Content-Type', 'application/json');
             // Пример добавления токена (если есть авторизация)
             const token = (getState() as any).auth?.token;
             if (token) {
@@ -59,7 +58,7 @@ export const apiCase = createApi({
                 formData.append('file', file);
 
                 return {
-                    url: `${id}/upload-image`, // Убедитесь, что URL правильный, включая слеш в конце
+                    url: `case/${id}/upload-image`, // Убедитесь, что URL правильный, включая слеш в конце
                     method: 'POST',
                     body: formData,
                     // Content-Type будет установлен автоматически для multipart запросов

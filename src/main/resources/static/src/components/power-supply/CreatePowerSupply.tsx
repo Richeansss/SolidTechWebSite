@@ -3,7 +3,8 @@ import Select from "react-select";
 import { PowerSupply } from "../../types/PowerSupply"; // Тип PowerSupply
 import { useCreatePowerSupplyMutation } from "../../store/api/apiPowerSupply";
 import { useGetBrandsQuery } from "../../store/api/apiBrand";
-import "../case/CreateCase.css"; // Подключение CSS
+import "../case/CreateCase.css";
+import {useUploadImageMutation} from "../../store/api/apiPowerSupply"; // Подключение CSS
 
 const AddPowerSupplyComponent: React.FC = () => {
     const [newPowerSupply, setNewPowerSupply] = useState<Partial<PowerSupply>>({
@@ -13,9 +14,11 @@ const AddPowerSupplyComponent: React.FC = () => {
         modular: undefined,
         name: "",
     });
+    const [image, setImage] = useState<File | null>(null);
 
     const [createPowerSupply, { isLoading, isSuccess, isError }] = useCreatePowerSupplyMutation();
     const { data: existingBrands } = useGetBrandsQuery();
+    const [uploadImage, { isLoading: isUploading }] = useUploadImageMutation(); // Мутация для загрузки изображения
 
     // Мемоизация списка брендов
     const brandOptions = useMemo(() =>
@@ -24,6 +27,13 @@ const AddPowerSupplyComponent: React.FC = () => {
             label: brand.name,
         })), [existingBrands]
     );
+
+    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files ? e.target.files[0] : null;
+        if (file) {
+            setImage(file);
+        }
+    };
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
@@ -52,7 +62,13 @@ const AddPowerSupplyComponent: React.FC = () => {
         }
 
         try {
-            await createPowerSupply(newPowerSupply).unwrap();
+            const createdPowerSupply = await createPowerSupply(newPowerSupply).unwrap();
+
+            if (image) {
+                // @ts-ignore
+                await uploadImage({ id: createdPowerSupply.id, file: image }).unwrap();
+            }
+
             alert("Блок питания успешно добавлен!");
             setNewPowerSupply({
                 brand: { id: 1, name: "Corsair" },
@@ -122,7 +138,11 @@ const AddPowerSupplyComponent: React.FC = () => {
                         <option value="false">Нет</option>
                     </select>
                 </div>
-                <button className="button-primary" type="submit" disabled={isLoading}>
+                <div>
+                    <label>Изображение</label>
+                    <input type="file" accept="image/*" onChange={handleImageChange}/>
+                </div>
+                <button className="button-primary" type="submit" disabled={isLoading || isUploading}>
                     {isLoading ? "Добавление..." : "Добавить блок питания"}
                 </button>
             </form>

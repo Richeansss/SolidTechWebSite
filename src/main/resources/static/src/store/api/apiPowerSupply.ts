@@ -7,7 +7,6 @@ export const apiPowerSupply = createApi({
     baseQuery: fetchBaseQuery({
         baseUrl: 'http://localhost:8080/api/v1/',
         prepareHeaders: (headers, { getState }) => {
-            headers.set('Content-Type', 'application/json');
             // Добавьте токен, если необходима авторизация
             const token = (getState() as any).auth?.token;
             if (token) {
@@ -59,7 +58,7 @@ export const apiPowerSupply = createApi({
                 formData.append('file', file);
 
                 return {
-                    url: `${id}/upload-image`, // Убедитесь, что URL правильный, включая слеш в конце
+                    url: `power-supply/${id}/upload-image`, // Убедитесь, что URL правильный, включая слеш в конце
                     method: 'POST',
                     body: formData,
                     // Content-Type будет установлен автоматически для multipart запросов

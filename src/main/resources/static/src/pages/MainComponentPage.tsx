@@ -20,6 +20,8 @@ import CreatePC from "../components/pc/CreatePC";
 
 import './Page.css';
 import VideocardList from "../components/video-card/VideocardList";
+import CreateCase from "../components/case/CreateCase";
+import CasesTable from "../components/case/CasesTable";
 
 const App: React.FC = () => {
         // Храним индекс активной вкладки в useState
@@ -41,48 +43,54 @@ const App: React.FC = () => {
                         onSelect={handleTabChange}
                     >
                             <TabList className="tab-list">
-                                    <Tab className="tab">Охлаждения</Tab>
-                                    <Tab className="tab">Блоки питания</Tab>
-                                    <Tab className="tab">Устройства хранения</Tab>
-                                    <Tab className="tab">Оперативная память</Tab>
-                                    <Tab className="tab">Видеокарты</Tab>
-                                    <Tab className="tab">Процессоры</Tab>
-                                    <Tab className="tab">Материнские платы</Tab>
                                     <Tab className="tab">ПК</Tab>
+                                    <Tab className="tab">Материнские платы</Tab>
+                                    <Tab className="tab">Процессоры</Tab>
+                                    <Tab className="tab">Видеокарты</Tab>
+                                    <Tab className="tab">Оперативная память</Tab>
+                                    <Tab className="tab">Блоки питания</Tab>
+                                    <Tab className="tab">Корпус</Tab>
+                                    <Tab className="tab">Охлаждения</Tab>
+                                    <Tab className="tab">Устройства хранения</Tab>
                             </TabList>
 
                             <TabPanel className="tab-panel">
-                                    <CreateCooler />
-                                    <CoolerTable />
-                            </TabPanel>
-                            <TabPanel className="tab-panel">
-                                    <CreatePowerSupply />
-                                    <PowerSuppliesTable />
-                            </TabPanel>
-                            <TabPanel className="tab-panel">
-                                    <CreateStorageDevice />
-                                    <StorageDevicesTable />
-                            </TabPanel>
-                            <TabPanel className="tab-panel">
-                                    <CreateRam />
-                                    <RamTable />
-                            </TabPanel>
-                            <TabPanel className="tab-panel">
-                                    <CreateVidoCard />
-                                    <VideoCardTable />
-                            </TabPanel>
-                            <TabPanel className="tab-panel">
-                                    <CreateProcessor />
-                                    <ProcessorTable />
+                                    <CreatePC />
+                                    <PCTable />
                             </TabPanel>
                             <TabPanel className="tab-panel">
                                     <CreateMotherBoard />
                                     <MotherBoardTable />
                             </TabPanel>
                             <TabPanel className="tab-panel">
-                                    <CreatePC />
-                                    <PCTable />
+                                    <CreateProcessor />
+                                    <ProcessorTable />
                             </TabPanel>
+                            <TabPanel className="tab-panel">
+                                    <CreateVidoCard />
+                                    <VideoCardTable />
+                            </TabPanel>
+                            <TabPanel className="tab-panel">
+                                    <CreateRam />
+                                    <RamTable />
+                            </TabPanel>
+                            <TabPanel className="tab-panel">
+                                    <CreatePowerSupply />
+                                    <PowerSuppliesTable />
+                            </TabPanel>
+                            <TabPanel className="tab-panel">
+                                    <CreateCase />
+                                    <CasesTable />
+                            </TabPanel>
+                            <TabPanel className="tab-panel">
+                                    <CreateCooler />
+                                    <CoolerTable />
+                            </TabPanel>
+                            <TabPanel className="tab-panel">
+                                    <CreateStorageDevice />
+                                    <StorageDevicesTable />
+                            </TabPanel>
+
                     </Tabs>
             </div>
         );

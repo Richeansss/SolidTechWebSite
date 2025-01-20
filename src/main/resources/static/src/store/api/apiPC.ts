@@ -7,7 +7,6 @@ export const apiPC = createApi({
     baseQuery: fetchBaseQuery({
         baseUrl: 'http://localhost:8080/api/v1/pc',
         prepareHeaders: (headers, { getState }) => {
-            headers.set('Content-Type', 'application/json');
             // Добавьте токен, если необходима авторизация
             const token = (getState() as any).auth?.token;
             if (token) {

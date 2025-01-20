@@ -1,11 +1,11 @@
 import React, {useMemo, useState} from 'react';
-import { useCreateCaseMutation } from '../../store/api/apiCase';
+import { useCreateCaseMutation, useUploadImageMutation } from '../../store/api/apiCase';
 import { useGetBrandsQuery } from '../../store/api/apiBrand';
 import { useGetLightTypesQuery } from '../../store/api/apiLighttype';
 import { Case } from '../../types/Case';
 import './CreateCase.css';
 import Select from "react-select";
-import {LightType} from "../../types/LightType"; // Подключение CSS
+import {LightType} from "../../types/LightType";
 
 const AddCaseComponent: React.FC = () => {
     const [newCase, setNewCase] = useState<Partial<Case>>({
@@ -18,6 +18,8 @@ const AddCaseComponent: React.FC = () => {
         color: 5,
         glassType: 2,
     });
+    const [image, setImage] = useState<File | null>(null);
+    const [uploadImage, { isLoading: isUploading }] = useUploadImageMutation(); // Мутация для загрузки изображения
 
     const [createCase, { isLoading, isSuccess, isError, error }] = useCreateCaseMutation();
 
@@ -53,6 +55,13 @@ const AddCaseComponent: React.FC = () => {
         }
     };
 
+    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files ? e.target.files[0] : null;
+        if (file) {
+            setImage(file);
+        }
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
@@ -63,13 +72,15 @@ const AddCaseComponent: React.FC = () => {
         }
 
         try {
-            // Передаем только id для lightType
-            const caseData = {
+            const createdCase = await createCase({
                 ...newCase,
                 lightType: { id: newCase.lightType.id, name: newCase.lightType.name }, // передаем объект с id
-            };
+                }).unwrap();
 
-            await createCase(caseData).unwrap();
+            if (image) {
+                // @ts-ignore
+                await uploadImage({ id: createdCase.id, file: image }).unwrap();
+            }
 
             // Сбрасываем форму после успешного создания корпуса
             setNewCase({
@@ -77,7 +88,7 @@ const AddCaseComponent: React.FC = () => {
                 formFactor: 2,
                 amountFun: 3,
                 name: '',
-                lightType: { id: 1, name: 'Cooler Master' },  // передаем только id, не объект
+                lightType: { id: 1, name: 'Cooler Master' }, // Сбрасываем только id
                 funConnector: 4,
                 color: 5,
                 glassType: 2,
@@ -205,7 +216,11 @@ const AddCaseComponent: React.FC = () => {
                         onChange={handleInputChange}
                     />
                 </div>
-                <button className="button-primary" type="submit" disabled={isLoading}>
+                <div>
+                    <label>Изображение</label>
+                    <input type="file" accept="image/*" onChange={handleImageChange}/>
+                </div>
+                <button className="button-primary" type="submit" disabled={isLoading || isUploading}>
                     {isLoading ? 'Загружается...' : 'Добавить корпус'}
                 </button>
             </form>

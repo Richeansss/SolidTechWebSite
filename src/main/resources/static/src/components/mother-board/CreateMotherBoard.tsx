@@ -7,6 +7,7 @@ import { useGetBrandsQuery } from "../../store/api/apiBrand";
 import { useGetSocketsQuery } from "../../store/api/apiSocket";
 import { useGetChipsetsQuery } from "../../store/api/apiChipset";
 import "../case/CreateCase.css";
+import {useUploadImageMutation} from "../../store/api/apiMotherBoard";
 
 const AddMotherBoardComponent: React.FC = () => {
     const [newMotherBoard, setNewMotherBoard] = useState<Partial<MotherBoard>>({
@@ -19,11 +20,20 @@ const AddMotherBoardComponent: React.FC = () => {
         amount_of_m2: 0,
         imageUrl: "",
     });
+    const [image, setImage] = useState<File | null>(null);
+    const [uploadImage, { isLoading: isUploading }] = useUploadImageMutation(); // Мутация для загрузки изображения
 
     const [createMotherBoard, { isLoading, isSuccess, isError }] = useCreateMotherBoardMutation();
     const { data: existingBrands } = useGetBrandsQuery();
     const { data: socketTypes, isLoading: isSearchingSockets } = useGetSocketsQuery();
     const { data: chipsetTypes, isLoading: isSearchingChipsets } = useGetChipsetsQuery();
+
+    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files ? e.target.files[0] : null;
+        if (file) {
+            setImage(file);
+        }
+    };
 
     const brandOptions = useMemo(
         () =>
@@ -114,15 +124,20 @@ const AddMotherBoardComponent: React.FC = () => {
             !newMotherBoard.socket ||
             !newMotherBoard.chipset ||
             !newMotherBoard.pci ||
-            !newMotherBoard.amount_of_m2 ||
-            !newMotherBoard.imageUrl
+            !newMotherBoard.amount_of_m2
         ) {
             alert("Все поля обязательны для заполнения!");
             return;
         }
 
         try {
-            await createMotherBoard(newMotherBoard).unwrap();
+            const createdMotherBoard = await createMotherBoard(newMotherBoard).unwrap();
+
+            if (image) {
+                // @ts-ignore
+                await uploadImage({ id: createdMotherBoard.id, file: image }).unwrap();
+            }
+
             alert("Материнская плата успешно добавлена!");
             setNewMotherBoard({
                 brand: { id: 0, name: "" },
@@ -214,16 +229,10 @@ const AddMotherBoardComponent: React.FC = () => {
                     />
                 </div>
                 <div>
-                    <label>Ссылка</label>
-                    <input
-                        type="url"
-                        name="url"
-                        value={newMotherBoard.imageUrl || ""}
-                        onChange={handleInputChange}
-                        required
-                    />
+                    <label>Изображение</label>
+                    <input type="file" accept="image/*" onChange={handleImageChange}/>
                 </div>
-                <button className="button-primary" type="submit" disabled={isLoading}>
+                <button className="button-primary" type="submit" disabled={isLoading || isUploading}>
                     {isLoading ? "Добавление..." : "Добавить материнскую плату"}
                 </button>
             </form>

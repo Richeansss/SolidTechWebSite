@@ -8,8 +8,6 @@ import ChipsetTable from "../components/chipset/ChipsetTable";
 
 
 import './Page.css';
-import CreateCase from "../components/case/CreateCase";
-import CasesTable from "../components/case/CasesTable";
 import CreateBrand from "../components/brand/CreateBrand";
 import BrandTable from "../components/brand/BrandTable";
 import CrateLightTable from "../components/light-type/CrateLightTable";
@@ -20,17 +18,12 @@ const App: React.FC = () => {
         <div>
             <Tabs>
                 <TabList className="tab-list">
-                    <Tab className="tab">Корпус</Tab>
                     <Tab className="tab">Бренд</Tab>
                     <Tab className="tab">Тип подсветки</Tab>
                     <Tab className="tab">Сокет</Tab>
                     <Tab className="tab">Чипсет</Tab>
                 </TabList>
 
-                <TabPanel className="tab-panel">
-                    <CreateCase />
-                    <CasesTable />
-                </TabPanel>
                 <TabPanel className="tab-panel">
                     <CreateBrand />
                     <BrandTable />

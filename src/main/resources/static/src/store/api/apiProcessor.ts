@@ -7,7 +7,6 @@ export const apiProcessor = createApi({
     baseQuery: fetchBaseQuery({
         baseUrl: 'http://localhost:8080/api/v1/processor',
         prepareHeaders: (headers, { getState }) => {
-            headers.set('Content-Type', 'application/json');
             // Добавьте токен, если необходима авторизация
             const token = (getState() as any).auth?.token;
             if (token) {

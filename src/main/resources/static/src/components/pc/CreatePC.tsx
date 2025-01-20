@@ -1,10 +1,10 @@
 import React, { useState, useMemo } from "react";
 import Select from "react-select";
-import { useCreatePCMutation } from "../../store/api/apiPC";
+import { useCreatePCMutation, useUploadImageMutation } from "../../store/api/apiPC";
 import { useSearchBrandsByNameQuery } from "../../store/api/apiBrand";
 import { useGetCoolersQuery } from "../../store/api/apiCooler";
 import { useGetCasesQuery } from "../../store/api/apiCase";
-import { useGetPowerSuppliesQuery } from "../../store/api/apiPowerSupply";
+import {useGetPowerSuppliesQuery } from "../../store/api/apiPowerSupply";
 import { useGetVideocardsQuery } from "../../store/api/apiVideoCard";
 import "../case/CreateCase.css";
 import {useGetProcessorsQuery} from "../../store/api/apiProcessor";
@@ -51,6 +51,15 @@ const AddPCComponent: React.FC = () => {
     });
 
     const [createPC, { isLoading, isSuccess, isError }] = useCreatePCMutation();
+    const [image, setImage] = useState<File | null>(null);
+    const [uploadImage, { isLoading: isUploading }] = useUploadImageMutation(); // Мутация для загрузки изображения
+
+    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files ? e.target.files[0] : null;
+        if (file) {
+            setImage(file);
+        }
+    };
 
     // Загрузка данных для выбора
     const { data: existingBrands } = useSearchBrandsByNameQuery("");
@@ -135,7 +144,13 @@ const AddPCComponent: React.FC = () => {
 
         try {
             // @ts-ignore
-            await createPC(newPC).unwrap();
+            const createdPC = await createPC(newPC).unwrap();
+
+            if (image) {
+                // @ts-ignore
+                await uploadImage({ id: createdPC.id, file: image }).unwrap();
+            }
+
             alert("ПК успешно добавлен!");
             setNewPC({
                 motherBoard: { id: 0 },
@@ -369,8 +384,12 @@ const AddPCComponent: React.FC = () => {
                         onChange={(e) => handleInputChange("price", e.target.value)}
                     />
                 </div>
+                <div>
+                    <label>Изображение</label>
+                    <input type="file" accept="image/*" onChange={handleImageChange}/>
+                </div>
 
-                <button className="button-primary" type="submit" disabled={isLoading}>
+                <button className="button-primary" type="submit" disabled={isLoading || isUploading}>
                     {isLoading ? "Добавление..." : "Добавить ПК"}
                 </button>
 

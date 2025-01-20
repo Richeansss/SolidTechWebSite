@@ -20,6 +20,7 @@ const StorageDevicesTable = () => {
                 interfaceType: storageDevice.interfaceType || 'Not specified',
                 readSpeedMbps: storageDevice.readSpeedMbps || 'Not specified',
                 writeSpeedMbps: storageDevice.writeSpeedMbps || 'Not specified',
+                imageUrl: storageDevice.imageUrl, // Используем URL из базы данных
             }));
             setRows(formattedRows);
         }
@@ -36,6 +37,18 @@ const StorageDevicesTable = () => {
         { field: 'interfaceType', headerName: 'Interface Type', width: 180 },
         { field: 'readSpeedMbps', headerName: 'Read Speed (Mbps)', width: 180 },
         { field: 'writeSpeedMbps', headerName: 'Write Speed (Mbps)', width: 180 },
+        {
+            field: 'imageUrl',
+            headerName: 'Image',
+            width: 200,
+            renderCell: (params) => (
+                <img
+                    src={params.value}
+                    alt="StorageDevices"
+                    style={{ width: '100px', height: 'auto', objectFit: 'contain' }}
+                />
+            ),
+        },
         {
             field: 'actions',
             headerName: 'Actions',
