@@ -13,6 +13,7 @@ const ChipsetTable = () => {
             const formattedRows = data.map((chipset) => ({
                 id: chipset.id,
                 name: chipset.name,
+                socket: chipset.socket ? chipset.socket.name : 'Not specified',
             }));
             setRows(formattedRows);
         }
@@ -21,6 +22,7 @@ const ChipsetTable = () => {
     const columns: GridColDef[] = [
         { field: 'id', headerName: 'ID', width: 90 },
         { field: 'name', headerName: 'Name', width: 180 },
+        { field: 'socket', headerName: 'Socket', width: 180},
         {
             field: 'actions',
             headerName: 'Actions',

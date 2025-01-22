@@ -1,10 +1,13 @@
-import React, { useState } from "react";
+import React, {useMemo, useState} from "react";
 import { Chipset } from "../../types/Chipset";
 import { useCreateChipsetMutation } from "../../store/api/apiChipset";
+import {useGetSocketsQuery} from "../../store/api/apiSocket";
+import Select from "react-select";
 
 const AddChipsetComponent: React.FC = () => {
     const [newChipset, setNewChipset] = useState<Partial<Chipset>>({ name: "" });
     const [createChipset, { isLoading, isSuccess, isError }] = useCreateChipsetMutation();
+    const { data: existingSockets } = useGetSocketsQuery();
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -12,6 +15,22 @@ const AddChipsetComponent: React.FC = () => {
             ...prevChipset,
             [name]: value,
         }));
+    };
+
+    const socketOptions = useMemo(() =>
+        existingSockets?.map((socket) => ({
+            value: socket.id,
+            label: socket.name,
+        })), [existingSockets]
+    );
+
+    const handleSocketsChange = (selectedOption: { value: number; label: string } | null) => {
+        if (selectedOption) {
+            setNewChipset((prevChipset) => ({
+                ...prevChipset,
+                socket: { id: selectedOption.value, name: selectedOption.label },
+            }));
+        }
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -22,10 +41,15 @@ const AddChipsetComponent: React.FC = () => {
             return;
         }
 
+        if (!newChipset.socket) {
+            alert("Сокет обязателен для выбора!");
+            return;
+        }
+
         try {
             await createChipset(newChipset).unwrap();
             alert("Чипсет успешно добавлен!");
-            setNewChipset({ name: "" });
+            setNewChipset({ name: "", socket: undefined });
         } catch (error) {
             console.error("Ошибка добавления чипсета:", error);
             alert("Произошла ошибка при добавлении чипсета.");
@@ -44,6 +68,19 @@ const AddChipsetComponent: React.FC = () => {
                         value={newChipset.name || ""}
                         onChange={handleInputChange}
                         required
+                    />
+                </div>
+                <div>
+                    <label>Сокет</label>
+                    <Select
+                        options={socketOptions}
+                        value={
+                            newChipset.socket
+                                ? { value: newChipset.socket.id, label: newChipset.socket.name }
+                                : null
+                        }
+                        onChange={handleSocketsChange}
+                        placeholder="Выберите сокет"
                     />
                 </div>
                 <button className="button-primary" type="submit" disabled={isLoading}>
