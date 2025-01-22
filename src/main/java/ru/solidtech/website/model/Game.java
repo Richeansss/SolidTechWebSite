@@ -9,6 +9,6 @@ import lombok.Data;
 public class Game {
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
     private String name;
 }

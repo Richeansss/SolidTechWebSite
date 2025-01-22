@@ -10,7 +10,7 @@ import java.util.List;
 public class FPSBuild {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @OneToMany(mappedBy = "fpsBuild", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference

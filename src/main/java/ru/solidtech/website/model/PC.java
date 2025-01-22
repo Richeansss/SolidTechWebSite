@@ -10,7 +10,7 @@ import lombok.Data;
 public class PC {
     @Id
     @GeneratedValue
-    private long id;
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "mother_board_id")

@@ -10,7 +10,7 @@ import lombok.Data;
 public class GameFPSCount {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "fpsbuild_id")
