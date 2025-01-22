@@ -35,6 +35,9 @@ public class MotherBoard {
     @Column(columnDefinition = "BIGINT NOT NULL")
     private int  amount_of_m2;
 
+    @Column(name = "has_argb")
+    private Boolean hasArgb;
+
     @Column(name = "image_url")
     private String imageUrl;
 

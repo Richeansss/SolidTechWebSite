@@ -19,8 +19,10 @@ const AddMotherBoardComponent: React.FC = () => {
         typeRam: RamType.DDR4, // Default RAM type
         pci: 0,
         amount_of_m2: 0,
+        hasArgb: false, // Изначально значение false
         imageUrl: "",
     });
+
     const [image, setImage] = useState<File | null>(null);
     const [uploadImage, { isLoading: isUploading }] = useUploadImageMutation(); // Мутация для загрузки изображения
 
@@ -132,7 +134,10 @@ const AddMotherBoardComponent: React.FC = () => {
         }
 
         try {
-            const createdMotherBoard = await createMotherBoard(newMotherBoard).unwrap();
+            const createdMotherBoard = await createMotherBoard({
+                ...newMotherBoard,
+                hasArgb: newMotherBoard.hasArgb,
+            }).unwrap();
 
             if (image) {
                 // @ts-ignore
@@ -148,6 +153,7 @@ const AddMotherBoardComponent: React.FC = () => {
                 typeRam: RamType.DDR4,
                 pci: 0,
                 amount_of_m2: 0,
+                hasArgb: false, // Сбросить значение
                 imageUrl: "",
             });
         } catch (error) {
@@ -174,29 +180,31 @@ const AddMotherBoardComponent: React.FC = () => {
                     <label>Бренд</label>
                     <Select
                         options={brandOptions}
+                        value={newMotherBoard.brand ? {
+                            value: newMotherBoard.brand.id,
+                            label: newMotherBoard.brand.name
+                        } : null}
                         onChange={handleBrandChange}
                         placeholder="Выберите бренд"
-                        required
+                        isClearable
                     />
                 </div>
                 <div>
                     <label>Сокет</label>
                     <Select
                         options={socketOptions}
-                        isLoading={isSearchingSockets}
+                        value={newMotherBoard.socket ? { value: newMotherBoard.socket.id, label: newMotherBoard.socket.name } : null}
                         onChange={handleSocketChange}
                         placeholder="Выберите сокет"
-                        required
                     />
                 </div>
                 <div>
                     <label>Чипсет</label>
                     <Select
                         options={chipsetOptions}
-                        isLoading={isSearchingChipsets}
+                        value={newMotherBoard.chipset ? { value: newMotherBoard.chipset.id, label: newMotherBoard.chipset.name } : null}
                         onChange={handleChipsetChange}
                         placeholder="Выберите чипсет"
-                        required
                     />
                 </div>
                 <div>
@@ -227,6 +235,20 @@ const AddMotherBoardComponent: React.FC = () => {
                         value={newMotherBoard.amount_of_m2 || ""}
                         onChange={handleInputChange}
                         required
+                    />
+                </div>
+                <div>
+                    <label>Подсветка ARGB</label>
+                    <input
+                        type="checkbox"
+                        name="has_argb"
+                        checked={newMotherBoard.hasArgb || false}
+                        onChange={(e) => {
+                            setNewMotherBoard((prev) => ({
+                                ...prev,
+                                hasArgb: e.target.checked,
+                            }));
+                        }}
                     />
                 </div>
                 <div>

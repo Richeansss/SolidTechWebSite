@@ -12,5 +12,6 @@ export interface MotherBoard {
     typeRam: RamType;
     pci: number;
     amount_of_m2: number;
+    hasArgb: boolean;
     imageUrl?: string;
 }

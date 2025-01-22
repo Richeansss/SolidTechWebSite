@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react';
 import { DataGrid, GridColDef, GridRowsProp, GridActionsCellItem } from '@mui/x-data-grid';
 import { useGetMotherBoardsQuery, useDeleteMotherBoardMutation } from '../../store/api/apiMotherBoard';
+import Checkbox from '@mui/material/Checkbox';
+
 
 const MotherBoardTable = () => {
     const { data, isLoading, isError } = useGetMotherBoardsQuery(); // Получаем данные о материнских платах
@@ -19,12 +21,14 @@ const MotherBoardTable = () => {
                 typeRam: motherBoard.typeRam,
                 pci: motherBoard.pci,
                 amount_of_m2: motherBoard.amount_of_m2,
+                hasArgb: motherBoard.hasArgb,
                 imageUrl: motherBoard.imageUrl,
             }));
             setRows(formattedRows);
         }
     }, [data]);
 
+    // @ts-ignore
     const columns: GridColDef[] = [
         { field: 'id', headerName: 'ID', width: 90 },
         {
@@ -53,6 +57,17 @@ const MotherBoardTable = () => {
         { field: 'typeRam', headerName: 'Тип памяти', width: 150 },
         { field: 'pci', headerName: 'Версия PCI', width: 100 },
         { field: 'amount_of_m2', headerName: 'кол-во M.2', width: 120 },
+        {
+            field: 'hasArgb',
+            headerName: 'ARGB разъем',
+            width: 120,
+            renderCell: (params: any) => (
+                <Checkbox
+                    checked={params.value}
+                    disabled
+                />
+            )
+        },
         {
             field: 'actions',
             headerName: 'Actions',
