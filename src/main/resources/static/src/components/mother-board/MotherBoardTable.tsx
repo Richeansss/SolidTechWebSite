@@ -27,26 +27,32 @@ const MotherBoardTable = () => {
 
     const columns: GridColDef[] = [
         { field: 'id', headerName: 'ID', width: 90 },
-        { field: 'name', headerName: 'Name', width: 180 },
-        { field: 'brand', headerName: 'Brand', width: 150 },
-        { field: 'socket', headerName: 'Socket', width: 150 },
-        { field: 'chipset', headerName: 'Chipset', width: 150 },
-        { field: 'typeRam', headerName: 'RAM Type', width: 150 },
-        { field: 'pci', headerName: 'PCI Slots', width: 100 },
-        { field: 'amount_of_m2', headerName: 'M.2 Slots', width: 120 },
-        { field: 'url', headerName: 'URL', width: 250, renderCell: (params) => <a href={params.value} target="_blank" rel="noopener noreferrer">{params.value}</a> },
         {
             field: 'imageUrl',
             headerName: 'Image',
             width: 200,
             renderCell: (params) => (
-                <img
-                    src={params.value}
-                    alt="StorageDevices"
-                    style={{ width: '100px', height: 'auto', objectFit: 'contain' }}
-                />
+                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+                    <img
+                        src={params.value}
+                        alt="MotherBoard"
+                        style={{
+                            maxWidth: '100px',
+                            maxHeight: '100%',
+                            objectFit: 'contain',
+                            display: 'block',
+                        }}
+                    />
+                </div>
             ),
         },
+        { field: 'name', headerName: 'Название', width: 180 },
+        { field: 'brand', headerName: 'Бренд', width: 150 },
+        { field: 'socket', headerName: 'Сокет', width: 150 },
+        { field: 'chipset', headerName: 'Чипсет', width: 150 },
+        { field: 'typeRam', headerName: 'Тип памяти', width: 150 },
+        { field: 'pci', headerName: 'Версия PCI', width: 100 },
+        { field: 'amount_of_m2', headerName: 'кол-во M.2', width: 120 },
         {
             field: 'actions',
             headerName: 'Actions',
