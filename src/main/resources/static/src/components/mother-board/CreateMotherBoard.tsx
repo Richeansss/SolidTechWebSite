@@ -10,11 +10,12 @@ import "../case/CreateCase.css";
 import {useUploadImageMutation} from "../../store/api/apiMotherBoard";
 
 const AddMotherBoardComponent: React.FC = () => {
+    // @ts-ignore
     const [newMotherBoard, setNewMotherBoard] = useState<Partial<MotherBoard>>({
         brand: { id: 0, name: "" },
         name: "",
         socket: { id: 0, name: "" },
-        chipset: { id: 0, name: "" },
+        chipset: { id: 0, name: "", socket: { id: 0, name: "" }},
         typeRam: RamType.DDR4, // Default RAM type
         pci: 0,
         amount_of_m2: 0,
@@ -101,7 +102,7 @@ const AddMotherBoardComponent: React.FC = () => {
         if (selectedOption) {
             setNewMotherBoard((prev) => ({
                 ...prev,
-                chipset: { id: selectedOption.value, name: selectedOption.label },
+                chipset: { id: selectedOption.value, name: selectedOption.label, socket: { id: 0, name: "" } },
             }));
         }
     };
@@ -143,7 +144,7 @@ const AddMotherBoardComponent: React.FC = () => {
                 brand: { id: 0, name: "" },
                 name: "",
                 socket: { id: 0, name: "" },
-                chipset: { id: 0, name: "" },
+                chipset: { id: 0, name: "", socket: { id: 0, name: "" } },
                 typeRam: RamType.DDR4,
                 pci: 0,
                 amount_of_m2: 0,
@@ -209,7 +210,7 @@ const AddMotherBoardComponent: React.FC = () => {
                     />
                 </div>
                 <div>
-                    <label>Количество PCI</label>
+                    <label>Версия PCI</label>
                     <input
                         type="number"
                         name="pci"
