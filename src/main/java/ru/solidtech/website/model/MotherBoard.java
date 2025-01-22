@@ -8,7 +8,8 @@ import lombok.Data;
 public class MotherBoard {
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
+
     @Column(columnDefinition = "VARCHAR(255) NOT NULL")
     private String name;
 
