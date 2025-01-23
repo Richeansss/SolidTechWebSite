@@ -21,10 +21,6 @@ public class Processor {
     @JoinColumn(name = "soket_id")
     private Socket socket;
 
-    @Column(name = "type_ram", nullable = false)
-    @Enumerated(EnumType.STRING)
-    private Ram.TypeRam typeRam;
-
     @Column(columnDefinition = "BIGINT NOT NULL")
     private int  core;
 
@@ -33,6 +29,8 @@ public class Processor {
 
     @Column(columnDefinition = "FLOAT NOT NULL")
     private float turbo_bust;
+
+    private int tdp;
 
     @Column(name = "image_url")
     private String imageUrl;

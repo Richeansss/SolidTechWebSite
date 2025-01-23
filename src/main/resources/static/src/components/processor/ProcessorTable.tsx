@@ -15,10 +15,10 @@ const ProcessorTable = () => {
                 name: processor.name,
                 brand: processor.brand.name,
                 socket: processor.socket.name, //  от лл
-                typeRam: processor.typeRam,
                 core: processor.core,
                 threads: processor.threads,
                 turboBust: processor.turbo_bust, 'Yes' : 'No',
+                tdp: processor.tdp,
                 imageUrl: processor.imageUrl, // Используем URL из базы данных
             }));
             setRows(formattedRows);
@@ -27,25 +27,32 @@ const ProcessorTable = () => {
 
     const columns: GridColDef[] = [
         { field: 'id', headerName: 'ID', width: 90 },
-        { field: 'name', headerName: 'Name', width: 180 },
-        { field: 'brand', headerName: 'Brand', width: 150 },
-        { field: 'socket', headerName: 'Socket', width: 150 },
-        { field: 'typeRam', headerName: 'RAM Type', width: 150 },
-        { field: 'core', headerName: 'Cores', width: 100 },
-        { field: 'threads', headerName: 'Threads', width: 100 },
-        { field: 'turboBust', headerName: 'Turbo Boost', width: 150 },
         {
             field: 'imageUrl',
-            headerName: 'Image',
+            headerName: 'Изображение',
             width: 200,
             renderCell: (params) => (
-                <img
-                    src={params.value}
-                    alt="Processor"
-                    style={{ width: '100px', height: 'auto', objectFit: 'contain' }}
-                />
+                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+                    <img
+                        src={params.value}
+                        alt="Processor"
+                        style={{
+                            maxWidth: '100px',
+                            maxHeight: '100%',
+                            objectFit: 'contain',
+                            display: 'block',
+                        }}
+                    />
+                </div>
             ),
         },
+        { field: 'name', headerName: 'Название', width: 180 },
+        { field: 'brand', headerName: 'Бренд', width: 150 },
+        { field: 'socket', headerName: 'Сокет', width: 150 },
+        { field: 'core', headerName: 'Ядер', width: 100 },
+        { field: 'threads', headerName: 'Потоков', width: 100 },
+        { field: 'turboBust', headerName: 'Turbo Boost', width: 150 },
+        { field: 'tdp', headerName: 'TDP', width: 150 },
         {
             field: 'actions',
             headerName: 'Actions',

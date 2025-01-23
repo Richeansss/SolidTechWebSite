@@ -33,7 +33,7 @@ const MotherBoardTable = () => {
         { field: 'id', headerName: 'ID', width: 90 },
         {
             field: 'imageUrl',
-            headerName: 'Image',
+            headerName: 'Изображение',
             width: 200,
             renderCell: (params) => (
                 <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>

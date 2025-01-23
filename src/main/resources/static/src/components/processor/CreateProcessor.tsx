@@ -13,15 +13,15 @@ const AddProcessorComponent: React.FC = () => {
         brand: { id: 0, name: "" },
         name: "",
         socket: { id: 0, name: "" },
-        typeRam: RamType.DDR4, // Set default RAM type
         core: 0,
         threads: 0,
         turbo_bust: 0,
+        tdp: 0,
     });
 
     const [image, setImage] = useState<File | null>(null);
 
-    const [createProcessor, { isLoading, isSuccess, isError }] = useCreateProcessorMutation();
+    const [createProcessor, { isLoading, isSuccess, isError}] = useCreateProcessorMutation();
     const { data: existingBrands } = useGetBrandsQuery();
     const { data: socketTypes, isLoading: isSearchingSockets } = useGetSocketsQuery();
     const [uploadImage, { isLoading: isUploading }] = useUploadImageMutation(); // Мутация для загрузки изображения
@@ -106,16 +106,15 @@ const AddProcessorComponent: React.FC = () => {
                 await uploadImage({ id: createdProcessor.id, file: image }).unwrap();
             }
 
-            await createProcessor(newProcessor).unwrap();
             alert("Процессор успешно добавлен!");
             setNewProcessor({
                 brand: { id: 0, name: "" },
                 name: "",
                 socket: { id: 0, name: "" },
-                typeRam: RamType.DDR4, // Reset to default value
                 core: 0,
                 threads: 0,
                 turbo_bust: 0,
+                tdp: 0
             });
         } catch (error) {
             console.error("Ошибка добавления процессора:", error);
@@ -141,29 +140,22 @@ const AddProcessorComponent: React.FC = () => {
                     <label>Бренд</label>
                     <Select
                         options={brandOptions}
+                        value={newProcessor.brand ? {
+                            value: newProcessor.brand.id,
+                            label: newProcessor.brand.name
+                        } : null}
                         onChange={handleBrandChange}
                         placeholder="Выберите бренд"
-                        required
+                        isClearable
                     />
                 </div>
                 <div>
                     <label>Сокет</label>
                     <Select
                         options={socketOptions}
-                        isLoading={isSearchingSockets}
+                        value={newProcessor.socket ? { value: newProcessor.socket.id, label: newProcessor.socket.name } : null}
                         onChange={handleSocketChange}
                         placeholder="Выберите сокет"
-                        required
-                    />
-                </div>
-                <div>
-                    <label>Тип оперативной памяти</label>
-                    <Select
-                        options={ramOptions}
-                        value={ramOptions.find(option => option.value === newProcessor.typeRam)}
-                        onChange={handleRamTypeChange}
-                        placeholder="Выберите тип RAM"
-                        required
                     />
                 </div>
                 <div>
@@ -192,6 +184,16 @@ const AddProcessorComponent: React.FC = () => {
                         type="number"
                         name="turbo_bust"
                         value={newProcessor.turbo_bust || ""}
+                        onChange={handleInputChange}
+                        required
+                    />
+                </div>
+                <div>
+                    <label>TDP</label>
+                    <input
+                        type="number"
+                        name="tdp"
+                        value={newProcessor.tdp || ""}
                         onChange={handleInputChange}
                         required
                     />

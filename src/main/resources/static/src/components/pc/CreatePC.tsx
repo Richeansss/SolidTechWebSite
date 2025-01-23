@@ -191,7 +191,7 @@ const AddPCComponent: React.FC = () => {
             <h2>Добавить ПК</h2>
             <form onSubmit={handleSubmit}>
                 {/* Материнская плата */}
-                <div>
+                <div className="form-group">
                     <label><strong>Материнская плата</strong></label>
                     <Select
                         options={motherBoardOptions}
@@ -214,7 +214,7 @@ const AddPCComponent: React.FC = () => {
                 </div>
 
                 {/* Процессор */}
-                <div>
+                <div className="form-group">
                     <label><strong>Процессор</strong></label>
                     <Select
                         options={processorOptions}
@@ -237,7 +237,7 @@ const AddPCComponent: React.FC = () => {
                 </div>
 
                 {/* Оперативная память */}
-                <div>
+                <div className="form-group">
                     <label><strong>Оперативная память</strong></label>
                     <Select
                         options={ramOptions}
@@ -260,7 +260,7 @@ const AddPCComponent: React.FC = () => {
                 </div>
 
                 {/* Охлаждение */}
-                <div>
+                <div className="form-group">
                     <label><strong>Охлаждение</strong></label>
                     <Select
                         options={coolerOptions}
@@ -283,7 +283,7 @@ const AddPCComponent: React.FC = () => {
                 </div>
 
                 {/* Корпус */}
-                <div>
+                <div className="form-group">
                     <label><strong>Корпус</strong></label>
                     <Select
                         options={caseOptions}
@@ -306,7 +306,7 @@ const AddPCComponent: React.FC = () => {
                 </div>
 
                 {/* Видеокарта */}
-                <div>
+                <div className="form-group">
                     <label><strong>Видеокарта</strong></label>
                     <Select
                         options={videocardOptions}
@@ -329,7 +329,7 @@ const AddPCComponent: React.FC = () => {
                 </div>
 
                 {/* Накопительное устройство */}
-                <div>
+                <div className="form-group">
                     <label><strong>Накопительное устройство</strong></label>
                     <Select
                         options={storageDeviceOptions}
@@ -352,7 +352,7 @@ const AddPCComponent: React.FC = () => {
                 </div>
 
                 {/* Источник питания */}
-                <div>
+                <div className="form-group">
                     <label><strong>Источник питания</strong></label>
                     <Select
                         options={powerSupplyOptions}
