@@ -145,17 +145,10 @@ const AddMotherBoardComponent: React.FC = () => {
             }
 
             alert("Материнская плата успешно добавлена!");
-            setNewMotherBoard({
-                brand: { id: 0, name: "" },
+            setNewMotherBoard((prevState) => ({
+                ...prevState,
                 name: "",
-                socket: { id: 0, name: "" },
-                chipset: { id: 0, name: "", socket: { id: 0, name: "" } },
-                typeRam: RamType.DDR4,
-                pci: 0,
-                amount_of_m2: 0,
-                hasArgb: false, // Сбросить значение
-                imageUrl: "",
-            });
+            }));
         } catch (error) {
             console.error("Ошибка добавления материнской платы:", error);
             alert("Произошла ошибка при добавлении материнской платы.");

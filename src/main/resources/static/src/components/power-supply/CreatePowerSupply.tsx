@@ -40,7 +40,7 @@ const AddPowerSupplyComponent: React.FC = () => {
 
         setNewPowerSupply((prevPowerSupply) => ({
             ...prevPowerSupply,
-            [name]: value,
+            [name]: name === "modular" ? value === "true" : value,
         }));
     };
 
@@ -56,7 +56,7 @@ const AddPowerSupplyComponent: React.FC = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        if (!newPowerSupply.name || !newPowerSupply.brand || !newPowerSupply.certificate || !newPowerSupply.power || newPowerSupply.modular === undefined) {
+        if (!newPowerSupply.name || !newPowerSupply.brand || !newPowerSupply.certificate || !newPowerSupply.power || newPowerSupply.modular === undefined ) {
             alert("Все поля обязательны для заполнения!");
             return;
         }
@@ -70,18 +70,20 @@ const AddPowerSupplyComponent: React.FC = () => {
             }
 
             alert("Блок питания успешно добавлен!");
-            setNewPowerSupply({
-                brand: { id: 1, name: "Corsair" },
-                certificate: 80,
-                power: 850,
-                modular: true,
+            setNewPowerSupply((prevState) => ({
+                ...prevState,
                 name: "",
-            });
+            }));
         } catch (error) {
             console.error("Ошибка добавления блока питания:", error);
             alert("Произошла ошибка при добавлении блока питания.");
         }
     };
+
+    const modularOptions = [
+        { value: true, label: "Да" },
+        { value: false, label: "Нет" },
+    ];
 
     return (
         <div>
@@ -101,9 +103,13 @@ const AddPowerSupplyComponent: React.FC = () => {
                     <label>Бренд</label>
                     <Select
                         options={brandOptions}
+                        value={newPowerSupply.brand ? {
+                            value: newPowerSupply.brand.id,
+                            label: newPowerSupply.brand.name
+                        } : null}
                         onChange={handleBrandChange}
                         placeholder="Выберите бренд"
-                        required
+                        isClearable
                     />
                 </div>
                 <div>
@@ -128,15 +134,18 @@ const AddPowerSupplyComponent: React.FC = () => {
                 </div>
                 <div>
                     <label>Модульный</label>
-                    <select
-                        name="modular"
-                        value={newPowerSupply.modular ? "true" : "false"}
-                        onChange={handleInputChange}
-                        required
-                    >
-                        <option value="true">Да</option>
-                        <option value="false">Нет</option>
-                    </select>
+                    <Select
+                        options={modularOptions} // Массив опций
+                        value={modularOptions.find((option) => option.value === newPowerSupply.modular) || null} // Текущее значение
+                        onChange={(selectedOption) =>
+                            setNewPowerSupply((prev) => ({
+                                ...prev,
+                                modular: selectedOption ? selectedOption.value : undefined, // Обновление значения
+                            }))
+                        }
+                        placeholder="Выберите модульность" // Плейсхолдер
+                        isClearable // Возможность очистки выбора
+                    />
                 </div>
                 <div>
                     <label>Изображение</label>

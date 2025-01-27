@@ -30,26 +30,33 @@ const CasesTable = () => {
     // Define columns for DataGrid
     const columns: GridColDef[] = [
         { field: 'id', headerName: 'ID', width: 90 },
-        { field: 'name', headerName: 'Name', width: 180 },
-        { field: 'brand', headerName: 'Brand', width: 150 },
-        { field: 'formFactor', headerName: 'Form', width: 150 },
-        { field: 'amountFun', headerName: 'Amount of Fans', width: 180 },
-        { field: 'lightType', headerName: 'Light Type', width: 180 },
-        { field: 'funConnector', headerName: 'Connector', width: 180 },
-        { field: 'color', headerName: 'Color', width: 180 },
-        { field: 'glassType', headerName: 'Glass Type', width: 180 },
         {
             field: 'imageUrl',
-            headerName: 'Image',
+            headerName: 'Изображение',
             width: 200,
             renderCell: (params) => (
-                <img
-                    src={params.value}
-                    alt="StorageDevices"
-                    style={{ width: '100px', height: 'auto', objectFit: 'contain' }}
-                />
+                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+                    <img
+                        src={params.value}
+                        alt="Processor"
+                        style={{
+                            maxWidth: '100px',
+                            maxHeight: '100%',
+                            objectFit: 'contain',
+                            display: 'block',
+                        }}
+                    />
+                </div>
             ),
         },
+        { field: 'name', headerName: 'Название', width: 180 },
+        { field: 'brand', headerName: 'Бренд', width: 150 },
+        { field: 'formFactor', headerName: 'Форм-фактор', width: 150 },
+        { field: 'amountFun', headerName: 'Кол-во вентиляторов', width: 180 },
+        { field: 'lightType', headerName: 'Тип подсветки', width: 180 },
+        { field: 'funConnector', headerName: 'Коннектор', width: 180 },
+        { field: 'color', headerName: 'Цвет', width: 180 },
+        { field: 'glassType', headerName: 'Тип стекла', width: 180 },
         {
             field: 'actions',
             headerName: 'Actions',

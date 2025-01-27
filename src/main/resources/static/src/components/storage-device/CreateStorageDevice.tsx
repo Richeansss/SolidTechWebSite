@@ -127,16 +127,10 @@ const AddStorageDeviceComponent: React.FC = () => {
             }
 
             alert("Накопитель успешно добавлен!");
-            setNewStorageDevice({
-                brand: { id: 0, name: "" },
+            setNewStorageDevice((prevState) => ({
+                ...prevState,
                 name: "",
-                type: StorageType.SSD,
-                capacityGb: 0,
-                formFactor: FormFactor.M_2,
-                interfaceType: InterfaceType.PCIE_3_0,
-                readSpeedMbps: 0,
-                writeSpeedMbps: 0,
-            });
+            }));
         } catch (error) {
             console.error("Ошибка добавления накопителя:", error);
             alert("Произошла ошибка при добавлении накопителя.");

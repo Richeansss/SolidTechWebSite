@@ -9,14 +9,14 @@ import {LightType} from "../../types/LightType";
 
 const AddCaseComponent: React.FC = () => {
     const [newCase, setNewCase] = useState<Partial<Case>>({
-        brand: { id: 1, name: 'Cooler Master' },
-        formFactor: 2,
-        amountFun: 3,
+        brand: { id: 0, name: '' },
+        formFactor: 0,
+        amountFun: 0,
         name: '',
-        lightType: { id: 1, name: 'Cooler Master' }, // This should be an object, not just a number
-        funConnector: 4,
-        color: 5,
-        glassType: 2,
+        lightType: { id: 0, name: '' }, // This should be an object, not just a number
+        funConnector: 0,
+        color: 0,
+        glassType: 0,
     });
     const [image, setImage] = useState<File | null>(null);
     const [uploadImage, { isLoading: isUploading }] = useUploadImageMutation(); // Мутация для загрузки изображения
@@ -83,16 +83,10 @@ const AddCaseComponent: React.FC = () => {
             }
 
             // Сбрасываем форму после успешного создания корпуса
-            setNewCase({
-                brand: { id: 1, name: 'Cooler Master' },
-                formFactor: 2,
-                amountFun: 3,
-                name: '',
-                lightType: { id: 1, name: 'Cooler Master' }, // Сбрасываем только id
-                funConnector: 4,
-                color: 5,
-                glassType: 2,
-            });
+            setNewCase((prevState) => ({
+                ...prevState,
+                name: "",
+            }));
 
             setMessage('Корпус успешно добавлен!');
         } catch (err) {
@@ -152,9 +146,13 @@ const AddCaseComponent: React.FC = () => {
                     <label>Бренд</label>
                     <Select
                         options={brandOptions}
+                        value={newCase.brand ? {
+                            value: newCase.brand.id,
+                            label: newCase.brand.name
+                        } : null}
                         onChange={handleBrandChange}
                         placeholder="Выберите бренд"
-                        required
+                        isClearable
                     />
                 </div>
                 <div>
@@ -181,8 +179,14 @@ const AddCaseComponent: React.FC = () => {
                     <label htmlFor="lightType">Тип подсветки</label>
                     <Select
                         options={lightTypeOptions}
+                        value={
+                            newCase.lightType
+                                ? { value: newCase.lightType.id, label: newCase.lightType.name }
+                                : null
+                        } // Связываем значение с состоянием
                         onChange={handleLightTypeChange}
                         placeholder="Выберите тип подсветки"
+                        isClearable
                         required
                     />
                 </div>

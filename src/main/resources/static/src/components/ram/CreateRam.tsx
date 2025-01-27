@@ -107,15 +107,10 @@ const AddRamComponent: React.FC = () => {
             }
 
             alert("Оперативная память успешно добавлена!");
-            setNewRam({
-                brand: { id: 0, name: "" },
+            setNewRam((prevState) => ({
+                ...prevState,
                 name: "",
-                amountRam: 0,
-                typeRam: RamType.DDR4,
-                jdek: 0,
-                timing: 0,
-                lightType: undefined,
-            });
+            }));
         } catch (error) {
             console.error("Ошибка добавления оперативной памяти:", error);
             alert("Произошла ошибка при добавлении оперативной памяти.");
@@ -140,9 +135,13 @@ const AddRamComponent: React.FC = () => {
                     <label>Бренд</label>
                     <Select
                         options={brandOptions}
+                        value={newRam.brand ? {
+                            value: newRam.brand.id,
+                            label: newRam.brand.name
+                        } : null}
                         onChange={handleBrandChange}
                         placeholder="Выберите бренд"
-                        required
+                        isClearable
                     />
                 </div>
                 <div>
@@ -190,8 +189,14 @@ const AddRamComponent: React.FC = () => {
                     <label>Тип подсветки</label>
                     <Select
                         options={lightTypeOptions}
+                        value={
+                            newRam.lightType
+                                ? { value: newRam.lightType.id, label: newRam.lightType.name }
+                                : null
+                        } // Связываем значение с состоянием
                         onChange={handleLightTypeChange}
                         placeholder="Выберите тип подсветки"
+                        isClearable
                         required
                     />
                 </div>

@@ -27,25 +27,32 @@ const RamTable = () => {
 
     const columns: GridColDef[] = [
         { field: 'id', headerName: 'ID', width: 90 },
-        { field: 'name', headerName: 'Name', width: 180 },
-        { field: 'brand', headerName: 'Brand', width: 150 },
-        { field: 'amountRam', headerName: 'Amount (GB)', width: 150 },
-        { field: 'typeRam', headerName: 'Type', width: 150 },
-        { field: 'jdek', headerName: 'Frequency (MHz)', width: 180 },
-        { field: 'timing', headerName: 'Timing', width: 180 },
-        { field: 'lightType', headerName: 'Light Type', width: 180,  },
         {
             field: 'imageUrl',
-            headerName: 'Image',
+            headerName: 'Изображение',
             width: 200,
             renderCell: (params) => (
-                <img
-                    src={params.value}
-                    alt="Ram"
-                    style={{ width: '100px', height: 'auto', objectFit: 'contain' }}
-                />
+                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+                    <img
+                        src={params.value}
+                        alt="Processor"
+                        style={{
+                            maxWidth: '100px',
+                            maxHeight: '100%',
+                            objectFit: 'contain',
+                            display: 'block',
+                        }}
+                    />
+                </div>
             ),
         },
+        { field: 'name', headerName: 'Название', width: 180 },
+        { field: 'brand', headerName: 'Бренд', width: 150 },
+        { field: 'amountRam', headerName: 'Кол-во (GB)', width: 150 },
+        { field: 'typeRam', headerName: 'Тип памяти', width: 150 },
+        { field: 'jdek', headerName: 'Частота (MHz)', width: 180 },
+        { field: 'timing', headerName: 'Тайминги', width: 180 },
+        { field: 'lightType', headerName: 'Тип подсветки', width: 180,  },
         {
             field: 'actions',
             headerName: 'Actions',

@@ -106,16 +106,10 @@ const AddVideocardComponent: React.FC = () => {
             alert("Видеокарта успешно добавлена и изображение загружено!");
 
             // Сброс формы
-            setNewVideocard({
-                brand: { id: 0, name: "" },
+            setNewVideocard((prevState) => ({
+                ...prevState,
                 name: "",
-                vram: 0,
-                typeOfVram: 0,
-                memoryBus: 0,
-                pci: 0,
-                color: 0,
-                lightType: undefined,
-            });
+            }));
 
         } catch (error) {
             console.error("Ошибка добавления видеокарты:", error);
@@ -141,9 +135,13 @@ const AddVideocardComponent: React.FC = () => {
                     <label>Бренд</label>
                     <Select
                         options={brandOptions}
+                        value={newVideocard.brand ? {
+                            value: newVideocard.brand.id,
+                            label: newVideocard.brand.name
+                        } : null}
                         onChange={handleBrandChange}
                         placeholder="Выберите бренд"
-                        required
+                        isClearable
                     />
                 </div>
                 <div>
@@ -200,8 +198,14 @@ const AddVideocardComponent: React.FC = () => {
                     <label>Тип подсветки</label>
                     <Select
                         options={lightTypeOptions}
+                        value={
+                            newVideocard.lightType
+                                ? { value: newVideocard.lightType.id, label: newVideocard.lightType.name }
+                                : null
+                        } // Связываем значение с состоянием
                         onChange={handleLightTypeChange}
                         placeholder="Выберите тип подсветки"
+                        isClearable
                         required
                     />
                 </div>

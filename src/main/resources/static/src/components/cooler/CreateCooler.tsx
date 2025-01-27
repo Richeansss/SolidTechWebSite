@@ -98,12 +98,10 @@ const AddCoolerComponent: React.FC = () => {
             }
 
             alert("Кулер успешно добавлен!");
-            setNewCooler({
-                brand: { id: 1, name: "Noctua" },
-                tdp: 65,
-                funConnector: 4,
+            setNewCooler((prevState) => ({
+                ...prevState,
                 name: "",
-            });
+            }));
         } catch (error) {
             console.error("Ошибка добавления кулера:", error);
             alert("Произошла ошибка при добавлении кулера.");
@@ -128,9 +126,13 @@ const AddCoolerComponent: React.FC = () => {
                     <label>Бренд</label>
                     <Select
                         options={brandOptions}
+                        value={newCooler.brand ? {
+                            value: newCooler.brand.id,
+                            label: newCooler.brand.name
+                        } : null}
                         onChange={handleBrandChange}
                         placeholder="Выберите бренд"
-                        required
+                        isClearable
                     />
                 </div>
                 <div>
@@ -157,8 +159,14 @@ const AddCoolerComponent: React.FC = () => {
                     <label htmlFor="lightType">Тип подсветки</label>
                     <Select
                         options={lightTypeOptions}
+                        value={
+                            newCooler.lightType
+                                ? { value: newCooler.lightType.id, label: newCooler.lightType.name }
+                                : null
+                        } // Связываем значение с состоянием
                         onChange={handleLightTypeChange}
                         placeholder="Выберите тип подсветки"
+                        isClearable
                         required
                     />
                 </div>
@@ -166,7 +174,7 @@ const AddCoolerComponent: React.FC = () => {
                     <label>Изображение</label>
                     <input type="file" accept="image/*" onChange={handleImageChange}/>
                 </div>
-                <button className="button-primary" type="submit" disabled={isLoading}>
+                <button className="button-primary" type="submit" disabled={isLoading || isUploading}>
                     {isLoading ? "Добавление..." : "Добавить кулер"}
                 </button>
             </form>

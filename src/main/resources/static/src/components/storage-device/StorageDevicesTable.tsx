@@ -29,26 +29,33 @@ const StorageDevicesTable = () => {
     // Определяем колонки для DataGrid
     const columns: GridColDef[] = [
         { field: 'id', headerName: 'ID', width: 90 },
-        { field: 'name', headerName: 'Name', width: 180 },
-        { field: 'brand', headerName: 'Brand', width: 150 },
-        { field: 'type', headerName: 'Type', width: 150 },
-        { field: 'capacityGb', headerName: 'Capacity (GB)', width: 180 },
-        { field: 'formFactor', headerName: 'Form Factor', width: 180 },
-        { field: 'interfaceType', headerName: 'Interface Type', width: 180 },
-        { field: 'readSpeedMbps', headerName: 'Read Speed (Mbps)', width: 180 },
-        { field: 'writeSpeedMbps', headerName: 'Write Speed (Mbps)', width: 180 },
         {
             field: 'imageUrl',
-            headerName: 'Image',
+            headerName: 'Изображение',
             width: 200,
             renderCell: (params) => (
-                <img
-                    src={params.value}
-                    alt="StorageDevices"
-                    style={{ width: '100px', height: 'auto', objectFit: 'contain' }}
-                />
+                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+                    <img
+                        src={params.value}
+                        alt="StorageDevices"
+                        style={{
+                            maxWidth: '100px',
+                            maxHeight: '100%',
+                            objectFit: 'contain',
+                            display: 'block',
+                        }}
+                    />
+                </div>
             ),
         },
+        { field: 'name', headerName: 'Название', width: 180 },
+        { field: 'brand', headerName: 'Бренд', width: 150 },
+        { field: 'type', headerName: 'Тип', width: 150 },
+        { field: 'capacityGb', headerName: 'Объем (GB)', width: 180 },
+        { field: 'formFactor', headerName: 'Форм фактор', width: 180 },
+        { field: 'interfaceType', headerName: 'Тип интерфейса', width: 180 },
+        { field: 'readSpeedMbps', headerName: 'Чтение (Mbps)', width: 180 },
+        { field: 'writeSpeedMbps', headerName: 'Запись (Mbps)', width: 180 },
         {
             field: 'actions',
             headerName: 'Actions',

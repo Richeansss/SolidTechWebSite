@@ -1,7 +1,9 @@
+import {Brand} from "./Brand";
+
 export interface Case {
     id: number;
     name: string;
-    brand?: { id: number; name: string };
+    brand: Brand;
     formFactor?: number;
     amountFun?: number;
     lightType?: { id: number, name: string };

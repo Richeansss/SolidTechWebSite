@@ -107,15 +107,10 @@ const AddProcessorComponent: React.FC = () => {
             }
 
             alert("Процессор успешно добавлен!");
-            setNewProcessor({
-                brand: { id: 0, name: "" },
+            setNewProcessor((prevState) => ({
+                ...prevState,
                 name: "",
-                socket: { id: 0, name: "" },
-                core: 0,
-                threads: 0,
-                turbo_bust: 0,
-                tdp: 0
-            });
+            }));
         } catch (error) {
             console.error("Ошибка добавления процессора:", error);
             alert("Произошла ошибка при добавлении процессора.");

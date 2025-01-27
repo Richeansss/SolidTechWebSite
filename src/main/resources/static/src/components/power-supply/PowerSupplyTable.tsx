@@ -27,23 +27,30 @@ const PowerSuppliesTable = () => {
     // Определяем колонки для DataGrid
     const columns: GridColDef[] = [
         { field: 'id', headerName: 'ID', width: 90 },
-        { field: 'name', headerName: 'Name', width: 180 },
-        { field: 'brand', headerName: 'Brand', width: 150 },
-        { field: 'certificate', headerName: 'Certificate', width: 150 },
-        { field: 'power', headerName: 'Power (W)', width: 180 },
-        { field: 'modular', headerName: 'Modular', width: 180 },
         {
             field: 'imageUrl',
-            headerName: 'Image',
+            headerName: 'Изображение',
             width: 200,
             renderCell: (params) => (
-                <img
-                    src={params.value}
-                    alt="Power-Supply"
-                    style={{ width: '100px', height: 'auto', objectFit: 'contain' }}
-                />
+                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+                    <img
+                        src={params.value}
+                        alt="Processor"
+                        style={{
+                            maxWidth: '100px',
+                            maxHeight: '100%',
+                            objectFit: 'contain',
+                            display: 'block',
+                        }}
+                    />
+                </div>
             ),
         },
+        { field: 'name', headerName: 'Название', width: 180 },
+        { field: 'brand', headerName: 'Бренд', width: 150 },
+        { field: 'certificate', headerName: 'Сертификат', width: 150 },
+        { field: 'power', headerName: 'Мощность (W)', width: 180 },
+        { field: 'modular', headerName: 'Модульность', width: 180 },
         {
             field: 'actions',
             headerName: 'Actions',
