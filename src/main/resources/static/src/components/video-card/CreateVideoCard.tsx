@@ -11,11 +11,13 @@ const AddVideocardComponent: React.FC = () => {
     const [newVideocard, setNewVideocard] = useState<Partial<Videocard>>({
         brand: { id: 0, name: "" },
         name: "",
+        graphicsClock: 0,
+        boostClock: 0,
         vram: 0,
-        typeOfVram: 0,
+        typeOfVram: "",
         memoryBus: 0,
         pci: 0,
-        color: 0,
+        color: undefined,
         lightType: undefined,
     });
 
@@ -34,12 +36,60 @@ const AddVideocardComponent: React.FC = () => {
         })), [existingBrands]
     );
 
+    const typeOfVramOptions = useMemo(() => [
+        { value: "GDDR1", label: "GDDR1" },
+        { value: "GDDR2", label: "GDDR2" },
+        { value: "GDDR3", label: "GDDR3" },
+        { value: "GDDR4", label: "GDDR4" },
+        { value: "GDDR5", label: "GDDR5" },
+        { value: "GDDR5X", label: "GDDR5X" },
+        { value: "GDDR6", label: "GDDR6" },
+        { value: "GDDR6X", label: "GDDR6X" },
+        { value: "GDDR7", label: "GDDR7" },
+        { value: "GDDR7X", label: "GDDR7X" },
+        { value: "LPDDR4", label: "LPDDR4" },
+        { value: "LPDDR5", label: "LPDDR5" },
+        { value: "LPDDR5X", label: "LPDDR5X" }
+    ], []);
+
+    const handleTypeOfVramChange = (selectedOption: { value: string; label: string } | null) => {
+        if (selectedOption) {
+            setNewVideocard((prevVideocard) => ({
+                ...prevVideocard,
+                typeOfVram: selectedOption.value as Videocard["typeOfVram"],
+            }));
+        }
+    };
+
     const lightTypeOptions = useMemo(() =>
         lightTypes?.map((lightType: LightType) => ({
             value: lightType.id,
             label: lightType.name,
         })), [lightTypes]
     );
+
+    const pciOptions = [
+        { value: 3.0, label: "PCIe 3.0" },
+        { value: 4.0, label: "PCIe 4.0" },
+        { value: 5.0, label: "PCIe 5.0" },
+        { value: 2.0, label: "PCIe 2.0" },
+        { value: 1.0, label: "PCIe 1.0" }
+    ];
+
+    const colorOptions = [
+        { value: "BLACK", label: "Черный" },
+        { value: "WHITE", label: "Белый" },
+        { value: "RED", label: "Красный" },
+        { value: "BLUE", label: "Синий" },
+        { value: "GREEN", label: "Зеленый" },
+        { value: "YELLOW", label: "Желтый" },
+        { value: "ORANGE", label: "Оранжевый" },
+        { value: "PURPLE", label: "Фиолетовый" },
+        { value: "PINK", label: "Розовый" },
+        { value: "GRAY", label: "Серый" },
+        { value: "SILVER", label: "Серебристый" },
+        { value: "GOLD", label: "Золотой" }
+    ];
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
@@ -73,6 +123,10 @@ const AddVideocardComponent: React.FC = () => {
         if (file) {
             setImage(file);
         }
+    };
+
+    const handleChange = (field: keyof Videocard, value: any) => {
+        setNewVideocard(prev => ({ ...prev, [field]: value }));
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -145,13 +199,33 @@ const AddVideocardComponent: React.FC = () => {
                     />
                 </div>
                 <div>
-                    <label>Тип VRAM</label>
+                    <label>Частота графического процессора (МГц)</label>
                     <input
                         type="number"
-                        name="typeOfVram"
-                        value={newVideocard.typeOfVram || ""}
+                        name="graphicsClock"
+                        value={newVideocard.graphicsClock || ""}
                         onChange={handleInputChange}
                         required
+                    />
+                </div>
+                <div>
+                    <label>Тактовая частота с ускорением(MHz)</label>
+                    <input
+                        type="number"
+                        name="boostClock"
+                        value={newVideocard.boostClock || ""}
+                        onChange={handleInputChange}
+                        required
+                    />
+                </div>
+                <div>
+                    <label>Тип VRAM</label>
+                    <Select
+                        options={typeOfVramOptions}
+                        value={typeOfVramOptions.find(option => option.value === newVideocard.typeOfVram) || null}
+                        onChange={handleTypeOfVramChange}
+                        placeholder="Выберите тип VRAM"
+                        isClearable
                     />
                 </div>
                 <div>
@@ -176,23 +250,16 @@ const AddVideocardComponent: React.FC = () => {
                 </div>
                 <div>
                     <label>Версия PCI</label>
-                    <input
-                        type="number"
-                        name="pci"
-                        value={newVideocard.pci || ""}
-                        onChange={handleInputChange}
-                        required
-                    />
+                    <Select options={pciOptions} value={pciOptions.find(opt => opt.value === newVideocard.pci) || null}
+                            onChange={opt => handleChange("pci", opt?.value)} placeholder="Выберите версию PCI"/>
                 </div>
                 <div>
-                    <label>Цвет</label>
-                    <input
-                        type="number"
-                        name="color"
-                        value={newVideocard.color || ""}
-                        onChange={handleInputChange}
-                        required
-                    />
+                    <div>
+                        <label>Цвет</label>
+                        <Select options={colorOptions}
+                                value={colorOptions.find(opt => opt.value === newVideocard.color) || null}
+                                onChange={opt => handleChange("color", opt?.value)} placeholder="Выберите цвет"/>
+                    </div>
                 </div>
                 <div>
                     <label>Тип подсветки</label>
@@ -200,7 +267,7 @@ const AddVideocardComponent: React.FC = () => {
                         options={lightTypeOptions}
                         value={
                             newVideocard.lightType
-                                ? { value: newVideocard.lightType.id, label: newVideocard.lightType.name }
+                                ? {value: newVideocard.lightType.id, label: newVideocard.lightType.name}
                                 : null
                         } // Связываем значение с состоянием
                         onChange={handleLightTypeChange}

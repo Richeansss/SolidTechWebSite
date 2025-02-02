@@ -6,17 +6,18 @@ import { Case } from '../../types/Case';
 import './CreateCase.css';
 import Select from "react-select";
 import {LightType} from "../../types/LightType";
+import {Videocard} from "../../types/VideoCard";
 
 const AddCaseComponent: React.FC = () => {
     const [newCase, setNewCase] = useState<Partial<Case>>({
         brand: { id: 0, name: '' },
-        formFactor: 0,
+        formFactor: undefined,
         amountFun: 0,
         name: '',
         lightType: { id: 0, name: '' }, // This should be an object, not just a number
         funConnector: 0,
-        color: 0,
-        glassType: 0,
+        color: undefined,
+        glassType: undefined,
     });
     const [image, setImage] = useState<File | null>(null);
     const [uploadImage, { isLoading: isUploading }] = useUploadImageMutation(); // Мутация для загрузки изображения
@@ -28,6 +29,43 @@ const AddCaseComponent: React.FC = () => {
     // Поиск брендов по имени
     const { data: existingBrands } = useGetBrandsQuery();
     const { data: lightTypes, isLoading: isLoadingLightTypes } = useGetLightTypesQuery();
+
+
+    const colorOptions = [
+        { value: "BLACK", label: "Черный" },
+        { value: "WHITE", label: "Белый" },
+        { value: "RED", label: "Красный" },
+        { value: "BLUE", label: "Синий" },
+        { value: "GREEN", label: "Зеленый" },
+        { value: "YELLOW", label: "Желтый" },
+        { value: "ORANGE", label: "Оранжевый" },
+        { value: "PURPLE", label: "Фиолетовый" },
+        { value: "PINK", label: "Розовый" },
+        { value: "GRAY", label: "Серый" },
+        { value: "SILVER", label: "Серебристый" },
+        { value: "GOLD", label: "Золотой" }
+    ];
+
+    const glassTypeOptions = [
+        { value: "TEMPERED", label: "Закаленное" },
+        { value: "ACRYLIC", label: "Акриловое" },
+        { value: "NONE", label: "Отсутствует" }
+    ];
+
+
+    const formFactorOptions = [
+        { value: "ATX", label: "ATX" },
+        { value: "MICRO_ATX", label: "MICRO ATX" },
+        { value: "MINI_ITX", label: "MINI ITX" },
+        { value: "E_ATX", label: "E ATX" },
+        { value: "XL_ATX", label: "XL ATX" },
+        { value: "FLEX_ATX", label: "FLEX ATX" },
+        { value: "MINI_STX", label: "MINI STX" },
+        { value: "NANO_ITX", label: "NANO ITX" },
+        { value: "PICO_ITX", label: "PICO ITX" },
+        { value: "SSI_CEB", label: "SSI CEB" },
+        { value: "SSI_EEB", label: "SSI EEB" },
+    ];
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
@@ -102,6 +140,10 @@ const AddCaseComponent: React.FC = () => {
         })), [existingBrands]
     );
 
+    const handleChange = (field: keyof Case, value: any) => {
+        setNewCase(prev => ({ ...prev, [field]: value }));
+    };
+
     const handleBrandChange = (selectedOption: { value: number; label: string } | null) => {
         if (selectedOption) {
             setNewCase((prevCase) => ({
@@ -156,14 +198,12 @@ const AddCaseComponent: React.FC = () => {
                     />
                 </div>
                 <div>
-                    <label htmlFor="formFactor">Форм-фактор</label>
-                    <input
-                        id="formFactor"
-                        type="number"
-                        name="formFactor"
-                        value={newCase.formFactor || ''}
-                        onChange={handleInputChange}
-                    />
+                    <div>
+                        <label>Форм фактор</label>
+                        <Select options={formFactorOptions}
+                                value={formFactorOptions.find(opt => opt.value === newCase.formFactor) || null}
+                                onChange={opt => handleChange("formFactor", opt?.value)} placeholder="Выберите форм фактор"/>
+                    </div>
                 </div>
                 <div>
                     <label htmlFor="amountFun">Количество вентиляторов</label>
@@ -201,24 +241,22 @@ const AddCaseComponent: React.FC = () => {
                     />
                 </div>
                 <div>
-                    <label htmlFor="color">Цвет</label>
-                    <input
-                        id="color"
-                        type="number"
-                        name="color"
-                        value={newCase.color || ''}
-                        onChange={handleInputChange}
-                    />
+                    <div>
+                        <div>
+                            <label>Цвет</label>
+                            <Select options={colorOptions}
+                                    value={colorOptions.find(opt => opt.value === newCase.color) || null}
+                                    onChange={opt => handleChange("color", opt?.value)} placeholder="Выберите цвет"/>
+                        </div>
+                    </div>
                 </div>
                 <div>
-                    <label htmlFor="glassType">Тип стекла</label>
-                    <input
-                        id="glassType"
-                        type="number"
-                        name="glassType"
-                        value={newCase.glassType || ''}
-                        onChange={handleInputChange}
-                    />
+                    <div>
+                        <label>Тип стекла</label>
+                        <Select options={glassTypeOptions}
+                                value={glassTypeOptions.find(opt => opt.value === newCase.glassType) || null}
+                                onChange={opt => handleChange("glassType", opt?.value)} placeholder="Выберите цвет"/>
+                    </div>
                 </div>
                 <div>
                     <label>Изображение</label>

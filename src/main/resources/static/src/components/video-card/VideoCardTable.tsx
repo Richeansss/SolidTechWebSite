@@ -14,6 +14,8 @@ const VideocardTable = () => {
                 id: videocard.id,
                 name: videocard.name,
                 brand: videocard.brand.name,
+                graphicsClock: videocard.graphicsClock,
+                boostClock: videocard.boostClock,
                 vram: videocard.vram,
                 typeOfVram: videocard.typeOfVram,
                 memoryBus: videocard.memoryBus,
@@ -36,7 +38,7 @@ const VideocardTable = () => {
                 <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
                     <img
                         src={params.value}
-                        alt="Processor"
+                        alt="Videocard"
                         style={{
                             maxWidth: '100px',
                             maxHeight: '100%',
@@ -49,6 +51,8 @@ const VideocardTable = () => {
         },
         { field: 'name', headerName: 'Название', width: 180 },
         { field: 'brand', headerName: 'Бренд', width: 150 },
+        { field: 'graphicsClock', headerName: 'Стандартная частота', width: 150 },
+        { field: 'boostClock', headerName: 'Частота в разгоне', width: 150 },
         { field: 'vram', headerName: 'VRAM (GB)', width: 150 },
         { field: 'typeOfVram', headerName: 'VRAM ТИП', width: 150 },
         { field: 'memoryBus', headerName: 'Шина (bit)', width: 180 },

@@ -38,7 +38,7 @@ const CasesTable = () => {
                 <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
                     <img
                         src={params.value}
-                        alt="Processor"
+                        alt="Case"
                         style={{
                             maxWidth: '100px',
                             maxHeight: '100%',

@@ -5,11 +5,13 @@ export interface Videocard {
     id?: number;
     name: string;
     brand: Brand;
+    graphicsClock: number;
+    boostClock: number;
     vram: number;
-    typeOfVram: number;
+    typeOfVram: string; // Изменил number на string
     memoryBus: number;
     pci: number;
-    color: number;
+    color: string;
     lightType: LightType;
     imageUrl?: string;  // Добавляем поле для хранения URL изображения
 }

@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useGetVideocardsQuery } from '../../store/api/apiVideoCard';
 import './CardList.css';
+import {useGetPCsQuery} from "../../store/api/apiPC";
 
 const VideocardList = () => {
-    const { data, isLoading, isError } = useGetVideocardsQuery(); // Получаем данные о видеокартах
+    const { data, isLoading, isError } = useGetPCsQuery(); // Получаем данные о видеокартах
 
     const [videocards, setVideocards] = useState<any[]>([]);
 
@@ -11,8 +12,8 @@ const VideocardList = () => {
         if (data) {
             const formattedVideocards = data.map((videocard) => ({
                 id: videocard.id,
-                name: videocard.name,
-                vram: videocard.vram,
+                name: videocard.case_pc,
+                vram: videocard.videocard,
                 imageUrl: videocard.imageUrl, // URL изображения
             }));
             setVideocards(formattedVideocards);
