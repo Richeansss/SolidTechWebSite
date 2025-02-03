@@ -6,12 +6,13 @@ import { useGetBrandsQuery } from "../../store/api/apiBrand";
 import { useGetLightTypesQuery } from "../../store/api/apiLighttype";
 import "../case/CreateCase.css";
 import {LightType} from "../../types/LightType";
-import {useUploadImageMutation} from "../../store/api/apiCase"; // Подключение CSS
+import {useUploadImageMutation} from "../../store/api/apiCooler";
 
 const AddCoolerComponent: React.FC = () => {
     const [newCooler, setNewCooler] = useState<Partial<Cooler>>({
         brand: { id: 0, name: "" },
         tdp: undefined,
+        funSize: undefined,
         funConnector: undefined,
         name: "",
     });
@@ -36,6 +37,14 @@ const AddCoolerComponent: React.FC = () => {
             label: brand.name,
         })), [existingBrands]
     );
+
+    const formFactorOptions = [
+        { value: "SIZE_120x120", label: "120x120" },
+        { value: "SIZE_92x92", label: "92x92" },
+        { value: "SIZE_140x140", label: "140x140" },
+        { value: "SIZE_70x70", label: "70x70" },
+        { value: "SIZE_80x80", label: "80x80" },
+    ];
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
@@ -80,6 +89,11 @@ const AddCoolerComponent: React.FC = () => {
             }));
         }
     };
+
+    const handleChange = (field: keyof Cooler, value: any) => {
+        setNewCooler(prev => ({ ...prev, [field]: value }));
+    };
+
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -146,6 +160,15 @@ const AddCoolerComponent: React.FC = () => {
                     />
                 </div>
                 <div>
+                    <div>
+                        <label>Размер вентилятора</label>
+                        <Select options={formFactorOptions}
+                                value={formFactorOptions.find(opt => opt.value === newCooler.funSize) || null}
+                                onChange={opt => handleChange("funSize", opt?.value)}
+                                placeholder="Выберите форм фактор"/>
+                    </div>
+                </div>
+                <div>
                     <label>Разъемы вентиляторов</label>
                     <input
                         type="number"
@@ -161,7 +184,7 @@ const AddCoolerComponent: React.FC = () => {
                         options={lightTypeOptions}
                         value={
                             newCooler.lightType
-                                ? { value: newCooler.lightType.id, label: newCooler.lightType.name }
+                                ? {value: newCooler.lightType.id, label: newCooler.lightType.name}
                                 : null
                         } // Связываем значение с состоянием
                         onChange={handleLightTypeChange}

@@ -6,6 +6,7 @@ export interface Cooler {
     name: string;
     brand: Brand;
     tdp: number;
+    funSize: string;
     funConnector: number; // Поле fun_connector переименовано в camelCase для консистентности
     lightType?: LightType; // lightType может быть необязательным, так как он не всегда указывается
     imageUrl?: string;

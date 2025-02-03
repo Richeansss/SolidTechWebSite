@@ -7,8 +7,6 @@ export const apiCooler = createApi({
     baseQuery: fetchBaseQuery({
         baseUrl: 'http://localhost:8080/api/v1/',
         prepareHeaders: (headers, { getState }) => {
-            headers.set('Content-Type', 'application/json');
-            // Добавьте токен, если необходима авторизация
             const token = (getState() as any).auth?.token;
             if (token) {
                 headers.set('Authorization', `Bearer ${token}`);
@@ -59,7 +57,7 @@ export const apiCooler = createApi({
                 formData.append('file', file);
 
                 return {
-                    url: `${id}/upload-image`, // Убедитесь, что URL правильный, включая слеш в конце
+                    url: `cooler/${id}/upload-image`, // Убедитесь, что URL правильный, включая слеш в конце
                     method: 'POST',
                     body: formData,
                     // Content-Type будет установлен автоматически для multipart запросов

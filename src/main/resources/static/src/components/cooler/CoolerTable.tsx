@@ -16,6 +16,7 @@ const CoolersTable = () => {
                 name: cooler.name,
                 brand: cooler.brand ? cooler.brand.name : 'Not specified',
                 tdp: cooler.tdp || 'Not specified',
+                funSize: cooler.funSize || 'Not specified',
                 funConnector: cooler.funConnector || 'Not specified',
                 lightType: cooler.lightType?.name || 'Not specified',
                 imageUrl: cooler.imageUrl, // Используем URL из базы данных
@@ -49,6 +50,7 @@ const CoolersTable = () => {
         { field: 'name', headerName: 'Название', width: 180 },
         { field: 'brand', headerName: 'Бренд', width: 150 },
         { field: 'tdp', headerName: 'TDP', width: 150 },
+        { field: 'funSize', headerName: 'Размер вентилятора', width: 180 },
         { field: 'funConnector', headerName: 'Коннектор', width: 180 },
         { field: 'lightType', headerName: 'Тип подсветки', width: 180 },
         {
