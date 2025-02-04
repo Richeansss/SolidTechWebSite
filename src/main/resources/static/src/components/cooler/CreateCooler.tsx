@@ -160,13 +160,11 @@ const AddCoolerComponent: React.FC = () => {
                     />
                 </div>
                 <div>
-                    <div>
-                        <label>Размер вентилятора</label>
-                        <Select options={formFactorOptions}
-                                value={formFactorOptions.find(opt => opt.value === newCooler.funSize) || null}
-                                onChange={opt => handleChange("funSize", opt?.value)}
-                                placeholder="Выберите форм фактор"/>
-                    </div>
+                    <label>Размер вентилятора</label>
+                    <Select options={formFactorOptions}
+                            value={formFactorOptions.find(opt => opt.value === newCooler.funSize) || null}
+                            onChange={opt => handleChange("funSize", opt?.value)}
+                            placeholder="Выберите размер вентилятора"/>
                 </div>
                 <div>
                     <label>Разъемы вентиляторов</label>

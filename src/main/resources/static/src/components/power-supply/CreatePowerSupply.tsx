@@ -4,7 +4,8 @@ import { PowerSupply } from "../../types/PowerSupply"; // Тип PowerSupply
 import { useCreatePowerSupplyMutation } from "../../store/api/apiPowerSupply";
 import { useGetBrandsQuery } from "../../store/api/apiBrand";
 import "../case/CreateCase.css";
-import {useUploadImageMutation} from "../../store/api/apiPowerSupply"; // Подключение CSS
+import {useUploadImageMutation} from "../../store/api/apiPowerSupply";
+import {Cooler} from "../../types/Cooler"; // Подключение CSS
 
 const AddPowerSupplyComponent: React.FC = () => {
     const [newPowerSupply, setNewPowerSupply] = useState<Partial<PowerSupply>>({
@@ -53,6 +54,16 @@ const AddPowerSupplyComponent: React.FC = () => {
         }
     };
 
+    const certificateOptions = [
+        { value: "NONE", label: "Отсутствует" },
+        { value: "SIMPLE_80_PLUS", label: "80 Plus" },
+        { value: "BRONZE_80_PLUS", label: "80 Plus Bronze" },
+        { value: "SILVER_80_PLUS", label: "80 Plus Silver" },
+        { value: "GOLD_80_PLUS", label: "80 Plus Gold" },
+        { value: "PLATINUM_80_PLUS", label: "80 Plus Platinum" },
+        { value: "TITANIUM_80_PLUS", label: "80 Plus Titanium" },
+    ];
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
@@ -85,6 +96,10 @@ const AddPowerSupplyComponent: React.FC = () => {
         { value: false, label: "Нет" },
     ];
 
+    const handleChange = (field: keyof PowerSupply, value: any) => {
+        setNewPowerSupply(prev => ({ ...prev, [field]: value }));
+    };
+
     return (
         <div>
             <h2>Добавить блок питания</h2>
@@ -114,13 +129,10 @@ const AddPowerSupplyComponent: React.FC = () => {
                 </div>
                 <div>
                     <label>Сертификат</label>
-                    <input
-                        type="number"
-                        name="certificate"
-                        value={newPowerSupply.certificate || ""}
-                        onChange={handleInputChange}
-                        required
-                    />
+                    <Select options={certificateOptions}
+                            value={certificateOptions.find(opt => opt.value === newPowerSupply.certificate) || null}
+                            onChange={opt => handleChange("certificate", opt?.value)}
+                            placeholder="Выберите сертификат"/>
                 </div>
                 <div>
                     <label>Мощность (Вт)</label>
@@ -133,7 +145,7 @@ const AddPowerSupplyComponent: React.FC = () => {
                     />
                 </div>
                 <div>
-                    <label>Модульный</label>
+                <label>Модульный</label>
                     <Select
                         options={modularOptions} // Массив опций
                         value={modularOptions.find((option) => option.value === newPowerSupply.modular) || null} // Текущее значение

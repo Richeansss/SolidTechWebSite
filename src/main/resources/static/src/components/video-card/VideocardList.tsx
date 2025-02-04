@@ -10,11 +10,11 @@ const VideocardList = () => {
 
     useEffect(() => {
         if (data) {
-            const formattedVideocards = data.map((videocard) => ({
-                id: videocard.id,
-                name: videocard.case_pc,
-                vram: videocard.videocard,
-                imageUrl: videocard.imageUrl, // URL изображения
+            const formattedVideocards = data.map((pc) => ({
+                id: pc.id,
+                case_pc: pc.case_pc,
+                videocard: pc.videocard,
+                imageUrl: pc.imageUrl, // URL изображения
             }));
             setVideocards(formattedVideocards);
         }
@@ -30,18 +30,18 @@ const VideocardList = () => {
 
     return (
         <div className="videocard-list">
-            {videocards.map((videocard) => (
-                <div key={videocard.id} className="videocard-card">
+            {videocards.map((pc) => (
+                <div key={pc.id} className="videocard-card">
                     <div className="image-container">
                         <img
-                            src={videocard.imageUrl}
-                            alt={videocard.name}
+                            src={pc.imageUrl}
+                            alt={pc.name}
                             className="videocard-image"
                         />
                     </div>
                     <div className="text-container">
-                        <h3>{videocard.name}</h3>
-                        <p>Memory: {videocard.vram} GB</p>
+                        <h3>{pc.case_pc.name}</h3>
+                        <p>Memory: {pc.videocard.name} GB</p>
                     </div>
                 </div>
             ))}

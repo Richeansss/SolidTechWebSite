@@ -255,7 +255,7 @@ const AddCaseComponent: React.FC = () => {
                         <label>Тип стекла</label>
                         <Select options={glassTypeOptions}
                                 value={glassTypeOptions.find(opt => opt.value === newCase.glassType) || null}
-                                onChange={opt => handleChange("glassType", opt?.value)} placeholder="Выберите цвет"/>
+                                onChange={opt => handleChange("glassType", opt?.value)} placeholder="Выберите тип стекла"/>
                     </div>
                 </div>
                 <div>

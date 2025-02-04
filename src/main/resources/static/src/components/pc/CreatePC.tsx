@@ -86,13 +86,13 @@ const AddPCComponent: React.FC = () => {
         value: ram.id,
         label: ram.name,
     })), [ramTypes]);
-    const motherBoardOptions = useMemo(() => ramTypes?.map((ram) => ({
-        value: ram.id,
-        label: ram.name,
+    const motherBoardOptions = useMemo(() => motherBoardTypes?.map((motherBoard) => ({
+        value: motherBoard.id,
+        label: motherBoard.name,
     })), [motherBoardTypes]);
-    const storageDeviceOptions = useMemo(() => ramTypes?.map((ram) => ({
-        value: ram.id,
-        label: ram.name,
+    const storageDeviceOptions = useMemo(() => storageDeviceTypes?.map((storageDevice) => ({
+        value: storageDevice.id,
+        label: storageDevice.name,
     })), [storageDeviceTypes]);
 
     const storeOptions = useMemo(() => Object.values(TypeStore).map(store => ({ value: store, label: store })), []);

@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import ru.solidtech.website.model.enums.Certificate;
 
 @Entity
 @Table(name = "power_supply")
@@ -23,8 +24,9 @@ public class PowerSupply {
     @JoinColumn(name = "brand_id", nullable = false)
     private Brand brand;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Long certificate;
+    private Certificate certificate;
 
     @Column(nullable = false)
     private Long power;
