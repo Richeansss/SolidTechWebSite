@@ -13,6 +13,7 @@ const AddRamComponent: React.FC = () => {
         brand: { id: 0, name: "" },
         name: "",
         amountRam: 0,
+        moduleCapacity: 0,
         typeRam: RamType.DDR4, // Например, по умолчанию DDR4
         jdek: 0,
         timing: 0,
@@ -156,11 +157,21 @@ const AddRamComponent: React.FC = () => {
                     />
                 </div>
                 <div>
-                    <label>Объем RAM (ГБ)</label>
+                    <label>Кол-во модулей</label>
                     <input
                         type="number"
                         name="amountRam"
                         value={newRam.amountRam || ""}
+                        onChange={handleInputChange}
+                        required
+                    />
+                </div>
+                <div>
+                    <label>Объем одного модуля (ГБ)</label>
+                    <input
+                        type="number"
+                        name="amountRam"
+                        value={newRam.moduleCapacity || ""}
                         onChange={handleInputChange}
                         required
                     />
@@ -191,7 +202,7 @@ const AddRamComponent: React.FC = () => {
                         options={lightTypeOptions}
                         value={
                             newRam.lightType
-                                ? { value: newRam.lightType.id, label: newRam.lightType.name }
+                                ? {value: newRam.lightType.id, label: newRam.lightType.name}
                                 : null
                         } // Связываем значение с состоянием
                         onChange={handleLightTypeChange}

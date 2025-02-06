@@ -13,6 +13,7 @@ export interface Ram {
         id: number;
         name: string;
     };
+    moduleCapacity: number;
     amountRam: number; // Объем памяти в ГБ
     typeRam: RamType;  // Тип памяти (например, DDR4, DDR5)
     jdek: number;     // Частота (например, 3200 МГц)

@@ -24,6 +24,9 @@ public class Ram {
     @Column(name = "amount_ram", nullable = false)
     private Long amountRam;
 
+    @Column(name = "module_capacity", nullable = false)
+    private Long moduleCapacity;
+
     @Column(name = "type_ram", nullable = false)
     @Enumerated(EnumType.STRING)
     private TypeRam typeRam;

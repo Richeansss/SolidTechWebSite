@@ -61,6 +61,24 @@ p {
         height: 200px;
     }
 }
+.info-box {
+    display: flex;
+    align-items: center;
+    background-color: #f0f0f0;
+    border-radius: 8px;
+    padding: 10px;
+    margin: 5px 0;
+    font-size: 14px;
+    text-align: left;
+    gap: 8px;
+}
+
+.icon {
+    width: 30px;
+    height: 30px;
+    margin-right: 8px;
+    vertical-align: middle;
+}
 
 /* Для экранов меньше 480px (очень маленькие экраны, например, телефоны) */
 @media (max-width: 480px) {

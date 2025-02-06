@@ -12,8 +12,13 @@ const VideocardList = () => {
         if (data) {
             const formattedVideocards = data.map((pc) => ({
                 id: pc.id,
+                price: pc.price,
                 case_pc: pc.case_pc,
                 videocard: pc.videocard,
+                motherBoard: pc.motherBoard,
+                storageDevice: pc.storageDevice,
+                processor: pc.processor,
+                ram: pc.ram,
                 imageUrl: pc.imageUrl, // URL изображения
             }));
             setVideocards(formattedVideocards);
@@ -40,8 +45,27 @@ const VideocardList = () => {
                         />
                     </div>
                     <div className="text-container">
-                        <h3>{pc.case_pc.name}</h3>
-                        <p>Memory: {pc.videocard.name} GB</p>
+                        <h3>{pc.price} ₽</h3>
+                        <div className="info-box">
+                            <img src="/icons/gpu.png" alt="GPU" className="icon"/>
+                            <span>Видеокарта<br/> {pc.videocard.name} GB</span>
+                        </div>
+                        <div className="info-box">
+                            <img src="/icons/cpu.png" alt="CPU" className="icon"/>
+                            <span>Процессор<br/> {pc.processor.name}</span>
+                        </div>
+                        <div className="info-box">
+                            <img src="/icons/motherboard.png" alt="Motherboard" className="icon"/>
+                            <span>Материнская плата<br/> {pc.motherBoard.name}</span>
+                        </div>
+                        <div className="info-box">
+                            <img src="/icons/ram.png" alt="RAM" className="icon"/>
+                            <span>Оперативная память<br/> {pc.ram.amountRam * pc.ram.moduleCapacity}GB {pc.ram.name}</span>
+                        </div>
+                        <div className="info-box">
+                            <img src="/icons/ssd.png" alt="HDD" className="icon"/>
+                            <span>Накопитель<br/> {pc.storageDevice.capacityGb}GB {pc.storageDevice.name}</span>
+                        </div>
                     </div>
                 </div>
             ))}
