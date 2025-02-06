@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useGetVideocardsQuery } from '../../store/api/apiVideoCard';
+import { useNavigate } from "react-router-dom"; // Импортируем useNavigate
 import './CardList.css';
 import {useGetPCsQuery} from "../../store/api/apiPC";
 
@@ -7,6 +8,8 @@ const VideocardList = () => {
     const { data, isLoading, isError } = useGetPCsQuery(); // Получаем данные о видеокартах
 
     const [videocards, setVideocards] = useState<any[]>([]);
+    const navigate = useNavigate(); // Хук для навигации
+
 
     useEffect(() => {
         if (data) {
@@ -37,7 +40,8 @@ const VideocardList = () => {
         <div className="videocard-list">
             {videocards.map((pc) => (
                 <div key={pc.id} className="videocard-card">
-                    <div className="image-container">
+                    <div className="image-container" onClick={() => navigate(`/pc/${pc.id}`)}
+                         style={{cursor: "pointer"}}>
                         <img
                             src={pc.imageUrl}
                             alt={pc.name}
