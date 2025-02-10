@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 
 import lombok.Data;
 
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Entity
@@ -64,6 +66,9 @@ public class PC {
     @Column(name = "image_url")
     private String imageUrl;
     private Boolean isForSale;
+
+    @OneToMany(mappedBy = "pc", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Image> images = new ArrayList<>();
 
     public enum TypeStore {
 

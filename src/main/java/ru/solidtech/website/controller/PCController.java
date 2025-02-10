@@ -83,4 +83,18 @@ public class PCController {
             return ResponseBuilder.buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Не удалось загрузить изображение");
         }
     }
+
+    @PostMapping("/{id}/upload-images")
+    public ResponseEntity<Map<String, Object>> uploadImages(
+            @PathVariable Long id,
+            @RequestParam("files") MultipartFile[] files) {
+        try {
+            List<String> imageUrls = pcService.saveImages(id, files);
+            return ResponseBuilder.buildResponse(HttpStatus.OK, "Изображения успешно загружены", imageUrls);
+        } catch (Exception e) {
+            logger.error("Ошибка при загрузке изображений для ПК с ID: {}", id, e);
+            return ResponseBuilder.buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Не удалось загрузить изображения");
+        }
+    }
+
 }

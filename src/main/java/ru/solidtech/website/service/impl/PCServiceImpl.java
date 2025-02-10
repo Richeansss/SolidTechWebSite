@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import ru.solidtech.website.model.Image;
 import ru.solidtech.website.model.PC;
 import ru.solidtech.website.model.PowerSupply;
 import ru.solidtech.website.repository.*;
@@ -13,6 +14,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -27,6 +29,7 @@ public class PCServiceImpl implements PCService {
     private final VideocardRepository videocardRepository;
     private final StorageDeviceRepository storageDeviceRepository;
     private final PowerSupplyRepository powerSupplyRepository;
+    private final ImageRepository imageRepository;
 
     @Override
     public List<PC> findAllPCs() {
@@ -68,10 +71,21 @@ public class PCServiceImpl implements PCService {
 
     @Override
     public void deletePC(Long id) {
-        if (!pcRepository.existsById(id)) {
-            throw new IllegalArgumentException("ПК с ID " + id + " не найден");
+        PC pc = pcRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("ПК с ID " + id + " не найден"));
+
+        // Удаляем файлы изображений с диска
+        for (Image image : pc.getImages()) {
+            Path filePath = Paths.get("src/main/resources/static/public" + image.getUrl());
+            try {
+                Files.deleteIfExists(filePath);
+            } catch (IOException e) {
+                throw new RuntimeException("Ошибка при удалении файла: " + filePath, e);
+            }
         }
-        pcRepository.deleteById(id);
+
+        // Удаляем ПК (и его изображения удалятся автоматически)
+        pcRepository.delete(pc);
     }
 
     @Override
@@ -124,5 +138,41 @@ public class PCServiceImpl implements PCService {
         pcRepository.save(pc);
 
         return imageUrl;
+    }
+
+    public List<String> saveImages(Long pcId, MultipartFile[] files) throws IOException {
+        PC pc = findPCById(pcId);
+        if (pc == null) {
+            throw new IllegalArgumentException("Компьютер с указанным ID не найден");
+        }
+
+        List<String> imageUrls = new ArrayList<>();
+        Path folderPath = Paths.get("src/main/resources/static/public/images/pc/" + pcId);
+        Files.createDirectories(folderPath);
+
+        for (MultipartFile file : files) {
+            String fileName = pcId + "_" + System.currentTimeMillis() + getExtension(file);
+            Path filePath = folderPath.resolve(fileName);
+            Files.write(filePath, file.getBytes());
+
+            String imageUrl = "/images/pc/" + pcId + "/" + fileName;
+            imageUrls.add(imageUrl);
+
+            // Сохраняем в БД
+            Image image = new Image();
+            image.setUrl(imageUrl);
+            image.setPc(pc);
+            imageRepository.save(image);
+        }
+
+        return imageUrls;
+    }
+
+    private String getExtension(MultipartFile file) {
+        String originalFileName = file.getOriginalFilename();
+        if (originalFileName != null && originalFileName.contains(".")) {
+            return originalFileName.substring(originalFileName.lastIndexOf("."));
+        }
+        throw new IllegalArgumentException("Некорректное имя файла");
     }
 }

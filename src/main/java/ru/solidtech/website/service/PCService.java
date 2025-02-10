@@ -19,4 +19,5 @@ public interface PCService {
 
     String saveImage(Long id, MultipartFile file) throws IOException;
 
+    List<String> saveImages(Long pcId, MultipartFile[] files) throws IOException;
 }
