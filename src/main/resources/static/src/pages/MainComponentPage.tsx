@@ -22,6 +22,7 @@ import CreateCase from "../components/case/CreateCase";
 import CasesTable from "../components/case/CasesTable";
 
 import './Page.css';
+import BarChart from "../components/chart/BarChart";
 
 const App: React.FC = () => {
         const [activeTabIndex, setActiveTabIndex] = useState<number>(() => {
@@ -29,6 +30,9 @@ const App: React.FC = () => {
                 const savedIndex = sessionStorage.getItem('activeTabIndex');
                 return savedIndex ? Number(savedIndex) : 0;
         });
+
+        const labels = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май'];
+        const data = [65, 59, 80, 81, 56];
 
         const handleTabChange = useCallback((index: number) => {
                 setActiveTabIndex(index);
@@ -51,7 +55,7 @@ const App: React.FC = () => {
         return (
             <div>
                     <h1>Магазин компьютеров</h1>
-                    <VideocardList />
+                    <VideocardList/>
                     <Tabs selectedIndex={activeTabIndex} onSelect={handleTabChange}>
                             <TabList className="tab-list">
                                     {tabsData.map((tab, index) => (
@@ -66,7 +70,12 @@ const App: React.FC = () => {
                                 </TabPanel>
                             ))}
                     </Tabs>
+                    <div>
+                            <h1>Моя столбчатая диаграмма</h1>
+                            <BarChart labels={labels} data={data}/>
+                    </div>
             </div>
+
         );
 };
 
