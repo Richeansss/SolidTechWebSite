@@ -1,7 +1,6 @@
 import React, { useState, useMemo } from "react";
 import Select from "react-select";
-import { useCreatePCMutation, useUploadImageMutation, useUploadImagesMutation } from "../../store/api/apiPC";
-import { useSearchBrandsByNameQuery } from "../../store/api/apiBrand";
+import { useCreatePCMutation, useUploadImagesMutation } from "../../store/api/apiPC";
 import { useGetCoolersQuery } from "../../store/api/apiCooler";
 import { useGetCasesQuery } from "../../store/api/apiCase";
 import {useGetPowerSuppliesQuery } from "../../store/api/apiPowerSupply";
@@ -51,20 +50,10 @@ const AddPCComponent: React.FC = () => {
     });
 
     const [createPC, { isLoading, isSuccess, isError }] = useCreatePCMutation();
-    const [image, setImage] = useState<File | null>(null);
-    const [uploadImage, { isLoading: isUploading }] = useUploadImageMutation(); // Мутация для загрузки изображения
     const [images, setImages] = useState<File[]>([]);
     const [uploadImages, { isLoading: isUploadings }] = useUploadImagesMutation(); // Мутация для загрузки нескольких изображений
 
-    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files ? e.target.files[0] : null;
-        if (file) {
-            setImage(file);
-        }
-    };
-
     // Загрузка данных для выбора
-    const { data: existingBrands } = useSearchBrandsByNameQuery("");
     const { data: coolerTypes } = useGetCoolersQuery();
     const { data: caseTypes } = useGetCasesQuery();
     const { data: powerSupplies } = useGetPowerSuppliesQuery();
@@ -75,7 +64,6 @@ const AddPCComponent: React.FC = () => {
     const { data: storageDeviceTypes} = useGetStorageDevicesQuery()
 
     // Опции для Select
-    const brandOptions = useMemo(() => existingBrands?.map((brand) => ({ value: brand.id, label: brand.name })), [existingBrands]);
     const coolerOptions = useMemo(() => coolerTypes?.map((cooler) => ({ value: cooler.id, label: cooler.name })), [coolerTypes]);
     const caseOptions = useMemo(() => caseTypes?.map((caseItem) => ({ value: caseItem.id, label: caseItem.name })), [caseTypes]);
     const powerSupplyOptions = useMemo(() => powerSupplies?.map((psu) => ({ value: psu.id, label: psu.name })), [powerSupplies]);
@@ -404,7 +392,7 @@ const AddPCComponent: React.FC = () => {
                     />
                 </div>
 
-                <button className="button-primary" type="submit" disabled={isLoading || isUploading}>
+                <button className="button-primary" type="submit" disabled={isLoading || isUploadings}>
                     {isLoading ? "Добавление..." : "Добавить ПК"}
                 </button>
 
