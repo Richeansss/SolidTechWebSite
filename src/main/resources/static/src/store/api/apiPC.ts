@@ -67,6 +67,22 @@ export const apiPC = createApi({
             transformResponse: (response: ApiResponse<string>) => response.data as string,
             invalidatesTags: (result, error, { id }) => [{ type: 'PC', id }],
         }),
+        uploadImages: builder.mutation<string[], { id: number; files: File[] }>(
+            {
+                query: ({ id, files }) => {
+                    const formData = new FormData();
+                    files.forEach(file => formData.append('files', file));
+
+                    return {
+                        url: `/${id}/upload-images`, // добавлен ведущий слеш
+                        method: 'POST',
+                        body: formData,
+                    };
+                },
+                transformResponse: (response: ApiResponse<string[]>) => response.data as string[],
+                invalidatesTags: (result, error, { id }) => [{ type: 'PC', id }],
+            }
+        ),
     }),
 });
 
@@ -76,5 +92,6 @@ export const {
     useCreatePCMutation,
     useUpdatePCMutation,
     useDeletePCMutation,
-    useUploadImageMutation
+    useUploadImageMutation,
+    useUploadImagesMutation
 } = apiPC;

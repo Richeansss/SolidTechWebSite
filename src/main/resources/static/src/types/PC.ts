@@ -43,7 +43,8 @@ export interface PC {
 
     price: number;
 
-    imageUrl?: string;  // Добавляем поле для хранения URL изображения
+    imageUrl?: string;
+    imagesUrl?: string[];  // Добавляем поле для хранения URL изображения
 }
 
 export enum TypeStore {

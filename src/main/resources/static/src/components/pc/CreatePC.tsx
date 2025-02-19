@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from "react";
 import Select from "react-select";
-import { useCreatePCMutation, useUploadImageMutation } from "../../store/api/apiPC";
+import { useCreatePCMutation, useUploadImageMutation, useUploadImagesMutation } from "../../store/api/apiPC";
 import { useSearchBrandsByNameQuery } from "../../store/api/apiBrand";
 import { useGetCoolersQuery } from "../../store/api/apiCooler";
 import { useGetCasesQuery } from "../../store/api/apiCase";
@@ -53,6 +53,8 @@ const AddPCComponent: React.FC = () => {
     const [createPC, { isLoading, isSuccess, isError }] = useCreatePCMutation();
     const [image, setImage] = useState<File | null>(null);
     const [uploadImage, { isLoading: isUploading }] = useUploadImageMutation(); // Мутация для загрузки изображения
+    const [images, setImages] = useState<File[]>([]);
+    const [uploadImages, { isLoading: isUploadings }] = useUploadImagesMutation(); // Мутация для загрузки нескольких изображений
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files ? e.target.files[0] : null;
@@ -107,6 +109,13 @@ const AddPCComponent: React.FC = () => {
         }
     };
 
+    const handleImagesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (!e.target.files) return; // Проверяем, что файлы есть
+        const newFiles = Array.from(e.target.files); // Теперь TypeScript не будет ругаться
+        setImages((prevImages) => [...prevImages, ...newFiles]);
+    };
+
+
     const handleStoreSelectChange = (name: string, selectedOption: { value: string; label: string } | null) => {
         if (selectedOption) {
             setNewPC((prev) => ({
@@ -146,9 +155,10 @@ const AddPCComponent: React.FC = () => {
             // @ts-ignore
             const createdPC = await createPC(newPC).unwrap();
 
-            if (image) {
-                // @ts-ignore
-                await uploadImage({ id: createdPC.id, file: image }).unwrap();
+            if (images.length > 0) {
+                for (const file of images) {
+                    await uploadImages({ id: createdPC.id, files: [file] }).unwrap();
+                }
             }
 
             alert("ПК успешно добавлен!");
@@ -385,8 +395,13 @@ const AddPCComponent: React.FC = () => {
                     />
                 </div>
                 <div>
-                    <label>Изображение</label>
-                    <input type="file" accept="image/*" onChange={handleImageChange}/>
+                    <label>Изображения</label>
+                    <input
+                        type="file"
+                        accept="images/*"
+                        multiple // Позволяет выбирать несколько файлов
+                        onChange={handleImagesChange}
+                    />
                 </div>
 
                 <button className="button-primary" type="submit" disabled={isLoading || isUploading}>
