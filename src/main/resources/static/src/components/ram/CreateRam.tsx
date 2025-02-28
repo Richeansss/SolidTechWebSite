@@ -170,7 +170,7 @@ const AddRamComponent: React.FC = () => {
                     <label>Объем одного модуля (ГБ)</label>
                     <input
                         type="number"
-                        name="amountRam"
+                        name="moduleCapacity"
                         value={newRam.moduleCapacity || ""}
                         onChange={handleInputChange}
                         required
