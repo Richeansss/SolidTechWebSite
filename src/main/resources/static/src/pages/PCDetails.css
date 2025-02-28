@@ -1,0 +1,134 @@
+.pc-details {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+    position: relative;
+}
+
+.image-container {
+    width: 100%;
+    max-width: 600px;
+    height: auto;
+    margin-bottom: 20px;
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+}
+
+.pc-image {
+    width: 100%;
+    height: auto;
+    max-height: 400px;
+    object-fit: contain;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    display: block;
+}
+
+.specs {
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+    max-width: 1900px;
+    background: #fff;
+    padding: 24px;
+    border-radius: 12px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    position: relative;
+    z-index: 2;
+    gap: 15px; /* Добавляет пространство между блоками */
+}
+
+.left-info-box, .right-info-box {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    background: #f9f9f9;
+    width: 100%;
+}
+
+.left-info-box {
+    justify-content: flex-start;
+    align-self: flex-start;
+    text-align: left;
+}
+
+.info-text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+}
+
+.left-info-box .label {
+    font-weight: bold;
+    font-size: 16px;
+    color: #d32f2f;
+}
+
+.left-info-box .value {
+    justify-content: flex-end;
+
+    font-size: 14px;
+    color: #666;
+}
+
+.left-info-box .extra {
+    font-size: 14px;
+    color: #999;
+}
+
+.right-info-box {
+    justify-content: flex-end;
+    align-self: flex-end;
+    text-align: left;
+}
+
+.right-info-box .label {
+    font-weight: bold;
+    font-size: 16px;
+    color: #d32f2f;
+}
+
+.right-info-box .value {
+    justify-content: flex-end;
+
+    font-size: 14px;
+    color: #666;
+}
+
+.right-info-box .extra {
+    font-size: 14px;
+    color: #999;
+    white-space: pre-line;
+}
+
+.image-icon {
+    width: 400px; /* Увеличенный размер */
+    height: 400px;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain; /* Гарантирует, что изображение вмещается, не обрезаясь */
+    margin-right: 15px;
+}
+
+@media (max-width: 768px) {
+    .image-container, .specs {
+        width: 95%;
+    }
+    .pc-image {
+        max-height: 300px;
+    }
+    .left-info-box, .right-info-box {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .icon {
+        margin-bottom: 5px;
+    }
+}
