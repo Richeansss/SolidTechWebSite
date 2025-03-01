@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom"; // Импортируем useNav
 import './CardList.css';
 import {useGetPCsQuery} from "../../store/api/apiPC";
 
-const VideocardList = () => {
+const PCList = () => {
     const { data, isLoading, isError } = useGetPCsQuery(); // Получаем данные о видеокартах
 
     const [videocards, setVideocards] = useState<any[]>([]);
@@ -13,7 +13,7 @@ const VideocardList = () => {
 
     useEffect(() => {
         if (data) {
-            const formattedVideocards = data.map((pc) => ({
+            const formattedPCs = data.map((pc) => ({
                 id: pc.id,
                 price: pc.price,
                 case_pc: pc.casePc,
@@ -22,9 +22,10 @@ const VideocardList = () => {
                 storageDevice: pc.storageDevice,
                 processor: pc.processor,
                 ram: pc.ram,
-                imageUrl: pc.imageUrl, // URL изображения
+                imagesUrl: pc.imagesUrl, // URL изображения
+
             }));
-            setVideocards(formattedVideocards);
+            setVideocards(formattedPCs);
         }
     }, [data]);
 
@@ -36,17 +37,23 @@ const VideocardList = () => {
         return <div className="error">Error loading data</div>;
     }
 
+
     return (
         <div className="videocard-list">
             {videocards.map((pc) => (
                 <div key={pc.id} className="videocard-card">
-                    <div className="image-container" onClick={() => navigate(`/pc/${pc.id}`)}
-                         style={{cursor: "pointer"}}>
-                        <img
-                            src={pc.imageUrl}
-                            alt={pc.name}
-                            className="videocard-image"
-                        />
+                    <div className="image-container-main" onClick={() => navigate(`/pc/${pc.id}`)}>
+                        {pc.imagesUrl.length > 0 ? (
+                            <>
+                                <img
+                                    src={`http://localhost:3000${pc.imagesUrl[0]}`} // Используем первое изображение
+                                    alt={`{pc}`}
+                                    className="pc-image-main"
+                                />
+                            </>
+                        ) : (
+                            <p>Изображения отсутствуют</p>
+                        )}
                     </div>
                     <div className="text-container">
                         <h3>{pc.price} ₽</h3>
@@ -77,4 +84,4 @@ const VideocardList = () => {
     );
 };
 
-export default VideocardList;
+export default PCList;

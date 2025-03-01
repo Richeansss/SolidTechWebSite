@@ -17,13 +17,87 @@
     background-color: #fff; /* Белый фон */
 }
 
-.image-container {
+.image-container-main {
+    position: relative;
     width: 100%;
-    height: 256px;
+    max-width: 600px;
+    min-width: 300px; /* Минимальная ширина */
+    height: 400px;
+    min-height: 400px; /* Гарантия, что высота не изменится */
+    margin: 0 auto;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    background-color: #f0f0f0;
+    cursor: pointer;
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #f4f4f4;
+}
+
+.image-container {
+    position: relative;
+    width: 100%;
+    max-width: 2000px;
+    height: 400px;
+    min-height: 400px; /* Гарантия, что высота не изменится */
+    margin: 0 auto;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    background-color: #f0f0f0;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.pc-image-main {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.pc-image {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.pc-image.hidden {
+    opacity: 0; /* Скрытое изображение */
+}
+
+.carousel-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.3);
+    color: white;
+    border: none;
+    padding: 12px;
+    cursor: pointer;
+    font-size: 20px;
+    border-radius: 15%;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+}
+
+.carousel-button:hover {
+    background-color: rgba(0, 0, 0, 0.9);
+    transform: translateY(-50%) scale(1.1); /* Увеличение кнопки при наведении */
+}
+
+.carousel-button.prev {
+    left: 20px;
+}
+
+.carousel-button.next {
+    right: 20px;
 }
 
 .videocard-image {

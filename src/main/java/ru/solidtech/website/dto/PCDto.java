@@ -35,5 +35,5 @@ public class PCDto {
     private int price;
     private String imageUrl;
     private Boolean isForSale;
-    private List<String> imageUrls; // Список URL изображений
+    private List<String> imagesUrl; // Список URL изображений
 }

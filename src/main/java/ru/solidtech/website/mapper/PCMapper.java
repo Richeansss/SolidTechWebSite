@@ -39,7 +39,7 @@ public class PCMapper {
         dto.setIsForSale(pc.getIsForSale());
 
         // Преобразуем список изображений в список URL
-        dto.setImageUrls(pc.getImages().stream()
+        dto.setImagesUrl(pc.getImages().stream()
                 .map(image -> image.getUrl())
                 .collect(Collectors.toList()));
 

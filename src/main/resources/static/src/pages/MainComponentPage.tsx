@@ -17,7 +17,7 @@ import CreateMotherBoard from "../components/mother-board/CreateMotherBoard";
 import MotherBoardTable from "../components/mother-board/MotherBoardTable";
 import PCTable from "../components/pc/PCTable";
 import CreatePC from "../components/pc/CreatePC";
-import VideocardList from "../components/video-card/VideocardList";
+import PCList from "../components/video-card/PCList";
 import CreateCase from "../components/case/CreateCase";
 import CasesTable from "../components/case/CasesTable";
 
@@ -55,7 +55,7 @@ const App: React.FC = () => {
         return (
             <div>
                     <h1>Магазин компьютеров</h1>
-                    <VideocardList/>
+                    <PCList/>
                     <Tabs selectedIndex={activeTabIndex} onSelect={handleTabChange}>
                             <TabList className="tab-list">
                                     {tabsData.map((tab, index) => (
