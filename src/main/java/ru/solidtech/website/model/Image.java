@@ -1,5 +1,6 @@
 package ru.solidtech.website.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -14,5 +15,6 @@ public class Image {
 
     @ManyToOne
     @JoinColumn(name = "pc_id")
+    @JsonBackReference
     private PC pc;
 }
