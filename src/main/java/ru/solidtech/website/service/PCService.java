@@ -1,13 +1,14 @@
 package ru.solidtech.website.service;
 
 import org.springframework.web.multipart.MultipartFile;
+import ru.solidtech.website.dto.PCDto;
 import ru.solidtech.website.model.PC;
 
 import java.io.IOException;
 import java.util.List;
 
 public interface PCService {
-    List<PC> findAllPCs();
+    List<PCDto> findAllPCs();
 
     PC findPCById(Long id);
 

@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import ru.solidtech.website.dto.PCDto;
+import ru.solidtech.website.mapper.PCMapper;
 import ru.solidtech.website.model.Image;
 import ru.solidtech.website.model.PC;
 import ru.solidtech.website.model.PowerSupply;
@@ -16,6 +18,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -31,9 +34,11 @@ public class PCServiceImpl implements PCService {
     private final PowerSupplyRepository powerSupplyRepository;
     private final ImageRepository imageRepository;
 
-    @Override
-    public List<PC> findAllPCs() {
-        return pcRepository.findAll();
+    public List<PCDto> findAllPCs() {
+        List<PC> pcList = pcRepository.findAll();
+        return pcList.stream()
+                .map(PCMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override

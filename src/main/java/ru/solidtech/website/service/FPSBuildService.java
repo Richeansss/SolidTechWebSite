@@ -2,7 +2,7 @@ package ru.solidtech.website.service;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.solidtech.website.dto.GameFPSCountDTO; // Импортируйте ваш DTO
+import ru.solidtech.website.dto.GameFPSCountDTO;
 import ru.solidtech.website.model.FPSBuild;
 import ru.solidtech.website.model.Game;
 import ru.solidtech.website.model.GameFPSCount;

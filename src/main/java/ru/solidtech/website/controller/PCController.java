@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import ru.solidtech.website.dto.PCDto;
 import ru.solidtech.website.model.PC;
 import ru.solidtech.website.response.ResponseBuilder;
 import ru.solidtech.website.service.PCService;
@@ -23,7 +24,7 @@ public class PCController {
 
     @GetMapping
     public ResponseEntity<Map<String, Object>> findAllPCs() {
-        List<PC> pcList = pcService.findAllPCs();
+        List<PCDto> pcList = pcService.findAllPCs();
         return ResponseBuilder.buildResponse(HttpStatus.OK, "Список ПК успешно получен", pcList);
     }
 
