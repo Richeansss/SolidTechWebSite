@@ -30,13 +30,13 @@ const PCDetails: React.FC = () => {
     // @ts-ignore
     return (
         <div className="pc-details">
-            <h2>{pc.case_pc.name} ({pc.price} ₽)</h2>
+            <h2>{pc.casePc.name} ({pc.price} ₽)</h2>
             <div className="image-container">
-                <img src={pc.imageUrl} alt={pc.case_pc.name} className="pc-image" />
+                <img src={pc.imageUrl} alt={pc.casePc.name} className="pc-image" />
             </div>
             <div className="specs">
                 <div className="left-info-box">
-                    <img src={pc.videocard.imageUrl} alt={pc.case_pc.name} className="image-icon"/>
+                    <img src={pc.videocard.imageUrl} alt={pc.casePc.name} className="image-icon"/>
                     <InfoText
                         label="Видеокарта"
                         value={pc.videocard.name}
@@ -60,10 +60,10 @@ const PCDetails: React.FC = () => {
                             `${pc.processor.turbo_bust} ГГц (турбо)`,
                         ]}
                     />
-                    <img src={pc.processor.imageUrl} alt={pc.case_pc.name} className="image-icon"/>
+                    <img src={pc.processor.imageUrl} alt={pc.casePc.name} className="image-icon"/>
                 </div>
                 <div className="left-info-box">
-                    <img src={pc.motherBoard.imageUrl} alt={pc.case_pc.name} className="image-icon"/>
+                    <img src={pc.motherBoard.imageUrl} alt={pc.casePc.name} className="image-icon"/>
                     <InfoText
                         label="Материнская плата"
                         value={pc.motherBoard.name}
@@ -87,10 +87,10 @@ const PCDetails: React.FC = () => {
                             `Частота: ${pc.ram.jdek}`,
                             `Таймнг: CL-${pc.ram.timing}`,
                         ]}                    />
-                    <img src={pc.ram.imageUrl} alt={pc.case_pc.name} className="image-icon"/>
+                    <img src={pc.ram.imageUrl} alt={pc.casePc.name} className="image-icon"/>
                 </div>
                 <div className="left-info-box">
-                    <img src={pc.storageDevice.imageUrl} alt={pc.case_pc.name} className="image-icon"/>
+                    <img src={pc.storageDevice.imageUrl} alt={pc.casePc.name} className="image-icon"/>
                     <InfoText
                         label="Накопитель"
                         value={pc.storageDevice.name}
@@ -116,12 +116,12 @@ const PCDetails: React.FC = () => {
                     <img src={pc.cooler.imageUrl} alt={pc.cooler.name} className="image-icon"/>
                 </div>
                 <div className="left-info-box">
-                    <img src={pc.case_pc.imageUrl} alt={pc.case_pc.name} className="image-icon"/>
+                    <img src={pc.casePc.imageUrl} alt={pc.casePc.name} className="image-icon"/>
                     <InfoText
                         label="Корпус"
-                        value={pc.case_pc.name}
+                        value={pc.casePc.name}
                         extra={[
-                            `TDP: ${pc.case_pc.formFactor}`,
+                            `TDP: ${pc.casePc.formFactor}`,
                             `Коннектор вентилятора: ${pc.cooler.funConnector} pin`,
                             `Размер вентилятора: ${pc.cooler.funSize.replace("SIZE_", "")}`,
                         ]}                    />

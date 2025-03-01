@@ -16,7 +16,7 @@ const VideocardList = () => {
             const formattedVideocards = data.map((pc) => ({
                 id: pc.id,
                 price: pc.price,
-                case_pc: pc.case_pc,
+                case_pc: pc.casePc,
                 videocard: pc.videocard,
                 motherBoard: pc.motherBoard,
                 storageDevice: pc.storageDevice,

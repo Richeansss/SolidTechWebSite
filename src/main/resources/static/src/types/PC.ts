@@ -25,7 +25,7 @@ export interface PC {
     coolerWarranty: number | null;
     coolerStore: TypeStore;
 
-    case_pc: Case;
+    casePc: Case;
     caseWarranty: number | null;
     caseStore: TypeStore;
 
