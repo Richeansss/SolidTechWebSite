@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.solidtech.website.dto.GameFPSCountDTO; // Импортируйте DTO
+import ru.solidtech.website.dto.GameFPSCountDTO;
 import ru.solidtech.website.model.FPSBuild;
 import ru.solidtech.website.response.ResponseBuilder;
 import ru.solidtech.website.service.FPSBuildService;
