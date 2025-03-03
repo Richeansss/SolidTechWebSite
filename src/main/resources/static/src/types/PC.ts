@@ -25,7 +25,7 @@ export interface PC {
     coolerWarranty: number | null;
     coolerStore: TypeStore;
 
-    case_pc: Case;
+    casePc: Case;
     caseWarranty: number | null;
     caseStore: TypeStore;
 
@@ -44,7 +44,7 @@ export interface PC {
     price: number;
 
     imageUrl?: string;
-    imagesUrl?: string[];  // Добавляем поле для хранения URL изображения
+    imagesUrl: string[];  // Добавляем поле для хранения URL изображения
 }
 
 export enum TypeStore {

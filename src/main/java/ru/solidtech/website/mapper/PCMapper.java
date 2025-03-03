@@ -10,28 +10,28 @@ public class PCMapper {
     public static PCDto toDto(PC pc) {
         PCDto dto = new PCDto();
         dto.setId(pc.getId());
-        dto.setMotherBoard(pc.getMotherBoard().getName());
+        dto.setMotherBoard(pc.getMotherBoard());
         dto.setMotherBoardWarranty(pc.getMotherBoardWarranty());
         dto.setMotherBoardStore(pc.getMotherBoardStore().toString());
-        dto.setProcessor(pc.getProcessor().getName());
+        dto.setProcessor(pc.getProcessor());
         dto.setProcessorWarranty(pc.getProcessorWarranty());
         dto.setProcessorStore(pc.getProcessorStore().toString());
-        dto.setRam(pc.getRam().getName());
+        dto.setRam(pc.getRam());
         dto.setRamWarranty(pc.getRamWarranty());
         dto.setRamStore(pc.getRamStore().toString());
-        dto.setCooler(pc.getCooler().getName());
+        dto.setCooler(pc.getCooler());
         dto.setCoolerWarranty(pc.getCoolerWarranty());
         dto.setCoolerStore(pc.getCoolerStore().toString());
-        dto.setCasePc(pc.getCase_pc().getName());
+        dto.setCasePc(pc.getCase_pc());
         dto.setCaseWarranty(pc.getCaseWarranty());
         dto.setCaseStore(pc.getCaseStore().toString());
-        dto.setVideocard(pc.getVideocard().getName());
+        dto.setVideocard(pc.getVideocard());
         dto.setVideocardWarranty(pc.getVideocardWarranty());
         dto.setVideocardStore(pc.getVideocardStore().toString());
-        dto.setStorageDevice(pc.getStorageDevice().getName());
+        dto.setStorageDevice(pc.getStorageDevice());
         dto.setStorageDeviceWarranty(pc.getStorageDeviceWarranty());
         dto.setStorageDeviceStore(pc.getStorageDeviceStore().toString());
-        dto.setPowerSupply(pc.getPowerSupply().getName());
+        dto.setPowerSupply(pc.getPowerSupply());
         dto.setPowerSupplyWarranty(pc.getPowerSupplyWarranty());
         dto.setPowerSupplyStore(pc.getPowerSupplyStore().toString());
         dto.setPrice(pc.getPrice());
@@ -39,7 +39,7 @@ public class PCMapper {
         dto.setIsForSale(pc.getIsForSale());
 
         // Преобразуем список изображений в список URL
-        dto.setImageUrls(pc.getImages().stream()
+        dto.setImagesUrl(pc.getImages().stream()
                 .map(image -> image.getUrl())
                 .collect(Collectors.toList()));
 

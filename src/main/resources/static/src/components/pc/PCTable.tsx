@@ -24,7 +24,7 @@ const PCTable = () => {
                 cooler: pc.cooler.name,
                 coolerWarranty: pc.coolerWarranty,
                 coolerStore: pc.coolerStore,
-                case: pc.case_pc.name,
+                case: pc.casePc.name,
                 caseWarranty: pc.caseWarranty,
                 caseStore: pc.caseStore,
                 videocard: pc.videocard.name,
