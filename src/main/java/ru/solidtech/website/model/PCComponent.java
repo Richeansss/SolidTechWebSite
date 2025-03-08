@@ -8,6 +8,7 @@ import ru.solidtech.website.model.enums.ComponentType;
 @Table(name = "pc_components")
 @Data
 public class PCComponent {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
