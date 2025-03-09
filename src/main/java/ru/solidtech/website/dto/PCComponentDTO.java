@@ -12,8 +12,7 @@ public class PCComponentDTO {
     private Long componentId;
     private Integer warrantyMonths;
     private TypeStore store;
-
-
+    private Object details;
 }
 
 

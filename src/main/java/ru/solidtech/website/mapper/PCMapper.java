@@ -1,13 +1,25 @@
 package ru.solidtech.website.mapper;
 
+import ru.solidtech.website.dto.PCComponentDTO;
 import ru.solidtech.website.dto.PCDto;
 import ru.solidtech.website.model.PC;
+import ru.solidtech.website.model.PCComponent;
 
 import java.util.stream.Collectors;
 
+import org.springframework.stereotype.Component;
+import ru.solidtech.website.service.PCComponentService;
+
+@Component
 public class PCMapper {
 
-    public static PCDto toDto(PC pc) {
+    private final PCComponentService pcComponentService;
+
+    public PCMapper(PCComponentService pcComponentService) {
+        this.pcComponentService = pcComponentService;
+    }
+
+    public PCDto toDto(PC pc) {
         PCDto dto = new PCDto();
         dto.setId(pc.getId());
         dto.setMotherBoard(pc.getMotherBoard());
@@ -43,6 +55,32 @@ public class PCMapper {
                 .map(image -> image.getUrl())
                 .collect(Collectors.toList()));
 
+        // Добавляем компоненты с details
+        dto.setComponents(pc.getComponents().stream()
+                .map(this::convertToDetailedDTO)
+                .collect(Collectors.toList()));
+
+        return dto;
+    }
+
+    private PCComponentDTO convertToDetailedDTO(PCComponent component) {
+        PCComponentDTO dto = convertToDTO(component);
+
+        // Получаем details
+        Object details = pcComponentService.getComponentDetails(component);
+        dto.setDetails(details);
+
+        return dto;
+    }
+
+    private PCComponentDTO convertToDTO(PCComponent component) {
+        PCComponentDTO dto = new PCComponentDTO();
+        dto.setId(component.getId());
+        dto.setPcId(component.getPc().getId());
+        dto.setComponentType(component.getComponentType());
+        dto.setComponentId(component.getComponentId());
+        dto.setWarrantyMonths(component.getWarrantyMonths());
+        dto.setStore(component.getStore());
         return dto;
     }
 }

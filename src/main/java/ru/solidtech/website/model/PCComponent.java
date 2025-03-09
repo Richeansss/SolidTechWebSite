@@ -1,5 +1,6 @@
 package ru.solidtech.website.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import ru.solidtech.website.model.enums.ComponentType;
@@ -14,13 +15,14 @@ public class PCComponent {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "pc_id", nullable = false)
+    @JsonBackReference
+    @JoinColumn(name = "pc_id", nullable = true) // Может быть null, если на складе
     private PC pc;
 
     @Enumerated(EnumType.STRING)
     private ComponentType componentType; // Тип компонента (MOTHERBOARD, PROCESSOR и т. д.)
 
-    private Long componentId; // ID комплектующего (будет ссылаться на любую таблицу)
+    private Long componentId; // ID комплектующего (ссылка на справочник)
 
     private Integer warrantyMonths; // Гарантия в месяцах
 
@@ -29,5 +31,12 @@ public class PCComponent {
 
     public enum TypeStore {
         AVITO, OZON, DNS, ONLINETRADE, ALIEXPRESS, CITILINK;
+    }
+
+    /**
+     * Проверяет, находится ли компонент на складе (если не привязан к PC).
+     */
+    public boolean isStored() {
+        return pc == null;
     }
 }

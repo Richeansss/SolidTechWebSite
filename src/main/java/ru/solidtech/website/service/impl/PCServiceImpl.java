@@ -8,7 +8,7 @@ import ru.solidtech.website.dto.PCDto;
 import ru.solidtech.website.mapper.PCMapper;
 import ru.solidtech.website.model.Image;
 import ru.solidtech.website.model.PC;
-import ru.solidtech.website.model.PowerSupply;
+import ru.solidtech.website.model.PCComponent;
 import ru.solidtech.website.repository.*;
 import ru.solidtech.website.service.PCService;
 
@@ -23,6 +23,10 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class PCServiceImpl implements PCService {
+
+    private final PCMapper pcMapper;
+
+    private final PCComponentRepository pcComponentRepository;
     private final PCRepository pcRepository;
     private final MotherBoardRepository motherBoardRepository;
     private final ProcessorRepository processorRepository;
@@ -37,7 +41,7 @@ public class PCServiceImpl implements PCService {
     public List<PCDto> findAllPCs() {
         List<PC> pcList = pcRepository.findAll();
         return pcList.stream()
-                .map(PCMapper::toDto)
+                .map(pcMapper::toDto) // Используем внедренный pcMapper
                 .collect(Collectors.toList());
     }
 
@@ -49,6 +53,8 @@ public class PCServiceImpl implements PCService {
 
     @Override
     public PC createPC(PC pcEntity) {
+
+
         pcEntity.setMotherBoard(getEntityById(pcEntity.getMotherBoard().getId(), motherBoardRepository, "Материнская плата"));
         pcEntity.setProcessor(getEntityById(pcEntity.getProcessor().getId(), processorRepository, "Процессор"));
         pcEntity.setRam(getEntityById(pcEntity.getRam().getId(), ramRepository, "ОЗУ"));
@@ -58,8 +64,19 @@ public class PCServiceImpl implements PCService {
         pcEntity.setStorageDevice(getEntityById(pcEntity.getStorageDevice().getId(), storageDeviceRepository, "Накопитель"));
         pcEntity.setPowerSupply(getEntityById(pcEntity.getPowerSupply().getId(), powerSupplyRepository, "Блок питания"));
 
+        // Загружаем существующие комплектующие из БД по их ID
+        List<PCComponent> existingComponents = new ArrayList<>();
+        for (PCComponent component : pcEntity.getComponents()) {
+            PCComponent existingComponent = pcComponentRepository.findById(component.getId())
+                    .orElseThrow(() -> new RuntimeException("Комплектующее с ID " + component.getId() + " не найдено"));
+            existingComponent.setPc(pcEntity); // Привязываем к PC
+            existingComponents.add(existingComponent);
+        }
+        pcEntity.setComponents(existingComponents);
+
         return pcRepository.save(pcEntity);
     }
+
 
     private <T> T getEntityById(Long id, JpaRepository<T, Long> repository, String entityName) {
         return repository.findById(id)

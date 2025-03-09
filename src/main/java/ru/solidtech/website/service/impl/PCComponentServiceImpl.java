@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
+import ru.solidtech.website.dto.PCComponentDTO;
 import ru.solidtech.website.model.PC;
 import ru.solidtech.website.model.PCComponent;
 import ru.solidtech.website.model.enums.ComponentType;
@@ -49,8 +50,33 @@ public class PCComponentServiceImpl implements PCComponentService {
     }
 
     @Override
-    public List<PCComponent> findAllComponents() {
-        return pcComponentRepository.findAll();
+    public List<PCComponentDTO> findAllComponents() {
+        List<PCComponent> components = pcComponentRepository.findAll();
+
+        return components.stream()
+                .map(this::convertToDetailedDTO) // Метод для создания DTO с деталями
+                .toList();
+    }
+
+    private PCComponentDTO convertToDetailedDTO(PCComponent component) {
+        PCComponentDTO dto = convertToDTO(component); // Базовое преобразование
+
+        // Получаем подробности
+        Object details = getComponentDetails(component);
+        dto.setDetails(details); // Добавляем в DTO
+
+        return dto;
+    }
+
+    private PCComponentDTO convertToDTO(PCComponent component) {
+        PCComponentDTO dto = new PCComponentDTO();
+        dto.setId(component.getId());
+        dto.setPcId(component.getPc().getId()); // Берём только ID ПК
+        dto.setComponentType(component.getComponentType());
+        dto.setComponentId(component.getComponentId());
+        dto.setWarrantyMonths(component.getWarrantyMonths());
+        dto.setStore(component.getStore());
+        return dto;
     }
 
     @Override
@@ -61,14 +87,6 @@ public class PCComponentServiceImpl implements PCComponentService {
 
     @Override
     public PCComponent createComponent(PCComponent component) {
-        if (component.getPc() == null || component.getPc().getId() == null) {
-            throw new IllegalArgumentException("Необходимо указать существующий PC");
-        }
-
-        PC pc = pcRepository.findById(component.getPc().getId())
-                .orElseThrow(() -> new IllegalArgumentException("PC с ID " + component.getPc().getId() + " не найден"));
-
-        component.setPc(pc);
         return pcComponentRepository.save(component);
     }
 

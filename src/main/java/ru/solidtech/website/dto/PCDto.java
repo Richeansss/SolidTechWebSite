@@ -36,4 +36,5 @@ public class PCDto {
     private String imageUrl;
     private Boolean isForSale;
     private List<String> imagesUrl; // Список URL изображений
+    private List<PCComponentDTO> components;
 }

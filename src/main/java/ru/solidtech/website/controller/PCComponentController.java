@@ -24,11 +24,7 @@ public class PCComponentController {
 
     @GetMapping
     public ResponseEntity<Map<String, Object>> findAllComponents() {
-        List<PCComponent> components = pcComponentService.findAllComponents();
-        List<PCComponentDTO> componentDTOs = components.stream()
-                .map(this::convertToDTO)
-                .toList();
-
+        List<PCComponentDTO> componentDTOs = pcComponentService.findAllComponents();
         return ResponseBuilder.buildResponse(HttpStatus.OK, "Список компонентов успешно получен", componentDTOs);
     }
 
@@ -95,7 +91,12 @@ public class PCComponentController {
             ComponentType type = ComponentType.valueOf(componentType.toUpperCase());
             List<PCComponent> components = pcComponentService.findComponentsByType(type);
             List<PCComponentDTO> componentDTOs = components.stream()
-                    .map(this::convertToDTO)
+                    .map(component -> {
+                        PCComponentDTO dto = convertToDTO(component);
+                        Object details = pcComponentService.getComponentDetails(component);
+                        dto.setDetails(details); // Добавляем детали в DTO
+                        return dto;
+                    })
                     .toList();
 
             return ResponseBuilder.buildResponse(HttpStatus.OK, "Список компонентов типа " + componentType + " успешно получен", componentDTOs);

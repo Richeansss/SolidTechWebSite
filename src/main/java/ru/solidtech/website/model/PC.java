@@ -15,6 +15,10 @@ public class PC {
     @GeneratedValue
     private Long id;
 
+    @OneToMany(mappedBy = "pc", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<PCComponent> components = new ArrayList<>();
+
     @ManyToOne
     @JoinColumn(name = "mother_board_id")
     private MotherBoard motherBoard;
