@@ -23,6 +23,7 @@ import CasesTable from "../components/case/CasesTable";
 
 import './Page.css';
 import BarChart from "../components/chart/BarChart";
+import CreatePCComponent from "../components/PCComponent/CreatePCComponent";
 
 const App: React.FC = () => {
         const [activeTabIndex, setActiveTabIndex] = useState<number>(() => {
@@ -71,6 +72,7 @@ const App: React.FC = () => {
                             ))}
                     </Tabs>
                     <div>
+                            <CreatePCComponent></CreatePCComponent>
                             <h1>Моя столбчатая диаграмма</h1>
                             <BarChart labels={labels} data={data}/>
                     </div>
