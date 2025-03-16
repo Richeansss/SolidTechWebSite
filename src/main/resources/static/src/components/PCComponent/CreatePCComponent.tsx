@@ -18,17 +18,15 @@ const AddPCComponent: React.FC = () => {
         store: TypeStore.AVITO,
         pc: null,
     });
+    const [quantity, setQuantity] = useState(1);
 
     const [createPCComponent, { isLoading }] = useCreatePCComponentMutation();
     const { data: existingBrands } = useGetBrandsQuery();
-
-    // Вызываем все запросы на верхнем уровне
     const { data: processors } = useGetProcessorsQuery();
     const { data: rams } = useGetRamsQuery();
     const { data: motherboards } = useGetMotherBoardsQuery();
     const { data: storageDevices } = useGetStorageDevicesQuery();
 
-    // Определяем, какие данные использовать в зависимости от выбранного типа компонента
     const componentData = useMemo(() => {
         switch (newComponent.componentType) {
             case ComponentType.PROCESSOR:
@@ -44,7 +42,6 @@ const AddPCComponent: React.FC = () => {
         }
     }, [newComponent.componentType, processors, rams, motherboards, storageDevices]);
 
-    // Формируем опции для выпадающего списка компонентов
     const componentOptions = useMemo(
         () =>
             componentData?.map(comp => ({
@@ -54,30 +51,26 @@ const AddPCComponent: React.FC = () => {
         [componentData]
     );
 
-    // Опции для выбора типа компонента
     const componentTypeOptions = Object.values(ComponentType).map(type => ({
         value: type,
         label: type,
     }));
 
-    // Опции для выбора магазина
     const storeOptions = Object.values(TypeStore).map(store => ({
         value: store,
         label: store,
     }));
 
-    // Обработчик выбора типа компонента
     const handleComponentTypeChange = (selectedOption: { value: ComponentType; label: string } | null) => {
         if (selectedOption) {
             setNewComponent(prev => ({
                 ...prev,
                 componentType: selectedOption.value,
-                componentId: 0, // Сбрасываем ID компонента при смене типа
+                componentId: 0,
             }));
         }
     };
 
-    // Обработчик выбора компонента
     const handleComponentChange = (selectedOption: SingleValue<{ value: number | undefined; label: string }>) => {
         setNewComponent(prev => ({
             ...prev,
@@ -85,7 +78,6 @@ const AddPCComponent: React.FC = () => {
         }));
     };
 
-    // Обработчик выбора магазина
     const handleStoreChange = (selectedOption: { value: TypeStore; label: string } | null) => {
         if (selectedOption) {
             setNewComponent(prev => ({
@@ -95,7 +87,6 @@ const AddPCComponent: React.FC = () => {
         }
     };
 
-    // Обработчик изменения гарантии
     const handleWarrantyChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setNewComponent(prev => ({
             ...prev,
@@ -103,7 +94,10 @@ const AddPCComponent: React.FC = () => {
         }));
     };
 
-    // Отправка данных
+    const handleQuantityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setQuantity(Math.max(1, Number(e.target.value)));
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
@@ -113,8 +107,10 @@ const AddPCComponent: React.FC = () => {
         }
 
         try {
-            await createPCComponent(newComponent).unwrap();
-            alert("Компонент успешно добавлен!");
+            for (let i = 0; i < quantity; i++) {
+                await createPCComponent(newComponent).unwrap();
+            }
+            alert("Компонент(ы) успешно добавлены!");
             setNewComponent({
                 id: 0,
                 componentType: undefined,
@@ -123,6 +119,7 @@ const AddPCComponent: React.FC = () => {
                 store: TypeStore.AVITO,
                 pc: null,
             });
+            setQuantity(1);
         } catch (error) {
             console.error("Ошибка добавления компонента:", error);
             alert("Произошла ошибка при добавлении компонента.");
@@ -160,6 +157,16 @@ const AddPCComponent: React.FC = () => {
                         name="warrantyMonths"
                         value={newComponent.warrantyMonths}
                         onChange={handleWarrantyChange}
+                        required
+                    />
+                </div>
+                <div>
+                    <label>Количество экземпляров</label>
+                    <input
+                        type="number"
+                        min="1"
+                        value={quantity}
+                        onChange={handleQuantityChange}
                         required
                     />
                 </div>
