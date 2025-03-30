@@ -6,6 +6,7 @@ import { Cooler } from "./Cooler";
 import { Case } from "./Case";
 import { Videocard } from "./VideoCard";
 import { StorageDevice } from "./StorageDevice";
+import {PCComponent} from "./PCComponent";
 
 export interface PC {
     id: number;
@@ -42,6 +43,7 @@ export interface PC {
     powerSupplyStore: TypeStore;
 
     price: number;
+    components?: PCComponent[]; // добавляем массив компонентов
 
     imageUrl?: string;
     imagesUrl: string[];  // Добавляем поле для хранения URL изображения

@@ -71,7 +71,13 @@ public class PCComponentServiceImpl implements PCComponentService {
     private PCComponentDTO convertToDTO(PCComponent component) {
         PCComponentDTO dto = new PCComponentDTO();
         dto.setId(component.getId());
-        dto.setPcId(component.getPc().getId()); // Берём только ID ПК
+        // Проверяем, что объект PC не null, и если он не null, проверяем, что getId() не null
+        if (component.getPc() != null && component.getPc().getId() != null) {
+            dto.setPcId(component.getPc().getId()); // Берем ID ПК
+        } else {
+            dto.setPcId(null); // Или любое другое значение по умолчанию
+        }
+
         dto.setComponentType(component.getComponentType());
         dto.setComponentId(component.getComponentId());
         dto.setWarrantyMonths(component.getWarrantyMonths());

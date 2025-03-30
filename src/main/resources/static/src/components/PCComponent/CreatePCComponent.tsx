@@ -2,7 +2,6 @@ import React, { useState, useMemo } from "react";
 import Select, { SingleValue } from "react-select";
 import { ComponentType, TypeStore, PCComponent } from "../../types/PCComponent";
 import { useCreatePCComponentMutation } from "../../store/api/apiPCComponent";
-import { useGetBrandsQuery } from "../../store/api/apiBrand";
 import { useGetProcessorsQuery } from "../../store/api/apiProcessor";
 import { useGetRamsQuery } from "../../store/api/apiRam";
 import { useGetMotherBoardsQuery } from "../../store/api/apiMotherBoard";
@@ -21,7 +20,6 @@ const AddPCComponent: React.FC = () => {
     const [quantity, setQuantity] = useState(1);
 
     const [createPCComponent, { isLoading }] = useCreatePCComponentMutation();
-    const { data: existingBrands } = useGetBrandsQuery();
     const { data: processors } = useGetProcessorsQuery();
     const { data: rams } = useGetRamsQuery();
     const { data: motherboards } = useGetMotherBoardsQuery();

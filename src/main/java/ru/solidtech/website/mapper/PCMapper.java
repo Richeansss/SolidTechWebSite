@@ -76,7 +76,12 @@ public class PCMapper {
     private PCComponentDTO convertToDTO(PCComponent component) {
         PCComponentDTO dto = new PCComponentDTO();
         dto.setId(component.getId());
-        dto.setPcId(component.getPc().getId());
+        if (component.getPc() != null) {
+            dto.setPcId(component.getPc().getId());
+        } else {
+            // Можно вернуть значение по умолчанию, например, -1 или другое значение
+            dto.setPcId(null);  // Значение по умолчанию (можно оставить null, если нужно)
+        }
         dto.setComponentType(component.getComponentType());
         dto.setComponentId(component.getComponentId());
         dto.setWarrantyMonths(component.getWarrantyMonths());

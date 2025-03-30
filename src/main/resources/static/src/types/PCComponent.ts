@@ -29,3 +29,5 @@ export interface PCComponent {
     warrantyMonths: number;
     store: TypeStore;
 }
+
+
