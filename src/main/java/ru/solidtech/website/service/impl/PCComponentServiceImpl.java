@@ -5,13 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import ru.solidtech.website.dto.PCComponentDTO;
-import ru.solidtech.website.model.PC;
-import ru.solidtech.website.model.PCComponent;
+import ru.solidtech.website.model.*;
 import ru.solidtech.website.model.enums.ComponentType;
-import ru.solidtech.website.repository.MotherBoardRepository;
-import ru.solidtech.website.repository.PCComponentRepository;
-import ru.solidtech.website.repository.PCRepository;
-import ru.solidtech.website.repository.ProcessorRepository;
+import ru.solidtech.website.repository.*;
 import ru.solidtech.website.service.PCComponentService;
 
 import java.util.List;
@@ -30,12 +26,24 @@ public class PCComponentServiceImpl implements PCComponentService {
             PCComponentRepository pcComponentRepository,
             PCRepository pcRepository,
             MotherBoardRepository motherBoardRepository,
-            ProcessorRepository processorRepository
+            ProcessorRepository processorRepository,
+            RamRepository ramRepository,
+            CoolerRepository coolerRepository,
+            CaseRepository caseRepository,
+            VideocardRepository videocardRepository,
+            StorageDeviceRepository storageDeviceRepository,
+            PowerSupplyRepository powerSupplyRepository
     ) {
         this.pcComponentRepository = pcComponentRepository;
         this.pcRepository = pcRepository;
         this.repositoryMap = Map.of(
                 ComponentType.MOTHERBOARD, motherBoardRepository,
+                ComponentType.RAM, ramRepository,
+                ComponentType.COOLER, coolerRepository,
+                ComponentType.CASE, caseRepository,
+                ComponentType.VIDEOCARD, videocardRepository,
+                ComponentType.STORAGE_DEVICE, storageDeviceRepository,
+                ComponentType.POWER_SUPPLY, powerSupplyRepository,
                 ComponentType.PROCESSOR, processorRepository
         );
     }

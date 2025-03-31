@@ -88,8 +88,7 @@ public class PCComponentController {
     @GetMapping("/type/{componentType}")
     public ResponseEntity<Map<String, Object>> getComponentsByType(@PathVariable String componentType) {
         try {
-            logger.debug("Получен тип компонента: {}", componentType);  // Логируем перед парсингом
-
+            logger.debug("Получен тип компонента (до преобразования): {}", componentType); // Это не будет выполнено
             ComponentType type = ComponentType.valueOf(componentType.toUpperCase());
             List<PCComponent> components = pcComponentService.findComponentsByType(type);
             List<PCComponentDTO> componentDTOs = components.stream()
@@ -103,10 +102,12 @@ public class PCComponentController {
 
             return ResponseBuilder.buildResponse(HttpStatus.OK, "Список компонентов типа " + componentType + " успешно получен", componentDTOs);
         } catch (IllegalArgumentException e) {
-            logger.error("Неверный тип компонента: {}", componentType, e);
+            logger.error("Неверный тип компонента: {}, ошибка: {}", componentType, e.getMessage());
             return ResponseBuilder.buildErrorResponse(HttpStatus.BAD_REQUEST, "Некорректный тип компонента: " + componentType);
         }
     }
+
+
 
 
     private PCComponentDTO convertToDTO(PCComponent component) {
