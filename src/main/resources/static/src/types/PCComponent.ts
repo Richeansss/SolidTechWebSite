@@ -28,6 +28,9 @@ export interface PCComponent {
     componentId: number;
     warrantyMonths: number;
     store: TypeStore;
+    details?: {
+        name: string;
+    };
 }
 
 

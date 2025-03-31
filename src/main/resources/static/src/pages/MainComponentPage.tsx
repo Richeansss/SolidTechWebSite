@@ -24,6 +24,7 @@ import CasesTable from "../components/case/CasesTable";
 import './Page.css';
 import BarChart from "../components/chart/BarChart";
 import CreatePCComponent from "../components/PCComponent/CreatePCComponent";
+import PCComponentSelector from "../components/pc/TestCreatPC";
 
 const App: React.FC = () => {
         const [activeTabIndex, setActiveTabIndex] = useState<number>(() => {
@@ -55,6 +56,7 @@ const App: React.FC = () => {
 
         return (
             <div>
+                    <PCComponentSelector />
                     <h1>Магазин компьютеров</h1>
                     <PCList/>
                     <Tabs selectedIndex={activeTabIndex} onSelect={handleTabChange}>
