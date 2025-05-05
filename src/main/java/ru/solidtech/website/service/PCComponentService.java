@@ -14,4 +14,5 @@ public interface PCComponentService {
     void deleteComponent(Long id);
     Object getComponentDetails(PCComponent pcComponent);
     List<PCComponent> findComponentsByType(ComponentType componentType);
+    PCComponentDTO getComponentById(Long id);
 }

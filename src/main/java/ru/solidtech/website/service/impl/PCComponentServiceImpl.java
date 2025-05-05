@@ -121,6 +121,14 @@ public class PCComponentServiceImpl implements PCComponentService {
         pcComponentRepository.deleteById(id);
     }
 
+    @Override
+    public PCComponentDTO getComponentById(Long id) {
+        PCComponent component = pcComponentRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Компонент с ID " + id + " не найден"));
+
+        return convertToDetailedDTO(component);
+    }
+
     public List<PCComponent> findComponentsByType(ComponentType componentType) {
         return pcComponentRepository.findByComponentType(componentType);
     }

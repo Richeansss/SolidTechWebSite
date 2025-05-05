@@ -10,6 +10,8 @@ import {useGetProcessorsQuery} from "../../store/api/apiProcessor";
 import {useGetRamsQuery} from "../../store/api/apiRam";
 import {useGetMotherBoardsQuery} from "../../store/api/apiMotherBoard";
 import {useGetStorageDevicesQuery} from "../../store/api/apiStorageDevice";
+import {useGetPCComponentsByTypeQuery} from "../../store/api/apiPCComponent";
+import {PCComponent} from "../../types/PCComponent";
 
 export enum TypeStore {
     Avito = "Avito",
@@ -21,6 +23,8 @@ export enum TypeStore {
 }
 
 const AddPCComponent: React.FC = () => {
+    const [selectedComponents, setSelectedComponents] = useState<{ [key: string]: PCComponent | null }>({});
+
     const [newPC, setNewPC] = useState({
         motherBoard: { id: 0 },
         motherBoardStore: "",
@@ -52,6 +56,14 @@ const AddPCComponent: React.FC = () => {
     const [createPC, { isLoading, isSuccess, isError }] = useCreatePCMutation();
     const [images, setImages] = useState<File[]>([]);
     const [uploadImages, { isLoading: isUploadings }] = useUploadImagesMutation(); // Мутация для загрузки нескольких изображений
+
+    const { data: processorsl = [], isFetching: loadingProcessors } = useGetPCComponentsByTypeQuery("PROCESSOR");
+    const { data: videocardsl = [], isFetching: loadingVideocards } = useGetPCComponentsByTypeQuery("VIDEOCARD");
+    const { data: motherboardsl = [], isFetching: loadingMotherboards } = useGetPCComponentsByTypeQuery("MOTHERBOARD");
+    const { data: raml = [], isFetching: loadingRam } = useGetPCComponentsByTypeQuery("RAM");
+    const { data: storagel = [], isFetching: loadingStorage } = useGetPCComponentsByTypeQuery("STORAGE");
+    const { data: coolersl = [], isFetching: loadingCoolers } = useGetPCComponentsByTypeQuery("COOLER");
+    const { data: powerSuppliesl = [], isFetching: loadingPowerSupplies } = useGetPCComponentsByTypeQuery("POWER_SUPPLY");
 
     // Загрузка данных для выбора
     const { data: coolerTypes } = useGetCoolersQuery();
@@ -389,6 +401,201 @@ const AddPCComponent: React.FC = () => {
                         accept="images/*"
                         multiple // Позволяет выбирать несколько файлов
                         onChange={handleImagesChange}
+                    />
+                </div>
+                {/* Процессор */}
+                <div className="form-group mb-4">
+                    <label><strong>Процессор</strong></label>
+                    <Select
+                        options={processorsl.map(comp => ({
+                            value: comp.id.toString(),
+                            label: comp.details?.name ?? `ID: ${comp.componentId}`,
+                        }))}
+                        placeholder={loadingProcessors ? "Загрузка..." : "Выберите процессор"}
+                        isDisabled={loadingProcessors}
+                        onChange={(selected) =>
+                            setSelectedComponents((prev) => ({
+                                ...prev,
+                                PROCESSOR: selected ? processorsl.find(c => c.id.toString() === selected.value) ?? null : null
+                            }))
+                        }
+                        value={
+                            selectedComponents.PROCESSOR
+                                ? {
+                                    value: selectedComponents.PROCESSOR.id.toString(),
+                                    label: selectedComponents.PROCESSOR.details?.name ?? `ID: ${selectedComponents.PROCESSOR.componentId}`,
+                                }
+                                : null
+                        }
+                        isClearable
+                    />
+                </div>
+
+                {/* Видеокарта */}
+                <div className="form-group mb-4">
+                    <label><strong>Видеокарта</strong></label>
+                    <Select
+                        options={videocardsl.map(comp => ({
+                            value: comp.id.toString(),
+                            label: comp.details?.name ?? `ID: ${comp.componentId}`,
+                        }))}
+                        placeholder={loadingVideocards ? "Загрузка..." : "Выберите видеокарту"}
+                        isDisabled={loadingVideocards}
+                        onChange={(selected) =>
+                            setSelectedComponents((prev) => ({
+                                ...prev,
+                                VIDEOCARD: selected ? videocardsl.find(c => c.id.toString() === selected.value) ?? null : null
+                            }))
+                        }
+                        value={
+                            selectedComponents.VIDEOCARD
+                                ? {
+                                    value: selectedComponents.VIDEOCARD.id.toString(),
+                                    label: selectedComponents.VIDEOCARD.details?.name ?? `ID: ${selectedComponents.VIDEOCARD.componentId}`,
+                                }
+                                : null
+                        }
+                        isClearable
+                    />
+                </div>
+
+                {/* Материнская плата */}
+                <div className="form-group mb-4">
+                    <label><strong>Материнская плата</strong></label>
+                    <Select
+                        options={motherboardsl.map(comp => ({
+                            value: comp.id.toString(),
+                            label: comp.details?.name ?? `ID: ${comp.componentId}`,
+                        }))}
+                        placeholder={loadingMotherboards ? "Загрузка..." : "Выберите материнскую плату"}
+                        isDisabled={loadingMotherboards}
+                        onChange={(selected) =>
+                            setSelectedComponents((prev) => ({
+                                ...prev,
+                                MOTHERBOARD: selected ? motherboardsl.find(c => c.id.toString() === selected.value) ?? null : null
+                            }))
+                        }
+                        value={
+                            selectedComponents.MOTHERBOARD
+                                ? {
+                                    value: selectedComponents.MOTHERBOARD.id.toString(),
+                                    label: selectedComponents.MOTHERBOARD.details?.name ?? `ID: ${selectedComponents.MOTHERBOARD.componentId}`,
+                                }
+                                : null
+                        }
+                        isClearable
+                    />
+                </div>
+
+                {/* Оперативная память */}
+                <div className="form-group mb-4">
+                    <label><strong>Оперативная память</strong></label>
+                    <Select
+                        options={raml.map(comp => ({
+                            value: comp.id.toString(),
+                            label: comp.details?.name ?? `ID: ${comp.componentId}`,
+                        }))}
+                        placeholder={loadingRam ? "Загрузка..." : "Выберите оперативную память"}
+                        isDisabled={loadingRam}
+                        onChange={(selected) =>
+                            setSelectedComponents((prev) => ({
+                                ...prev,
+                                RAM: selected ? raml.find(c => c.id.toString() === selected.value) ?? null : null
+                            }))
+                        }
+                        value={
+                            selectedComponents.RAM
+                                ? {
+                                    value: selectedComponents.RAM.id.toString(),
+                                    label: selectedComponents.RAM.details?.name ?? `ID: ${selectedComponents.RAM.componentId}`,
+                                }
+                                : null
+                        }
+                        isClearable
+                    />
+                </div>
+
+                {/* Накопитель */}
+                <div className="form-group mb-4">
+                    <label><strong>Накопитель</strong></label>
+                    <Select
+                        options={storagel.map(comp => ({
+                            value: comp.id.toString(),
+                            label: comp.details?.name ?? `ID: ${comp.componentId}`,
+                        }))}
+                        placeholder={loadingStorage ? "Загрузка..." : "Выберите накопитель"}
+                        isDisabled={loadingStorage}
+                        onChange={(selected) =>
+                            setSelectedComponents((prev) => ({
+                                ...prev,
+                                STORAGE: selected ? storagel.find(c => c.id.toString() === selected.value) ?? null : null
+                            }))
+                        }
+                        value={
+                            selectedComponents.STORAGE
+                                ? {
+                                    value: selectedComponents.STORAGE.id.toString(),
+                                    label: selectedComponents.STORAGE.details?.name ?? `ID: ${selectedComponents.STORAGE.componentId}`,
+                                }
+                                : null
+                        }
+                        isClearable
+                    />
+                </div>
+
+                {/* Кулер */}
+                <div className="form-group mb-4">
+                    <label><strong>Кулер</strong></label>
+                    <Select
+                        options={coolersl.map(comp => ({
+                            value: comp.id.toString(),
+                            label: comp.details?.name ?? `ID: ${comp.componentId}`,
+                        }))}
+                        placeholder={loadingCoolers ? "Загрузка..." : "Выберите кулер"}
+                        isDisabled={loadingCoolers}
+                        onChange={(selected) =>
+                            setSelectedComponents((prev) => ({
+                                ...prev,
+                                COOLER: selected ? coolersl.find(c => c.id.toString() === selected.value) ?? null : null
+                            }))
+                        }
+                        value={
+                            selectedComponents.COOLER
+                                ? {
+                                    value: selectedComponents.COOLER.id.toString(),
+                                    label: selectedComponents.COOLER.details?.name ?? `ID: ${selectedComponents.COOLER.componentId}`,
+                                }
+                                : null
+                        }
+                        isClearable
+                    />
+                </div>
+
+                {/* Блок питания */}
+                <div className="form-group mb-4">
+                    <label><strong>Блок питания</strong></label>
+                    <Select
+                        options={powerSuppliesl.map(comp => ({
+                            value: comp.id.toString(),
+                            label: comp.details?.name ?? `ID: ${comp.componentId}`,
+                        }))}
+                        placeholder={loadingPowerSupplies ? "Загрузка..." : "Выберите блок питания"}
+                        isDisabled={loadingPowerSupplies}
+                        onChange={(selected) =>
+                            setSelectedComponents((prev) => ({
+                                ...prev,
+                                POWER_SUPPLY: selected ? powerSuppliesl.find(c => c.id.toString() === selected.value) ?? null : null
+                            }))
+                        }
+                        value={
+                            selectedComponents.POWER_SUPPLY
+                                ? {
+                                    value: selectedComponents.POWER_SUPPLY.id.toString(),
+                                    label: selectedComponents.POWER_SUPPLY.details?.name ?? `ID: ${selectedComponents.POWER_SUPPLY.componentId}`,
+                                }
+                                : null
+                        }
+                        isClearable
                     />
                 </div>
 

@@ -2,9 +2,7 @@ package ru.solidtech.website.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-
 import lombok.Data;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,79 +13,46 @@ public class PC {
     @GeneratedValue
     private Long id;
 
-    @OneToMany(mappedBy = "pc", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
-    private List<PCComponent> components = new ArrayList<>();
-
     @ManyToOne
     @JoinColumn(name = "mother_board_id")
-    private MotherBoard motherBoard;
-    private Integer motherBoardWarranty;
-    private TypeStore motherBoardStore;
+    private PCComponent motherBoard;
 
     @ManyToOne
     @JoinColumn(name = "processor_id")
-    private Processor processor;
-    private Integer processorWarranty;
-    private TypeStore processorStore;
+    private PCComponent processor;
 
     @ManyToOne
     @JoinColumn(name = "ram_id")
-    private Ram ram;
-    private Integer ramWarranty;
-    private TypeStore ramStore;
+    private PCComponent ram;
 
     @ManyToOne
     @JoinColumn(name = "cooler_id")
-    private Cooler cooler;
-    private Integer coolerWarranty;
-    private TypeStore coolerStore;
+    private PCComponent cooler;
 
     @ManyToOne
     @JoinColumn(name = "case_pc_id")
-    private Case case_pc;
-    private Integer caseWarranty;
-    private TypeStore caseStore;
+    private PCComponent case_pc;
 
     @ManyToOne
     @JoinColumn(name = "videocard_id")
-    private Videocard videocard;
-    private Integer videocardWarranty;
-    private TypeStore videocardStore;
+    private PCComponent videocard;
 
     @ManyToOne
     @JoinColumn(name = "storage_device_id")
-    private StorageDevice storageDevice;
-    private Integer storageDeviceWarranty;
-    private TypeStore storageDeviceStore;
+    private PCComponent storageDevice;
 
     @ManyToOne
     @JoinColumn(name = "power_supply_id")
-    private PowerSupply powerSupply;
-    private Integer powerSupplyWarranty;
-    private TypeStore powerSupplyStore;
+    private PCComponent powerSupply;
 
     private int price;
+
     @Column(name = "image_url")
     private String imageUrl;
+
     private Boolean isForSale;
 
     @OneToMany(mappedBy = "pc", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<Image> images = new ArrayList<>();
-
-    public enum TypeStore {
-
-        Avito,
-
-        Ozon,
-
-        DNS,
-
-        OnlineTrade,
-
-        Aliexpress,
-
-        Citilink
-    }
 }

@@ -53,34 +53,27 @@ public class PCServiceImpl implements PCService {
 
     @Override
     public PC createPC(PC pcEntity) {
-
-
-        pcEntity.setMotherBoard(getEntityById(pcEntity.getMotherBoard().getId(), motherBoardRepository, "Материнская плата"));
-        pcEntity.setProcessor(getEntityById(pcEntity.getProcessor().getId(), processorRepository, "Процессор"));
-        pcEntity.setRam(getEntityById(pcEntity.getRam().getId(), ramRepository, "ОЗУ"));
-        pcEntity.setCooler(getEntityById(pcEntity.getCooler().getId(), coolerRepository, "Кулер"));
-        pcEntity.setCase_pc(getEntityById(pcEntity.getCase_pc().getId(), caseRepository, "Корпус"));
-        pcEntity.setVideocard(getEntityById(pcEntity.getVideocard().getId(), videocardRepository, "Видеокарта"));
-        pcEntity.setStorageDevice(getEntityById(pcEntity.getStorageDevice().getId(), storageDeviceRepository, "Накопитель"));
-        pcEntity.setPowerSupply(getEntityById(pcEntity.getPowerSupply().getId(), powerSupplyRepository, "Блок питания"));
-
-        // Загружаем существующие комплектующие из БД по их ID
-        List<PCComponent> existingComponents = new ArrayList<>();
-        for (PCComponent component : pcEntity.getComponents()) {
-            PCComponent existingComponent = pcComponentRepository.findById(component.getId())
-                    .orElseThrow(() -> new RuntimeException("Комплектующее с ID " + component.getId() + " не найдено"));
-            existingComponent.setPc(pcEntity); // Привязываем к PC
-            existingComponents.add(existingComponent);
-        }
-        pcEntity.setComponents(existingComponents);
+        // Загружаем все компоненты по их ID
+        pcEntity.setMotherBoard(getPCComponentById(pcEntity.getMotherBoard()));
+        pcEntity.setProcessor(getPCComponentById(pcEntity.getProcessor()));
+        pcEntity.setRam(getPCComponentById(pcEntity.getRam()));
+        pcEntity.setCooler(getPCComponentById(pcEntity.getCooler()));
+        pcEntity.setCase_pc(getPCComponentById(pcEntity.getCase_pc()));
+        pcEntity.setVideocard(getPCComponentById(pcEntity.getVideocard()));
+        pcEntity.setStorageDevice(getPCComponentById(pcEntity.getStorageDevice()));
+        pcEntity.setPowerSupply(getPCComponentById(pcEntity.getPowerSupply()));
 
         return pcRepository.save(pcEntity);
     }
 
 
-    private <T> T getEntityById(Long id, JpaRepository<T, Long> repository, String entityName) {
-        return repository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException(entityName + " с ID " + id + " не найден"));
+    private PCComponent getPCComponentById(PCComponent component) {
+        if (component == null || component.getId() == null) {
+            return null;
+        }
+
+        return pcComponentRepository.findById(component.getId())
+                .orElseThrow(() -> new IllegalArgumentException("Компонент с ID " + component.getId() + " не найден"));
     }
 
     @Override
