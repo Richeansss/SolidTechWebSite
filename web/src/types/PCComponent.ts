@@ -4,7 +4,7 @@ export enum ComponentType {
     MOTHERBOARD = "MOTHERBOARD",
     PROCESSOR = "PROCESSOR",
     RAM = "RAM",
-    STORAGE = "STORAGE",
+    STORAGE_DEVICE = "STORAGE_DEVICE",
     GPU = "GPU",
     POWER_SUPPLY = "POWER_SUPPLY",
     COOLER = "COOLER",

@@ -1,4 +1,4 @@
-.pc-details {
+.pcDetails {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -7,7 +7,7 @@
     position: relative;
 }
 
-.image-container {
+.imageContainer {
     width: 100%;
     max-width: fit-content;
     height: auto;
@@ -17,7 +17,7 @@
     overflow: hidden;
 }
 
-.pc-image {
+.pcImage {
     width: 100%;
     height: auto;
     max-height: 400px;
@@ -41,7 +41,7 @@
     gap: 15px; /* Добавляет пространство между блоками */
 }
 
-.left-info-box, .right-info-box {
+.leftInfoBox, .rightInfoBox {
     display: flex;
     align-items: center;
     padding: 10px;
@@ -52,63 +52,63 @@
     width: 100%;
 }
 
-.left-info-box {
+.leftInfoBox {
     justify-content: flex-start;
     align-self: flex-start;
     text-align: left;
 }
 
-.info-text {
+.infoText {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     gap: 5px;
 }
 
-.left-info-box .label {
+.leftInfoBox .label {
     font-weight: bold;
     font-size: 16px;
     color: #d32f2f;
 }
 
-.left-info-box .value {
+.leftInfoBox .value {
     justify-content: flex-end;
 
     font-size: 14px;
     color: #666;
 }
 
-.left-info-box .extra {
+.leftInfoBox .extra {
     font-size: 14px;
     color: #999;
 }
 
-.right-info-box {
+.rightInfoBox {
     justify-content: flex-end;
     align-self: flex-end;
     text-align: left;
 }
 
-.right-info-box .label {
+.rightInfoBox .label {
     font-weight: bold;
     font-size: 16px;
     color: #d32f2f;
 }
 
-.right-info-box .value {
+.rightInfoBox .value {
     justify-content: flex-end;
 
     font-size: 14px;
     color: #666;
 }
 
-.right-info-box .extra {
+.rightInfoBox .extra {
     font-size: 14px;
     color: #999;
     white-space: pre-line;
 }
 
-.image-icon {
+.imageIcon {
     width: 400px; /* Увеличенный размер */
     height: 400px;
     max-width: 100%;
@@ -118,65 +118,65 @@
 }
 
 @media (max-width: 768px) {
-    .image-container, .specs {
+    .imageContainer, .specs {
         width: 95%;
     }
-    .pc-image {
+    .pcImage {
         max-height: 300px;
     }
-    .left-info-box, .right-info-box {
+    .leftInfoBox, .rightInfoBox {
         flex-direction: column;
         align-items: flex-start;
         text-align: left;
     }
-    .image-icon {
+    .imageIcon {
         width: 300px;
         height: 300px;
     }
 }
 
 @media (max-width: 480px) {
-    .pc-details {
+    .pcDetails {
         padding: 10px;
     }
-    .image-container {
+    .imageContainer {
         width: 100%;
         max-width: 90%;
         margin-bottom: 10px;
     }
-    .pc-image {
+    .pcImage {
         max-height: 250px;
     }
     .specs {
         padding: 15px;
         gap: 10px;
     }
-    .left-info-box, .right-info-box {
+    .leftInfoBox, .rightInfoBox {
         padding: 8px;
         font-size: 14px;
     }
-    .image-icon {
+    .imageIcon {
         width: 250px;
         height: 250px;
     }
 }
 
 @media (max-width: 360px) {
-    .pc-details {
+    .pcDetails {
         padding: 5px;
     }
     .specs {
         padding: 10px;
         gap: 8px;
     }
-    .pc-image {
+    .pcImage {
         max-height: 200px;
     }
-    .left-info-box, .right-info-box {
+    .leftInfoBox, .rightInfoBox {
         padding: 5px;
         font-size: 12px;
     }
-    .image-icon {
+    .imageIcon {
         width: 200px;
         height: 200px;
     }

@@ -4,7 +4,8 @@ import { Ram, RamType } from "../../types/Ram"; // Импортируем инт
 import {useCreateRamMutation, useUploadImageMutation} from "../../store/api/apiRam";
 import { useGetBrandsQuery } from "../../store/api/apiBrand";
 import { useGetLightTypesQuery } from "../../store/api/apiLighttype";
-import "../case/CreateCase.css";
+//todo
+import styles from '../case/CreateCase.module.css';
 import { LightType } from "../../types/LightType";
 
 

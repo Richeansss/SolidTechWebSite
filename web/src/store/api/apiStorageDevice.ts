@@ -1,13 +1,17 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { StorageDevice } from '../../types/StorageDevice'; // Определите тип StorageDevice
-import { ApiResponse } from '../../types/Response'; // Тип для стандартного ответа API
+import { ApiResponse } from '../../types/Response';
+import {BASE_URL} from "./configApi.ts";
+import Cookies from "js-cookie"; // Тип для стандартного ответа API
+
+const API_URL = `${BASE_URL}/api/v1/`;
 
 export const apiStorageDevice = createApi({
     reducerPath: 'apiStorageDevice',
     baseQuery: fetchBaseQuery({
-        baseUrl: 'http://localhost:8080/api/v1/', // URL вашего API
+        baseUrl: API_URL, // URL вашего API
         prepareHeaders: (headers, { getState }) => {
-            const token = (getState() as any).auth?.token;
+            const token = Cookies.get('jwt');
             if (token) {
                 headers.set('Authorization', `Bearer ${token}`);
             }

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useCreateBrandMutation, useSearchBrandsByNameQuery } from '../../store/api/apiBrand';
 import { Brand } from '../../types/Brand';
-import '../case/CreateCase.css';
+import styles from '../case/CreateCase.module.css';
 
 const AddBrandComponent: React.FC = () => {
     const [newBrand, setNewBrand] = useState<Partial<Brand>>({
@@ -61,7 +61,7 @@ const AddBrandComponent: React.FC = () => {
 
     const renderMessage = () => {
         if (message) {
-            return <p className="message">{message}</p>;
+            return <p className={styles.massage}>{message}</p>;
         }
         return null;
     };
@@ -111,7 +111,7 @@ const AddBrandComponent: React.FC = () => {
                     />
                     {newBrand.name && renderSuggestions()}
                 </div>
-                <button className="button-primary" type="submit" disabled={isLoading}>
+                <button className={styles.buttonPrimary} type="submit" disabled={isLoading}>
                     {isLoading ? 'Загружается...' : 'Добавить бренд'}
                 </button>
             </form>

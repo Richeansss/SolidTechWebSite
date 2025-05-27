@@ -1,5 +1,5 @@
 /* Стили для вкладок */
-.tab-list {
+.tabList {
     display: flex;
     justify-content: space-evenly; /* Для равномерного распределения */
     padding: 10px;

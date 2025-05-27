@@ -1,13 +1,14 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { Cooler } from '../../types/Cooler'; // Определите тип Cooler
-import { ApiResponse } from '../../types/Response'; // Тип для стандартного ответа API
+import { ApiResponse } from '../../types/Response';
+import Cookies from "js-cookie"; // Тип для стандартного ответа API
 
 export const apiCooler = createApi({
     reducerPath: 'apiCooler',
     baseQuery: fetchBaseQuery({
         baseUrl: 'http://localhost:8080/api/v1/',
         prepareHeaders: (headers, { getState }) => {
-            const token = (getState() as any).auth?.token;
+            const token = Cookies.get('jwt');
             if (token) {
                 headers.set('Authorization', `Bearer ${token}`);
             }

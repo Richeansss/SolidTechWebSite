@@ -1,15 +1,18 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { Chipset } from '../../types/Chipset'; // Тип для чипсета
-import { ApiResponse } from '../../types/Response'; // Тип для стандартного ответа API
+import { ApiResponse } from '../../types/Response';
+import {BASE_URL} from "./configApi.ts";
+import Cookies from "js-cookie"; // Тип для стандартного ответа API
+
+const API_URL = `${BASE_URL}/api/v1/chipset`;
 
 export const apiChipset = createApi({
     reducerPath: 'apiChipset',
     baseQuery: fetchBaseQuery({
-        baseUrl: 'http://localhost:8080/api/v1/chipset',
+        baseUrl: API_URL,
         prepareHeaders: (headers, { getState }) => {
-            headers.set('Content-Type', 'application/json');
+            const token = Cookies.get('jwt');
             // Добавьте токен, если необходима авторизация
-            const token = (getState() as any).auth?.token;
             if (token) {
                 headers.set('Authorization', `Bearer ${token}`);
             }

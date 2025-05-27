@@ -1,33 +1,40 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { DataGrid, GridColDef, GridRowsProp, GridActionsCellItem } from '@mui/x-data-grid';
 import { useGetCasesQuery, useDeleteCaseMutation } from '../../store/api/apiCase';
-import './CasesTable.css';  // Импортируем CSS
+import styles from './CasesTable.module.css'; // модульный стиль
 
 const CasesTable = () => {
-    const { data, isLoading, isError } = useGetCasesQuery(); // Fetch data using Redux Toolkit Query
+    const { data, isLoading, isError } = useGetCasesQuery();
     const [rows, setRows] = useState<GridRowsProp>([]);
-    const [deleteCase] = useDeleteCaseMutation(); // Хук для удаления записи
+    const [deleteCase] = useDeleteCaseMutation();
 
     useEffect(() => {
         if (data) {
-            // Format data for the table
             const formattedRows = data.map((caseItem) => ({
                 id: caseItem.id,
                 name: caseItem.name,
                 brand: caseItem.brand ? caseItem.brand.name : 'Not specified',
                 formFactor: caseItem.formFactor || 'Not specified',
                 amountFun: caseItem.amountFun || 'Not specified',
-                lightType: caseItem.lightType?.name || 'Not specified',  // Используем name
+                lightType: caseItem.lightType?.name || 'Not specified',
                 funConnector: caseItem.funConnector || 'Not specified',
                 color: caseItem.color || 'Not specified',
                 glassType: caseItem.glassType || 'Not specified',
-                imageUrl: caseItem.imageUrl, // Используем URL из базы данных
+                imageUrl: caseItem.imageUrl,
             }));
             setRows(formattedRows);
         }
     }, [data]);
 
-    // Define columns for DataGrid
+    const handleDelete = async (id: number) => {
+        try {
+            await deleteCase(id);
+            setRows((prevRows) => prevRows.filter((row) => row.id !== id));
+        } catch (error) {
+            console.error('Error deleting case:', error);
+        }
+    };
+
     const columns: GridColDef[] = [
         { field: 'id', headerName: 'ID', width: 90 },
         {
@@ -63,9 +70,7 @@ const CasesTable = () => {
             width: 120,
             renderCell: (params) => (
                 <GridActionsCellItem
-                    icon={
-                        <button className="delete-button">Delete</button>  // Добавляем свой класс кнопки
-                    }
+                    icon={<button className={styles.deleteButton}>Delete</button>}
                     label="Delete"
                     onClick={() => handleDelete(params.row.id)}
                 />
@@ -73,29 +78,21 @@ const CasesTable = () => {
         },
     ];
 
-    const handleDelete = async (id: number) => {
-        try {
-            await deleteCase(id); // Удаляем запись через API
-            setRows((prevRows) => prevRows.filter((row) => row.id !== id)); // Обновляем состояние таблицы
-        } catch (error) {
-            console.error('Error deleting case:', error);
-        }
-    };
-
     if (isLoading) {
-        return <div className="loading">Loading...</div>;
+        return <div className={styles.loading}>Loading...</div>;
     }
 
     if (isError) {
-        return <div className="error">Error loading data</div>;
+        return <div className={styles.error}>Error loading data</div>;
     }
 
     return (
-        <div className="table-container">
+        <div className={styles.tableContainer}>
             <DataGrid
                 rows={rows}
                 columns={columns}
-                pagination // Enable pagination
+                pagination
+                className={styles.dataGrid}
             />
         </div>
     );

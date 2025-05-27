@@ -1,4 +1,4 @@
-.videocard-list {
+.pcList {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Автоматическая настройка столбцов */
     gap: 20px; /* Отступы между карточками */
@@ -6,7 +6,7 @@
     justify-items: center; /* Центрирование карточек */
 }
 
-.videocard-card {
+.pcCard {
     display: flex;
     flex-direction: column;
     border: 1px solid #ccc;
@@ -17,7 +17,7 @@
     background-color: #fff; /* Белый фон */
 }
 
-.image-container-main {
+.mainImageContainer {
     position: relative;
     width: 100%;
     max-width: 600px;
@@ -34,7 +34,7 @@
     align-items: center;
 }
 
-.image-container {
+.imageContainer {
     position: relative;
     width: 100%;
     max-width: 2000px;
@@ -50,25 +50,25 @@
     align-items: center;
 }
 
-.pc-image-main {
+.mainPcImage {
     max-width: 100%;
     max-height: 100%;
     object-fit: cover;
     display: block;
 }
 
-.pc-image {
+.pcImage {
     max-width: 100%;
     max-height: 100%;
     object-fit: cover;
     display: block;
 }
 
-.pc-image.hidden {
+.pcImage.hidden {
     opacity: 0; /* Скрытое изображение */
 }
 
-.carousel-button {
+.carouselButton {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
@@ -87,20 +87,20 @@
     height: 40px;
 }
 
-.carousel-button:hover {
+.carouselButton:hover {
     background-color: rgba(0, 0, 0, 0.9);
     transform: translateY(-50%) scale(1.1); /* Увеличение кнопки при наведении */
 }
 
-.carousel-button.prev {
+.carouselButton.prev {
     left: 20px;
 }
 
-.carousel-button.next {
+.carouselButton.next {
     right: 20px;
 }
 
-.videocard-image {
+.videoCardImage {
     width: 256px;
     height: 256px;
     object-fit: contain;
@@ -108,7 +108,7 @@
     margin: 0 auto;
 }
 
-.text-container {
+.textContainer {
     padding: 10px;
     text-align: center;
 }
@@ -126,16 +126,16 @@ p {
 
 /* Для экранов меньше 768px (мобильные устройства) */
 @media (max-width: 768px) {
-    .videocard-list {
+    .pcList {
         grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Уменьшаем минимальный размер */
     }
 
-    .videocard-image {
+    .videoCardImage {
         width: 200px;
         height: 200px;
     }
 }
-.info-box {
+.infoBox {
     display: flex;
     align-items: center;
     background-color: #f0f0f0;
@@ -147,7 +147,7 @@ p {
     gap: 8px;
 }
 
-.icon {
+.iconImage {
     width: 30px;
     height: 30px;
     margin-right: 8px;
@@ -156,11 +156,11 @@ p {
 
 /* Для экранов меньше 480px (очень маленькие экраны, например, телефоны) */
 @media (max-width: 480px) {
-    .videocard-list {
+    .pcList {
         grid-template-columns: 1fr; /* Одна колонка */
     }
 
-    .videocard-image {
+    .videoCardImage {
         width: 150px;
         height: 150px;
     }

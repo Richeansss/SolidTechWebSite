@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { DataGrid, GridColDef, GridRowsProp, GridActionsCellItem } from '@mui/x-data-grid';
 import { useGetBrandsQuery, useDeleteBrandMutation } from '../../store/api/apiBrand'; // Импорт хука для получения данных брендов
 

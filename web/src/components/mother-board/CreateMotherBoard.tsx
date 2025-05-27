@@ -6,7 +6,7 @@ import { useCreateMotherBoardMutation } from "../../store/api/apiMotherBoard";
 import { useGetBrandsQuery } from "../../store/api/apiBrand";
 import { useGetSocketsQuery } from "../../store/api/apiSocket";
 import { useGetChipsetsQuery } from "../../store/api/apiChipset";
-import "../case/CreateCase.css";
+import styles from '../case/CreateCase.module.css';
 import {useUploadImageMutation} from "../../store/api/apiMotherBoard";
 
 const AddMotherBoardComponent: React.FC = () => {
@@ -248,7 +248,7 @@ const AddMotherBoardComponent: React.FC = () => {
                     <label>Изображение</label>
                     <input type="file" accept="image/*" onChange={handleImageChange}/>
                 </div>
-                <button className="button-primary" type="submit" disabled={isLoading || isUploading}>
+                <button className={styles.buttonPrimary} type="submit" disabled={isLoading || isUploading}>
                     {isLoading ? "Добавление..." : "Добавить материнскую плату"}
                 </button>
             </form>

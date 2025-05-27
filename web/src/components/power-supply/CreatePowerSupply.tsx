@@ -3,9 +3,9 @@ import Select from "react-select";
 import { PowerSupply } from "../../types/PowerSupply"; // Тип PowerSupply
 import { useCreatePowerSupplyMutation } from "../../store/api/apiPowerSupply";
 import { useGetBrandsQuery } from "../../store/api/apiBrand";
-import "../case/CreateCase.css";
+import "../case/CreateCase.module.css";
 import {useUploadImageMutation} from "../../store/api/apiPowerSupply";
-import {Cooler} from "../../types/Cooler"; // Подключение CSS
+import styles from '../case/CreateCase.module.css';
 
 const AddPowerSupplyComponent: React.FC = () => {
     const [newPowerSupply, setNewPowerSupply] = useState<Partial<PowerSupply>>({
@@ -163,7 +163,7 @@ const AddPowerSupplyComponent: React.FC = () => {
                     <label>Изображение</label>
                     <input type="file" accept="image/*" onChange={handleImageChange}/>
                 </div>
-                <button className="button-primary" type="submit" disabled={isLoading || isUploading}>
+                <button className={styles.buttonPrimary} type="submit" disabled={isLoading || isUploading}>
                     {isLoading ? "Добавление..." : "Добавить блок питания"}
                 </button>
             </form>

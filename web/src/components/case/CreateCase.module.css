@@ -44,7 +44,7 @@ label {
     display: block;
     margin-bottom: 5px;
 }
-.form-group {
+.formGroup {
     margin-bottom: 30px;
 }
 
@@ -63,7 +63,7 @@ input:focus {
 }
 
 /* Стили для различных кнопок */
-.button-primary {
+.buttonPrimary {
     width: 100%;
     padding: 12px;
     font-size: 16px;
@@ -78,12 +78,12 @@ input:focus {
 
 
 /* Стиль для кнопки в отключенном состоянии */
-.button-primary:disabled {
+.buttonPrimary:disabled {
     background-color: #ccc;
 }
 
 /* Стиль для кнопки при наведении (не отключена) */
-.button-primary:hover:not(:disabled) {
+.buttonPrimary:hover:not(:disabled) {
     background-color: #0056b3;
 }
 

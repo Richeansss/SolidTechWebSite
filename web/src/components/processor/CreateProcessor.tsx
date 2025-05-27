@@ -4,7 +4,8 @@ import { Processor } from "../../types/Processor"; // Импортируем и�
 import { useCreateProcessorMutation } from "../../store/api/apiProcessor";
 import { useGetBrandsQuery } from "../../store/api/apiBrand";
 import { useGetSocketsQuery } from "../../store/api/apiSocket";
-import "../case/CreateCase.css";
+//todo
+import styles from '../case/CreateCase.module.css';
 import {RamType} from "../../types/Ram";
 import {useUploadImageMutation} from "../../store/api/apiProcessor";
 

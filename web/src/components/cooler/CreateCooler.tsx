@@ -4,7 +4,8 @@ import { Cooler } from "../../types/Cooler";
 import { useCreateCoolerMutation } from "../../store/api/apiCooler";
 import { useGetBrandsQuery } from "../../store/api/apiBrand";
 import { useGetLightTypesQuery } from "../../store/api/apiLighttype";
-import "../case/CreateCase.css";
+//todo
+import styles from '../case/CreateCase.module.css';
 import {LightType} from "../../types/LightType";
 import {useUploadImageMutation} from "../../store/api/apiCooler";
 

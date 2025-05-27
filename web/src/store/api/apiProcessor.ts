@@ -1,14 +1,18 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { Processor } from '../../types/Processor'; // Тип для процессора
-import { ApiResponse } from '../../types/Response'; // Тип для стандартного ответа API
+import { ApiResponse } from '../../types/Response';
+import {BASE_URL} from "./configApi.ts";
+import Cookies from "js-cookie"; // Тип для стандартного ответа API
+
+const API_URL = `${BASE_URL}/api/v1/processor`;
 
 export const apiProcessor = createApi({
     reducerPath: 'apiProcessor',
     baseQuery: fetchBaseQuery({
-        baseUrl: 'http://localhost:8080/api/v1/processor',
+        baseUrl: API_URL,
         prepareHeaders: (headers, { getState }) => {
             // Добавьте токен, если необходима авторизация
-            const token = (getState() as any).auth?.token;
+            const token = Cookies.get('jwt');
             if (token) {
                 headers.set('Authorization', `Bearer ${token}`);
             }

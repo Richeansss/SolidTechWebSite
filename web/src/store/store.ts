@@ -13,12 +13,16 @@ import {apiChipset} from "./api/apiChipset";
 import {apiMotherBoard} from "./api/apiMotherBoard";
 import {apiPC} from "./api/apiPC";
 import {apiPCComponent} from "./api/apiPCComponent";
+import authReducer from './slice/authSlice';
+import {authApi} from "./api/authApi.ts"; // путь к твоему authSlice
+
 
 // Объединение редьюсеров
 const rootReducer = combineReducers({
     [apiCase.reducerPath]: apiCase.reducer,
     [apiBrand.reducerPath]: apiBrand.reducer,
     [apiLightType.reducerPath]: apiLightType.reducer,
+    auth: authReducer,[authApi.reducerPath]: authApi.reducer,
     [apiCooler.reducerPath]: apiCooler.reducer,
     [apiPowerSupply.reducerPath]: apiPowerSupply.reducer,
     [apiStorageDevice.reducerPath]: apiStorageDevice.reducer,
@@ -36,6 +40,7 @@ export const store = configureStore({
     reducer: rootReducer,  // Используем rootReducer, который объединяет редьюсеры
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware()
+            .concat(authApi.middleware)
             .concat(apiCase.middleware)  // Добавляем middleware для apiCase
             .concat(apiBrand.middleware)
             .concat(apiLightType.middleware)

@@ -1,14 +1,18 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { Case } from '../../types/Case';
-import { ApiResponse } from '../../types/Response'; // Импортируем тип ApiResponse
+import { ApiResponse } from '../../types/Response';
+import {BASE_URL} from "./configApi.ts"; // Импортируем тип ApiResponse
+import Cookies from 'js-cookie';
+
+const API_URL = `${BASE_URL}/api/v1/`;
 
 export const apiCase = createApi({
     reducerPath: 'apiCase',  // Уникальное имя для apiCase
     baseQuery: fetchBaseQuery({
-        baseUrl: 'http://localhost:8080/api/v1/', // Убедитесь, что это соответствует вашему серверу
+        baseUrl: API_URL, // Убедитесь, что это соответствует вашему серверу
         prepareHeaders: (headers, { getState }) => {
             // Пример добавления токена (если есть авторизация)
-            const token = (getState() as any).auth?.token;
+            const token = Cookies.get('jwt');
             if (token) {
                 headers.set('Authorization', `Bearer ${token}`);
             }

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { DataGrid, GridColDef, GridRowsProp, GridActionsCellItem } from '@mui/x-data-grid';
 import { useGetPowerSuppliesQuery, useDeletePowerSupplyMutation } from '../../store/api/apiPowerSupply';
-import '../case/CasesTable.css'; // Импортируем CSS
+import '../case/CasesTable.module.css'; // Импортируем CSS
 
 const PowerSuppliesTable = () => {
     const { data, isLoading, isError } = useGetPowerSuppliesQuery(); // Fetch data using Redux Toolkit Query

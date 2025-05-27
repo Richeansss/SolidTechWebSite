@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { DataGrid, GridColDef, GridRowsProp, GridActionsCellItem } from '@mui/x-data-grid';
 import { useGetCoolersQuery, useDeleteCoolerMutation } from '../../store/api/apiCooler';
-import '../case/CasesTable.css'; // Импортируем CSS
+import styles from '../case/CasesTable.module.css'; // модульный стиль
 
 const CoolersTable = () => {
     const { data, isLoading, isError } = useGetCoolersQuery(); // Fetch data using Redux Toolkit Query
@@ -60,7 +60,7 @@ const CoolersTable = () => {
             renderCell: (params) => (
                 <GridActionsCellItem
                     icon={
-                        <button className="delete-button">Delete</button> // Добавляем свой класс кнопки
+                        <button className={styles.deleteButton}>Delete</button> // Добавляем свой класс кнопки
                     }
                     label="Delete"
                     onClick={() => handleDelete(params.row.id)}
@@ -79,15 +79,15 @@ const CoolersTable = () => {
     };
 
     if (isLoading) {
-        return <div className="loading">Loading...</div>;
+        return <div className={styles.loading}>Loading...</div>;
     }
 
     if (isError) {
-        return <div className="error">Error loading data</div>;
+        return <div className={styles.error}>Error loading data</div>;
     }
 
     return (
-        <div className="table-container">
+        <div className={styles.tableContainer}>
             <DataGrid
                 rows={rows}
                 columns={columns}

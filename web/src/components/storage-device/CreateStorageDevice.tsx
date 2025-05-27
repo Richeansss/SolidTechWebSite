@@ -3,7 +3,7 @@ import Select from "react-select";
 import {FormFactor, InterfaceType, StorageDevice, StorageType} from "../../types/StorageDevice"; // Тип StorageDevice
 import {useCreateStorageDeviceMutation, useUploadImageMutation} from "../../store/api/apiStorageDevice";
 import { useGetBrandsQuery } from "../../store/api/apiBrand";
-import "../case/CreateCase.css"; // Подключение CSS
+import styles from '../case/CreateCase.module.css';
 
 const AddStorageDeviceComponent: React.FC = () => {
     const [newStorageDevice, setNewStorageDevice] = useState<Partial<StorageDevice>>({

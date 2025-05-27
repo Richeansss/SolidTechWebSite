@@ -1,13 +1,17 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { Ram } from '../../types/Ram'; // Тип для оперативной памяти
-import { ApiResponse } from '../../types/Response'; // Тип для стандартного ответа API
+import { ApiResponse } from '../../types/Response';
+import {BASE_URL} from "./configApi.ts";
+import Cookies from "js-cookie"; // Тип для стандартного ответа API
+
+const API_URL = `${BASE_URL}/api/v1/ram`;
 
 export const apiRam = createApi({
     reducerPath: 'apiRam',
     baseQuery: fetchBaseQuery({
-        baseUrl: 'http://localhost:8080/api/v1/ram',
+        baseUrl: API_URL,
         prepareHeaders: (headers, { getState }) => {
-            const token = (getState() as any).auth?.token;
+            const token = Cookies.get('jwt');
             if (token) {
                 headers.set('Authorization', `Bearer ${token}`);
             }

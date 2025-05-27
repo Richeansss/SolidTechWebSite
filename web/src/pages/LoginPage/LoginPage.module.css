@@ -1,0 +1,119 @@
+.wrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  row-gap: 25px;
+  justify-content: center;
+  align-items: center;
+  background-color: #f4f7fc; /* Светлый фон страницы */
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  row-gap: 20px; /* Расстояние между элементами формы */
+  padding: 40px; /* Просторный padding */
+  width: 500px; /* Ширина формы */
+  background-color: #ffffff; /* Белый фон формы */
+  border-radius: 10px; /* Закругленные углы */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Легкая тень */
+  border: none; /* Убрал стандартную границу */
+}
+
+.form__header {
+  display: flex;
+  flex-direction: column;
+  row-gap: 20px; /* Убедитесь, что здесь тоже одинаковое расстояние */
+  width: 100%; /* Убедитесь, что ширина заголовка совпадает с шириной формы */
+}
+
+.form__label {
+  display: flex;
+  flex-direction: column;
+  width: 100%; /* Поля ввода занимают всю ширину формы */
+}
+
+.form__span {
+  margin-bottom: 10px;
+  font-weight: bold; /* Для выделения текста */
+}
+
+.form__input {
+  border: 1px solid #dcdcdc;
+  height: 40px; /* Высота инпутов */
+  padding: 10px; /* Поле ввода */
+  border-radius: 5px; /* Закругленные углы */
+  transition: border-color 0.3s ease;
+  outline: none;
+  background-color: #f7f7f7; /* Легкий фон для инпутов */
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1); /* Легкая внутренняя тень */
+  width: 100%; /* Поля ввода занимают всю ширину формы */
+  box-sizing: border-box; /* Включает padding и border в общую ширину */
+}
+
+.passwordInputWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.togglePasswordButton {
+  position: absolute;
+  right: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+  padding: 0;
+  line-height: 1;
+}
+
+/* Добавим вместо этого специфичный класс для кнопки "войти" */
+.loginButton {
+  width: 100%;
+  height: 45px;
+  background-color: #1890ff;
+  color: white;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  box-sizing: border-box;
+}
+
+.loginButton:hover {
+  background-color: #1677cc;
+}
+
+.loginButton:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+  font-size: 15px;
+}
+
+/* Стили только для блока пароля */
+.passwordInputWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.togglePasswordButton {
+  position: absolute;
+  right: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+  padding: 0;
+  line-height: 1;
+}
+
+.warning {
+  color: #d9534f; /* ярко-красный */
+  font-size: 14px;
+  margin-top: 5px;
+}

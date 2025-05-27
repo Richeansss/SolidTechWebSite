@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { DataGrid, GridColDef, GridRowsProp, GridActionsCellItem } from '@mui/x-data-grid';
 import { useGetLightTypesQuery, useDeleteLightTypeMutation } from '../../store/api/apiLighttype'; // Импорт хука для работы с Light Types
 

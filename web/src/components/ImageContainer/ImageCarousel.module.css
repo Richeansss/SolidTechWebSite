@@ -1,0 +1,87 @@
+.carouselContainer {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    max-height: 70vh;
+    overflow: hidden;
+    position: relative;
+}
+
+.carouselImages {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+    height: 100%;
+}
+
+.carouselImage {
+    min-width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.carouselImage img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+.carouselImage::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to right, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0));
+    z-index: 0;
+}
+
+.carouselText {
+    font-family: 'PT Sans', sans-serif;
+    font-size: 15px;
+    position: absolute;
+    top: 50%;
+    left: 20px;
+    transform: translateY(-50%);
+    color: white;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+    z-index: 1;
+    max-width: 35%;
+    word-wrap: break-word;
+    word-break: break-word;
+    text-align: left;
+    line-height: 1.6;
+}
+
+.carouselIndicators {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+}
+
+.carouselIndicator {
+    width: 10px;
+    height: 10px;
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.active {
+    background-color: rgba(255, 255, 255, 1);
+}
+
+@media (max-width: 768px) {
+    .carouselText {
+        font-size: 14px;
+        max-width: 80%;
+        left: 10px;
+    }
+}

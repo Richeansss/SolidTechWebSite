@@ -1,15 +1,19 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { Brand } from '../../types/Brand';
-import { ApiResponse } from '../../types/Response'; // Импортируем тип ApiResponse
+import { ApiResponse } from '../../types/Response';
+import {BASE_URL} from "./configApi.ts"; // Импортируем тип ApiResponse
+import Cookies from 'js-cookie';
+
+const API_URL = `${BASE_URL}/api/v1/`;
 
 export const apiBrand = createApi({
     reducerPath: 'apiBrand',
     baseQuery: fetchBaseQuery({
-        baseUrl: 'http://localhost:8080/api/v1/', // Убедитесь, что это соответствует вашему серверу
+        baseUrl: API_URL,
         prepareHeaders: (headers, { getState }) => {
             headers.set('Content-Type', 'application/json');
             // Пример добавления токена (если есть авторизация)
-            const token = (getState() as any).auth?.token;
+            const token = Cookies.get('jwt');
             if (token) {
                 headers.set('Authorization', `Bearer ${token}`);
             }

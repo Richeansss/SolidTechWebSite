@@ -1,13 +1,17 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { PCComponent } from '../../types/PCComponent'; // Тип для PCComponent
-import { ApiResponse } from '../../types/Response'; // Тип для стандартного ответа API
+import { ApiResponse } from '../../types/Response';
+import {BASE_URL} from "./configApi.ts"; // Тип для стандартного ответа API
+import Cookies from "js-cookie"; // Тип для стандартного ответа API
+
+const API_URL = `${BASE_URL}/api/v1/pc-components`;
 
 export const apiPCComponent = createApi({
     reducerPath: 'apiPCComponent',
     baseQuery: fetchBaseQuery({
-        baseUrl: 'http://localhost:8080/api/v1/pc-components',
+        baseUrl: API_URL,
         prepareHeaders: (headers, { getState }) => {
-            const token = (getState() as any).auth?.token;
+            const token = Cookies.get('jwt');
             if (token) {
                 headers.set('Authorization', `Bearer ${token}`);
             }

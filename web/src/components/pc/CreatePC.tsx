@@ -1,610 +1,158 @@
-import React, { useState, useMemo } from "react";
+import React, { useState } from "react";
 import Select from "react-select";
 import { useCreatePCMutation, useUploadImagesMutation } from "../../store/api/apiPC";
-import { useGetCoolersQuery } from "../../store/api/apiCooler";
-import { useGetCasesQuery } from "../../store/api/apiCase";
-import {useGetPowerSuppliesQuery } from "../../store/api/apiPowerSupply";
-import { useGetVideocardsQuery } from "../../store/api/apiVideoCard";
-import "../case/CreateCase.css";
-import {useGetProcessorsQuery} from "../../store/api/apiProcessor";
-import {useGetRamsQuery} from "../../store/api/apiRam";
-import {useGetMotherBoardsQuery} from "../../store/api/apiMotherBoard";
-import {useGetStorageDevicesQuery} from "../../store/api/apiStorageDevice";
-import {useGetPCComponentsByTypeQuery} from "../../store/api/apiPCComponent";
-import {PCComponent} from "../../types/PCComponent";
-
-export enum TypeStore {
-    Avito = "Avito",
-    Ozon = "Ozon",
-    DNS = "DNS",
-    OnlineTrade = "OnlineTrade",
-    Aliexpress = "Aliexpress",
-    Citilink = "Citilink"
-}
+import { useGetPCComponentsByTypeQuery } from "../../store/api/apiPCComponent";
+import { PCComponent } from "../../types/PCComponent";
 
 const AddPCComponent: React.FC = () => {
-    const [selectedComponents, setSelectedComponents] = useState<{ [key: string]: PCComponent | null }>({});
-
     const [newPC, setNewPC] = useState({
         motherBoard: { id: 0 },
-        motherBoardStore: "",
-        motherBoardWarranty: 0,
         processor: { id: 0 },
-        processorStore: "",
-        processorWarranty: 0,
         ram: { id: 0 },
-        ramStore: "",
-        ramWarranty: 0,
         cooler: { id: 0 },
-        coolerStore: "",
-        coolerWarranty: 0,
         case_pc: { id: 0 },
-        caseStore: "",
-        caseWarranty: 0,
         videocard: { id: 0 },
-        videocardStore: "",
-        videocardWarranty: 0,
         storageDevice: { id: 0 },
-        storageDeviceStore: "",
-        storageDeviceWarranty: 0,
         powerSupply: { id: 0 },
-        powerSupplyStore: "",
-        powerSupplyWarranty: 0,
         price: 0,
+        isForSale: false
     });
 
-    const [createPC, { isLoading, isSuccess, isError }] = useCreatePCMutation();
     const [images, setImages] = useState<File[]>([]);
-    const [uploadImages, { isLoading: isUploadings }] = useUploadImagesMutation(); // Мутация для загрузки нескольких изображений
+    const [createPC, { isLoading, isSuccess, isError }] = useCreatePCMutation();
+    const [uploadImages, { isLoading: isUploading }] = useUploadImagesMutation();
 
-    const { data: processorsl = [], isFetching: loadingProcessors } = useGetPCComponentsByTypeQuery("PROCESSOR");
-    const { data: videocardsl = [], isFetching: loadingVideocards } = useGetPCComponentsByTypeQuery("VIDEOCARD");
-    const { data: motherboardsl = [], isFetching: loadingMotherboards } = useGetPCComponentsByTypeQuery("MOTHERBOARD");
-    const { data: raml = [], isFetching: loadingRam } = useGetPCComponentsByTypeQuery("RAM");
-    const { data: storagel = [], isFetching: loadingStorage } = useGetPCComponentsByTypeQuery("STORAGE");
-    const { data: coolersl = [], isFetching: loadingCoolers } = useGetPCComponentsByTypeQuery("COOLER");
-    const { data: powerSuppliesl = [], isFetching: loadingPowerSupplies } = useGetPCComponentsByTypeQuery("POWER_SUPPLY");
+    const processors = useGetPCComponentsByTypeQuery("PROCESSOR");
+    const videocards = useGetPCComponentsByTypeQuery("VIDEOCARD");
+    const motherboards = useGetPCComponentsByTypeQuery("MOTHERBOARD");
+    const rams = useGetPCComponentsByTypeQuery("RAM");
+    const storages = useGetPCComponentsByTypeQuery("STORAGE_DEVICE");
+    const coolers = useGetPCComponentsByTypeQuery("COOLER");
+    const powerSupplies = useGetPCComponentsByTypeQuery("POWER_SUPPLY");
+    const cases = useGetPCComponentsByTypeQuery("CASE");
 
-    // Загрузка данных для выбора
-    const { data: coolerTypes } = useGetCoolersQuery();
-    const { data: caseTypes } = useGetCasesQuery();
-    const { data: powerSupplies } = useGetPowerSuppliesQuery();
-    const { data: videocardTypes } = useGetVideocardsQuery();
-    const { data: processors } = useGetProcessorsQuery();
-    const { data: ramTypes } = useGetRamsQuery();
-    const { data: motherBoardTypes} = useGetMotherBoardsQuery();
-    const { data: storageDeviceTypes} = useGetStorageDevicesQuery()
-
-    // Опции для Select
-    const coolerOptions = useMemo(() => coolerTypes?.map((cooler) => ({ value: cooler.id, label: cooler.name })), [coolerTypes]);
-    const caseOptions = useMemo(() => caseTypes?.map((caseItem) => ({ value: caseItem.id, label: caseItem.name })), [caseTypes]);
-    const powerSupplyOptions = useMemo(() => powerSupplies?.map((psu) => ({ value: psu.id, label: psu.name })), [powerSupplies]);
-    const videocardOptions = useMemo(() => videocardTypes?.map((videocard) => ({ value: videocard.id, label: videocard.name })), [videocardTypes]);
-    const processorOptions = useMemo(() => processors?.map((processor) => ({
-        value: processor.id,
-        label: processor.name,
-    })), [processors]);
-    const ramOptions = useMemo(() => ramTypes?.map((ram) => ({
-        value: ram.id,
-        label: ram.name,
-    })), [ramTypes]);
-    const motherBoardOptions = useMemo(() => motherBoardTypes?.map((motherBoard) => ({
-        value: motherBoard.id,
-        label: motherBoard.name,
-    })), [motherBoardTypes]);
-    const storageDeviceOptions = useMemo(() => storageDeviceTypes?.map((storageDevice) => ({
-        value: storageDevice.id,
-        label: storageDevice.name,
-    })), [storageDeviceTypes]);
-
-    const storeOptions = useMemo(() => Object.values(TypeStore).map(store => ({ value: store, label: store })), []);
-
-    const handleSelectChange = (name: string, selectedOption: { value: number | undefined; label: string } | null) => {
+    const handleSelectChange = (name: string, selectedOption: { value: number; label: string } | null) => {
         if (selectedOption) {
-            const value = selectedOption.value ?? 0;
-            setNewPC((prev) => ({
-                ...prev,
-                [name]: { id: value },
-            }));
+            setNewPC((prev) => ({ ...prev, [name]: { id: selectedOption.value } }));
         }
+    };
+
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value, type, checked } = e.target;
+        setNewPC((prev) => ({
+            ...prev,
+            [name]: type === "checkbox" ? checked : Number(value)
+        }));
     };
 
     const handleImagesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (!e.target.files) return; // Проверяем, что файлы есть
-        const newFiles = Array.from(e.target.files); // Теперь TypeScript не будет ругаться
-        setImages((prevImages) => [...prevImages, ...newFiles]);
-    };
-
-
-    const handleStoreSelectChange = (name: string, selectedOption: { value: string; label: string } | null) => {
-        if (selectedOption) {
-            setNewPC((prev) => ({
-                ...prev,
-                [name]: selectedOption.value,
-            }));
+        if (e.target.files) {
+            const newFiles = Array.from(e.target.files);
+            setImages((prev) => [...prev, ...newFiles]);
         }
-    };
-
-    const handleInputChange = (name: string, value: number | string) => {
-        setNewPC((prev) => ({
-            ...prev,
-            [name]: value,
-        }));
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        // Проверяем, что все обязательные поля заполнены
-        if (
-            !newPC.motherBoard.id || !newPC.motherBoardStore || newPC.motherBoardWarranty === 0 ||
-            !newPC.processor.id || !newPC.processorStore || newPC.processorWarranty === 0 ||
-            !newPC.ram.id || !newPC.ramStore || newPC.ramWarranty === 0 ||
-            !newPC.cooler.id || !newPC.coolerStore || newPC.coolerWarranty === 0 ||
-            !newPC.case_pc.id || !newPC.caseStore || newPC.caseWarranty === 0 ||
-            !newPC.videocard.id || !newPC.videocardStore || newPC.videocardWarranty === 0 ||
-            !newPC.storageDevice.id || !newPC.storageDeviceStore || newPC.storageDeviceWarranty === 0 ||
-            !newPC.powerSupply.id || !newPC.powerSupplyStore || newPC.powerSupplyWarranty === 0 ||
-            !newPC.price || newPC.price <= 0
-        ) {
-            alert("Все поля обязательны для заполнения!");
-            return;
-        }
-
         try {
-            // @ts-ignore
             const createdPC = await createPC(newPC).unwrap();
 
-            if (images.length > 0) {
-                for (const file of images) {
-                    await uploadImages({ id: createdPC.id, files: [file] }).unwrap();
-                }
+            for (const file of images) {
+                await uploadImages({ id: createdPC.id, files: [file] }).unwrap();
             }
 
             alert("ПК успешно добавлен!");
             setNewPC({
                 motherBoard: { id: 0 },
-                motherBoardStore: "",
-                motherBoardWarranty: 0,
                 processor: { id: 0 },
-                processorStore: "",
-                processorWarranty: 0,
                 ram: { id: 0 },
-                ramStore: "",
-                ramWarranty: 0,
                 cooler: { id: 0 },
-                coolerStore: "",
-                coolerWarranty: 0,
                 case_pc: { id: 0 },
-                caseStore: "",
-                caseWarranty: 0,
                 videocard: { id: 0 },
-                videocardStore: "",
-                videocardWarranty: 0,
                 storageDevice: { id: 0 },
-                storageDeviceStore: "",
-                storageDeviceWarranty: 0,
                 powerSupply: { id: 0 },
-                powerSupplyStore: "",
-                powerSupplyWarranty: 0,
                 price: 0,
+                isForSale: false
             });
+            setImages([]);
         } catch (error) {
-            console.error("Ошибка добавления ПК:", error);
-            alert("Произошла ошибка при добавлении ПК.");
+            console.error("Ошибка при создании ПК:", error);
+            alert("Ошибка при добавлении ПК");
         }
     };
 
+    const renderSelect = (query: ReturnType<typeof useGetPCComponentsByTypeQuery>, field: string, label: string) => {
+        const { data = [], isFetching } = query;
+        const options = data.map((item: PCComponent) => ({
+            value: item.id,
+            label: item.details?.name || `ID: ${item.componentId}`
+        }));
+        return (
+            <div className="form-group mb-4">
+                <label><strong>{label}</strong></label>
+                <Select
+                    options={options}
+                    isDisabled={isFetching}
+                    placeholder={isFetching ? "Загрузка..." : `Выберите ${label.toLowerCase()}`}
+                    onChange={(selected) => handleSelectChange(field, selected)}
+                    isClearable
+                />
+            </div>
+        );
+    };
 
     return (
         <div>
             <h2>Добавить ПК</h2>
             <form onSubmit={handleSubmit}>
-                {/* Материнская плата */}
-                <div className="form-group">
-                    <label><strong>Материнская плата</strong></label>
-                    <Select
-                        options={motherBoardOptions}
-                        onChange={(option) => handleSelectChange("motherBoard", option)}
-                        placeholder="Выберите материнскую плату"
-                    />
-                    <label>Гарантия</label>
-                    <input
-                        type="number"
-                        placeholder="Гарантия материнской платы"
-                        value={newPC.motherBoardWarranty}
-                        onChange={(e) => handleInputChange("motherBoardWarranty", e.target.value)}
-                    />
-                    <label>Магазин</label>
-                    <Select
-                        options={storeOptions}
-                        onChange={(option) => handleStoreSelectChange("motherBoardStore", option)}
-                        placeholder="Выберите магазин"
-                    />
-                </div>
+                {renderSelect(motherboards, "motherBoard", "Материнская плата")}
+                {renderSelect(processors, "processor", "Процессор")}
+                {renderSelect(rams, "ram", "Оперативная память")}
+                {renderSelect(coolers, "cooler", "Кулер")}
+                {renderSelect(videocards, "videocard", "Видеокарта")}
+                {renderSelect(storages, "storageDevice", "Накопитель")}
+                {renderSelect(powerSupplies, "powerSupply", "Блок питания")}
+                {renderSelect(cases, "case_pc", "Корпус")}
 
-                {/* Процессор */}
                 <div className="form-group">
-                    <label><strong>Процессор</strong></label>
-                    <Select
-                        options={processorOptions}
-                        onChange={(option) => handleSelectChange("processor", option)}
-                        placeholder="Выберите процессор"
-                    />
-                    <label>Гарантия</label>
-                    <input
-                        type="number"
-                        placeholder="Гарантия процессора"
-                        value={newPC.processorWarranty}
-                        onChange={(e) => handleInputChange("processorWarranty", e.target.value)}
-                    />
-                    <label>Магазин</label>
-                    <Select
-                        options={storeOptions}
-                        onChange={(option) => handleStoreSelectChange("processorStore", option)}
-                        placeholder="Выберите магазин"
-                    />
-                </div>
-
-                {/* Оперативная память */}
-                <div className="form-group">
-                    <label><strong>Оперативная память</strong></label>
-                    <Select
-                        options={ramOptions}
-                        onChange={(option) => handleSelectChange("ram", option)}
-                        placeholder="Выберите оперативную память"
-                    />
-                    <label>Гарантия</label>
-                    <input
-                        type="number"
-                        placeholder="Гарантия оперативной памяти"
-                        value={newPC.ramWarranty}
-                        onChange={(e) => handleInputChange("ramWarranty", e.target.value)}
-                    />
-                    <label>Магазин</label>
-                    <Select
-                        options={storeOptions}
-                        onChange={(option) => handleStoreSelectChange("ramStore", option)}
-                        placeholder="Выберите магазин"
-                    />
-                </div>
-
-                {/* Охлаждение */}
-                <div className="form-group">
-                    <label><strong>Охлаждение</strong></label>
-                    <Select
-                        options={coolerOptions}
-                        onChange={(option) => handleSelectChange("cooler", option)}
-                        placeholder="Выберите кулер"
-                    />
-                    <label>Гарантия</label>
-                    <input
-                        type="number"
-                        placeholder="Гарантия кулера"
-                        value={newPC.coolerWarranty}
-                        onChange={(e) => handleInputChange("coolerWarranty", e.target.value)}
-                    />
-                    <label>Магазин</label>
-                    <Select
-                        options={storeOptions}
-                        onChange={(option) => handleStoreSelectChange("coolerStore", option)}
-                        placeholder="Выберите магазин"
-                    />
-                </div>
-
-                {/* Корпус */}
-                <div className="form-group">
-                    <label><strong>Корпус</strong></label>
-                    <Select
-                        options={caseOptions}
-                        onChange={(option) => handleSelectChange("case_pc", option)}
-                        placeholder="Выберите корпус"
-                    />
-                    <label>Гарантия</label>
-                    <input
-                        type="number"
-                        placeholder="Гарантия корпуса"
-                        value={newPC.caseWarranty}
-                        onChange={(e) => handleInputChange("caseWarranty", e.target.value)}
-                    />
-                    <label>Магазин</label>
-                    <Select
-                        options={storeOptions}
-                        onChange={(option) => handleStoreSelectChange("caseStore", option)}
-                        placeholder="Выберите магазин"
-                    />
-                </div>
-
-                {/* Видеокарта */}
-                <div className="form-group">
-                    <label><strong>Видеокарта</strong></label>
-                    <Select
-                        options={videocardOptions}
-                        onChange={(option) => handleSelectChange("videocard", option)}
-                        placeholder="Выберите видеокарту"
-                    />
-                    <label>Гарантия</label>
-                    <input
-                        type="number"
-                        placeholder="Гарантия видеокарты"
-                        value={newPC.videocardWarranty}
-                        onChange={(e) => handleInputChange("videocardWarranty", e.target.value)}
-                    />
-                    <label>Магазин</label>
-                    <Select
-                        options={storeOptions}
-                        onChange={(option) => handleStoreSelectChange("videocardStore", option)}
-                        placeholder="Выберите магазин"
-                    />
-                </div>
-
-                {/* Накопительное устройство */}
-                <div className="form-group">
-                    <label><strong>Накопительное устройство</strong></label>
-                    <Select
-                        options={storageDeviceOptions}
-                        onChange={(option) => handleSelectChange("storageDevice", option)}
-                        placeholder="Выберите накопительное устройство"
-                    />
-                    <label>Гарантия</label>
-                    <input
-                        type="number"
-                        placeholder="Гарантия накопительного устройства"
-                        value={newPC.storageDeviceWarranty}
-                        onChange={(e) => handleInputChange("storageDeviceWarranty", e.target.value)}
-                    />
-                    <label>Магазин</label>
-                    <Select
-                        options={storeOptions}
-                        onChange={(option) => handleStoreSelectChange("storageDeviceStore", option)}
-                        placeholder="Выберите магазин"
-                    />
-                </div>
-
-                {/* Источник питания */}
-                <div className="form-group">
-                    <label><strong>Источник питания</strong></label>
-                    <Select
-                        options={powerSupplyOptions}
-                        onChange={(option) => handleSelectChange("powerSupply", option)}
-                        placeholder="Выберите блок питания"
-                    />
-                    <label>Гарантия</label>
-                    <input
-                        type="number"
-                        placeholder="Гарантия источника питания"
-                        value={newPC.powerSupplyWarranty}
-                        onChange={(e) => handleInputChange("powerSupplyWarranty", e.target.value)}
-                    />
-                    <label>Магазин</label>
-                    <Select
-                        options={storeOptions}
-                        onChange={(option) => handleStoreSelectChange("powerSupplyStore", option)}
-                        placeholder="Выберите магазин"
-                    />
-                </div>
-
-                {/* Цена */}
-                <div>
                     <label><strong>Цена</strong></label>
                     <input
                         type="number"
-                        placeholder="Введите цену ПК"
+                        name="price"
                         value={newPC.price}
-                        onChange={(e) => handleInputChange("price", e.target.value)}
+                        onChange={handleInputChange}
                     />
                 </div>
-                <div>
-                    <label>Изображения</label>
+
+                <div className="form-group">
+                    <label>
+                        <input
+                            type="checkbox"
+                            name="isForSale"
+                            checked={newPC.isForSale}
+                            onChange={handleInputChange}
+                        />
+                        Доступен для продажи
+                    </label>
+                </div>
+
+                <div className="form-group">
+                    <label><strong>Изображения</strong></label>
                     <input
                         type="file"
-                        accept="images/*"
-                        multiple // Позволяет выбирать несколько файлов
+                        multiple
+                        accept="image/*"
                         onChange={handleImagesChange}
                     />
                 </div>
-                {/* Процессор */}
-                <div className="form-group mb-4">
-                    <label><strong>Процессор</strong></label>
-                    <Select
-                        options={processorsl.map(comp => ({
-                            value: comp.id.toString(),
-                            label: comp.details?.name ?? `ID: ${comp.componentId}`,
-                        }))}
-                        placeholder={loadingProcessors ? "Загрузка..." : "Выберите процессор"}
-                        isDisabled={loadingProcessors}
-                        onChange={(selected) =>
-                            setSelectedComponents((prev) => ({
-                                ...prev,
-                                PROCESSOR: selected ? processorsl.find(c => c.id.toString() === selected.value) ?? null : null
-                            }))
-                        }
-                        value={
-                            selectedComponents.PROCESSOR
-                                ? {
-                                    value: selectedComponents.PROCESSOR.id.toString(),
-                                    label: selectedComponents.PROCESSOR.details?.name ?? `ID: ${selectedComponents.PROCESSOR.componentId}`,
-                                }
-                                : null
-                        }
-                        isClearable
-                    />
-                </div>
 
-                {/* Видеокарта */}
-                <div className="form-group mb-4">
-                    <label><strong>Видеокарта</strong></label>
-                    <Select
-                        options={videocardsl.map(comp => ({
-                            value: comp.id.toString(),
-                            label: comp.details?.name ?? `ID: ${comp.componentId}`,
-                        }))}
-                        placeholder={loadingVideocards ? "Загрузка..." : "Выберите видеокарту"}
-                        isDisabled={loadingVideocards}
-                        onChange={(selected) =>
-                            setSelectedComponents((prev) => ({
-                                ...prev,
-                                VIDEOCARD: selected ? videocardsl.find(c => c.id.toString() === selected.value) ?? null : null
-                            }))
-                        }
-                        value={
-                            selectedComponents.VIDEOCARD
-                                ? {
-                                    value: selectedComponents.VIDEOCARD.id.toString(),
-                                    label: selectedComponents.VIDEOCARD.details?.name ?? `ID: ${selectedComponents.VIDEOCARD.componentId}`,
-                                }
-                                : null
-                        }
-                        isClearable
-                    />
-                </div>
-
-                {/* Материнская плата */}
-                <div className="form-group mb-4">
-                    <label><strong>Материнская плата</strong></label>
-                    <Select
-                        options={motherboardsl.map(comp => ({
-                            value: comp.id.toString(),
-                            label: comp.details?.name ?? `ID: ${comp.componentId}`,
-                        }))}
-                        placeholder={loadingMotherboards ? "Загрузка..." : "Выберите материнскую плату"}
-                        isDisabled={loadingMotherboards}
-                        onChange={(selected) =>
-                            setSelectedComponents((prev) => ({
-                                ...prev,
-                                MOTHERBOARD: selected ? motherboardsl.find(c => c.id.toString() === selected.value) ?? null : null
-                            }))
-                        }
-                        value={
-                            selectedComponents.MOTHERBOARD
-                                ? {
-                                    value: selectedComponents.MOTHERBOARD.id.toString(),
-                                    label: selectedComponents.MOTHERBOARD.details?.name ?? `ID: ${selectedComponents.MOTHERBOARD.componentId}`,
-                                }
-                                : null
-                        }
-                        isClearable
-                    />
-                </div>
-
-                {/* Оперативная память */}
-                <div className="form-group mb-4">
-                    <label><strong>Оперативная память</strong></label>
-                    <Select
-                        options={raml.map(comp => ({
-                            value: comp.id.toString(),
-                            label: comp.details?.name ?? `ID: ${comp.componentId}`,
-                        }))}
-                        placeholder={loadingRam ? "Загрузка..." : "Выберите оперативную память"}
-                        isDisabled={loadingRam}
-                        onChange={(selected) =>
-                            setSelectedComponents((prev) => ({
-                                ...prev,
-                                RAM: selected ? raml.find(c => c.id.toString() === selected.value) ?? null : null
-                            }))
-                        }
-                        value={
-                            selectedComponents.RAM
-                                ? {
-                                    value: selectedComponents.RAM.id.toString(),
-                                    label: selectedComponents.RAM.details?.name ?? `ID: ${selectedComponents.RAM.componentId}`,
-                                }
-                                : null
-                        }
-                        isClearable
-                    />
-                </div>
-
-                {/* Накопитель */}
-                <div className="form-group mb-4">
-                    <label><strong>Накопитель</strong></label>
-                    <Select
-                        options={storagel.map(comp => ({
-                            value: comp.id.toString(),
-                            label: comp.details?.name ?? `ID: ${comp.componentId}`,
-                        }))}
-                        placeholder={loadingStorage ? "Загрузка..." : "Выберите накопитель"}
-                        isDisabled={loadingStorage}
-                        onChange={(selected) =>
-                            setSelectedComponents((prev) => ({
-                                ...prev,
-                                STORAGE: selected ? storagel.find(c => c.id.toString() === selected.value) ?? null : null
-                            }))
-                        }
-                        value={
-                            selectedComponents.STORAGE
-                                ? {
-                                    value: selectedComponents.STORAGE.id.toString(),
-                                    label: selectedComponents.STORAGE.details?.name ?? `ID: ${selectedComponents.STORAGE.componentId}`,
-                                }
-                                : null
-                        }
-                        isClearable
-                    />
-                </div>
-
-                {/* Кулер */}
-                <div className="form-group mb-4">
-                    <label><strong>Кулер</strong></label>
-                    <Select
-                        options={coolersl.map(comp => ({
-                            value: comp.id.toString(),
-                            label: comp.details?.name ?? `ID: ${comp.componentId}`,
-                        }))}
-                        placeholder={loadingCoolers ? "Загрузка..." : "Выберите кулер"}
-                        isDisabled={loadingCoolers}
-                        onChange={(selected) =>
-                            setSelectedComponents((prev) => ({
-                                ...prev,
-                                COOLER: selected ? coolersl.find(c => c.id.toString() === selected.value) ?? null : null
-                            }))
-                        }
-                        value={
-                            selectedComponents.COOLER
-                                ? {
-                                    value: selectedComponents.COOLER.id.toString(),
-                                    label: selectedComponents.COOLER.details?.name ?? `ID: ${selectedComponents.COOLER.componentId}`,
-                                }
-                                : null
-                        }
-                        isClearable
-                    />
-                </div>
-
-                {/* Блок питания */}
-                <div className="form-group mb-4">
-                    <label><strong>Блок питания</strong></label>
-                    <Select
-                        options={powerSuppliesl.map(comp => ({
-                            value: comp.id.toString(),
-                            label: comp.details?.name ?? `ID: ${comp.componentId}`,
-                        }))}
-                        placeholder={loadingPowerSupplies ? "Загрузка..." : "Выберите блок питания"}
-                        isDisabled={loadingPowerSupplies}
-                        onChange={(selected) =>
-                            setSelectedComponents((prev) => ({
-                                ...prev,
-                                POWER_SUPPLY: selected ? powerSuppliesl.find(c => c.id.toString() === selected.value) ?? null : null
-                            }))
-                        }
-                        value={
-                            selectedComponents.POWER_SUPPLY
-                                ? {
-                                    value: selectedComponents.POWER_SUPPLY.id.toString(),
-                                    label: selectedComponents.POWER_SUPPLY.details?.name ?? `ID: ${selectedComponents.POWER_SUPPLY.componentId}`,
-                                }
-                                : null
-                        }
-                        isClearable
-                    />
-                </div>
-
-                <button className="button-primary" type="submit" disabled={isLoading || isUploadings}>
+                <button type="submit" disabled={isLoading || isUploading} className="button-primary">
                     {isLoading ? "Добавление..." : "Добавить ПК"}
                 </button>
 
                 {isSuccess && <p>ПК успешно добавлен!</p>}
-                {isError && <p>Произошла ошибка при добавлении ПК!</p>}
+                {isError && <p>Ошибка при добавлении ПК!</p>}
             </form>
         </div>
     );

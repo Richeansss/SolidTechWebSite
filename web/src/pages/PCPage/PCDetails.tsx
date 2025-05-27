@@ -1,29 +1,29 @@
-import React, {useState} from "react";
-import "./PCDetails.css";
+import React, { useState } from "react";
+import styles from "./PCDetails.module.css";
 import { useParams } from "react-router-dom";
-import {useGetPCsQuery} from "../store/api/apiPC";
+import { useGetPCsQuery } from "../store/api/apiPC";
 
 const PCDetails: React.FC = () => {
     const { id } = useParams<{ id: string }>();
     const { data, isLoading, isError } = useGetPCsQuery();
     const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
 
-    if (isLoading) return <div className="loading">Загрузка...</div>;
-    if (isError) return <div className="error">Ошибка загрузки данных</div>;
+    if (isLoading) return <div className={styles.loading}>Загрузка...</div>;
+    if (isError) return <div className={styles.error}>Ошибка загрузки данных</div>;
 
     // @ts-ignore
     const pc = data?.find((pc) => pc.id.toString() === id);
-    if (!pc) return <div className="error">Компьютер не найден</div>;
+    if (!pc) return <div className={styles.error}>Компьютер не найден</div>;
 
     const nextImage = () => {
-        if (pc.imagesUrl.length === 0) return; // Проверка на пустой массив
+        if (pc.imagesUrl.length === 0) return;
         setCurrentImageIndex((prevIndex) =>
             (prevIndex + 1) % pc.imagesUrl.length
         );
     };
 
     const prevImage = () => {
-        if (pc.imagesUrl.length === 0) return; // Проверка на пустой массив
+        if (pc.imagesUrl.length === 0) return;
         setCurrentImageIndex((prevIndex) =>
             (prevIndex - 1 + pc.imagesUrl.length) % pc.imagesUrl.length
         );
@@ -31,44 +31,39 @@ const PCDetails: React.FC = () => {
 
     const InfoText: React.FC<{ label: string; value: string; extra?: string | string[] }> = ({ label, value, extra }) => {
         return (
-            <div className="info-text">
-                <span className="label">{label}</span>
-                <span className="value">{value}</span>
+            <div className={styles.infoText}>
+                <span className={styles.label}>{label}</span>
+                <span className={styles.value}>{value}</span>
                 {extra && (
-                    <span className="extra">
-                    {Array.isArray(extra) ? extra.map((line, index) => <div key={index}>{line}</div>) : extra}
-                </span>
-                )}            </div>
+                    <span className={styles.extra}>
+                        {Array.isArray(extra) ? extra.map((line, index) => <div key={index}>{line}</div>) : extra}
+                    </span>
+                )}
+            </div>
         );
     };
 
-
-    // @ts-ignore
     return (
-        <div className="pc-details">
+        <div className={styles.pcDetails}>
             <h2>{pc.casePc.name} ({pc.price} ₽)</h2>
-            <div className="image-container">
+            <div className={styles.imageContainer}>
                 {pc.imagesUrl.length > 0 ? (
                     <>
                         <img
                             src={`http://localhost:3000${pc.imagesUrl[currentImageIndex]}`}
                             alt={`${pc.casePc.name} ${currentImageIndex + 1}`}
-                            className="pc-image"
+                            className={styles.pcImage}
                         />
-                        <button className="carousel-button prev" onClick={prevImage}>
-                            &lt;
-                        </button>
-                        <button className="carousel-button next" onClick={nextImage}>
-                            &gt;
-                        </button>
+                        <button className="carousel-button prev" onClick={prevImage}>&lt;</button>
+                        <button className="carousel-button next" onClick={nextImage}>&gt;</button>
                     </>
                 ) : (
                     <p>Изображения отсутствуют</p>
                 )}
             </div>
-            <div className="specs">
-                <div className="left-info-box">
-                    <img src={pc.videocard.imageUrl} alt={pc.casePc.name} className="image-icon"/>
+            <div className={styles.specs}>
+                <div className={styles.leftInfoBox}>
+                    <img src={pc.videocard.imageUrl} alt={pc.casePc.name} className={styles.imageIcon} />
                     <InfoText
                         label="Видеокарта"
                         value={pc.videocard.name}
@@ -81,7 +76,7 @@ const PCDetails: React.FC = () => {
                         ]}
                     />
                 </div>
-                <div className="right-info-box">
+                <div className={styles.rightInfoBox}>
                     <InfoText
                         label="Процессор"
                         value={pc.processor.name}
@@ -92,10 +87,10 @@ const PCDetails: React.FC = () => {
                             `${pc.processor.turbo_bust} ГГц (турбо)`,
                         ]}
                     />
-                    <img src={pc.processor.imageUrl} alt={pc.casePc.name} className="image-icon"/>
+                    <img src={pc.processor.imageUrl} alt={pc.casePc.name} className={styles.imageIcon} />
                 </div>
-                <div className="left-info-box">
-                    <img src={pc.motherBoard.imageUrl} alt={pc.casePc.name} className="image-icon"/>
+                <div className={styles.leftInfoBox}>
+                    <img src={pc.motherBoard.imageUrl} alt={pc.casePc.name} className={styles.imageIcon} />
                     <InfoText
                         label="Материнская плата"
                         value={pc.motherBoard.name}
@@ -107,7 +102,7 @@ const PCDetails: React.FC = () => {
                         ]}
                     />
                 </div>
-                <div className="right-info-box">
+                <div className={styles.rightInfoBox}>
                     <InfoText
                         label="Оперативная память"
                         value={pc.ram.name}
@@ -118,11 +113,12 @@ const PCDetails: React.FC = () => {
                             `Тип памяти: ${pc.ram.typeRam}`,
                             `Частота: ${pc.ram.jdek}`,
                             `Таймнг: CL-${pc.ram.timing}`,
-                        ]}/>
-                    <img src={pc.ram.imageUrl} alt={pc.casePc.name} className="image-icon"/>
+                        ]}
+                    />
+                    <img src={pc.ram.imageUrl} alt={pc.casePc.name} className={styles.imageIcon} />
                 </div>
-                <div className="left-info-box">
-                    <img src={pc.storageDevice.imageUrl} alt={pc.casePc.name} className="image-icon"/>
+                <div className={styles.leftInfoBox}>
+                    <img src={pc.storageDevice.imageUrl} alt={pc.casePc.name} className={styles.imageIcon} />
                     <InfoText
                         label="Накопитель"
                         value={pc.storageDevice.name}
@@ -135,7 +131,7 @@ const PCDetails: React.FC = () => {
                         ]}
                     />
                 </div>
-                <div className="right-info-box">
+                <div className={styles.rightInfoBox}>
                     <InfoText
                         label="Охлаждение"
                         value={pc.cooler.name}
@@ -145,10 +141,10 @@ const PCDetails: React.FC = () => {
                             `Размер вентилятора: ${pc.cooler.funSize.replace("SIZE_", "")}`,
                         ]}
                     />
-                    <img src={pc.cooler.imageUrl} alt={pc.cooler.name} className="image-icon"/>
+                    <img src={pc.cooler.imageUrl} alt={pc.cooler.name} className={styles.imageIcon} />
                 </div>
-                <div className="left-info-box">
-                    <img src={pc.casePc.imageUrl} alt={pc.casePc.name} className="image-icon"/>
+                <div className={styles.leftInfoBox}>
+                    <img src={pc.casePc.imageUrl} alt={pc.casePc.name} className={styles.imageIcon} />
                     <InfoText
                         label="Корпус"
                         value={pc.casePc.name}
@@ -156,12 +152,16 @@ const PCDetails: React.FC = () => {
                             `TDP: ${pc.casePc.formFactor}`,
                             `Коннектор вентилятора: ${pc.cooler.funConnector} pin`,
                             `Размер вентилятора: ${pc.cooler.funSize.replace("SIZE_", "")}`,
-                        ]}/>
+                        ]}
+                    />
                 </div>
-                <div className="right-info-box">
-                    <InfoText label="Блок питания" value={pc.powerSupply.name}
-                              extra={`${pc.ram.amountRam * pc.ram.moduleCapacity} GB`}/>
-                    <img src={pc.powerSupply.imageUrl} alt={pc.cooler.name} className="image-icon"/>
+                <div className={styles.rightInfoBox}>
+                    <InfoText
+                        label="Блок питания"
+                        value={pc.powerSupply.name}
+                        extra={`${pc.ram.amountRam * pc.ram.moduleCapacity} GB`}
+                    />
+                    <img src={pc.powerSupply.imageUrl} alt={pc.cooler.name} className={styles.imageIcon} />
                 </div>
             </div>
         </div>

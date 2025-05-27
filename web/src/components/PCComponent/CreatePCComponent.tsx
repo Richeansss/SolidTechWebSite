@@ -6,7 +6,10 @@ import { useGetProcessorsQuery } from "../../store/api/apiProcessor";
 import { useGetRamsQuery } from "../../store/api/apiRam";
 import { useGetMotherBoardsQuery } from "../../store/api/apiMotherBoard";
 import { useGetStorageDevicesQuery } from "../../store/api/apiStorageDevice";
-import "../case/CreateCase.css";
+import "../case/CreateCase.module.css";
+import {useGetCoolersQuery} from "../../store/api/apiCooler.ts";
+import {useGetCasesQuery} from "../../store/api/apiCase.ts";
+import {useGetPowerSuppliesQuery} from "../../store/api/apiPowerSupply.ts";
 
 const AddPCComponent: React.FC = () => {
     const [newComponent, setNewComponent] = useState<PCComponent>({
@@ -24,6 +27,9 @@ const AddPCComponent: React.FC = () => {
     const { data: rams } = useGetRamsQuery();
     const { data: motherboards } = useGetMotherBoardsQuery();
     const { data: storageDevices } = useGetStorageDevicesQuery();
+    const { data: coolers } = useGetCoolersQuery();
+    const { data: cases } = useGetCasesQuery();
+    const { data: powerSupplies } = useGetPowerSuppliesQuery();
 
     const componentData = useMemo(() => {
         switch (newComponent.componentType) {
@@ -33,12 +39,18 @@ const AddPCComponent: React.FC = () => {
                 return rams;
             case ComponentType.MOTHERBOARD:
                 return motherboards;
-            case ComponentType.STORAGE:
+            case ComponentType.STORAGE_DEVICE:
                 return storageDevices;
+            case ComponentType.COOLER:
+                return coolers;
+            case ComponentType.CASE:
+                return cases;
+            case ComponentType.POWER_SUPPLY:
+                return powerSupplies;
             default:
                 return [];
         }
-    }, [newComponent.componentType, processors, rams, motherboards, storageDevices]);
+    }, [newComponent.componentType, processors, rams, motherboards, storageDevices, coolers, cases, powerSupplies]);
 
     const componentOptions = useMemo(
         () =>
@@ -105,9 +117,12 @@ const AddPCComponent: React.FC = () => {
         }
 
         try {
+            const { id, ...componentToSend } = newComponent;
+
             for (let i = 0; i < quantity; i++) {
-                await createPCComponent(newComponent).unwrap();
+                await createPCComponent(componentToSend).unwrap();
             }
+
             alert("Компонент(ы) успешно добавлены!");
             setNewComponent({
                 id: 0,

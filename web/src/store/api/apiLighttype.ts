@@ -1,14 +1,18 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { LightType } from '../../types/LightType';
-import { ApiResponse } from '../../types/Response'; // Тип для обработки ответа
+import { ApiResponse } from '../../types/Response';
+import {BASE_URL} from "./configApi.ts";
+import Cookies from "js-cookie"; // Тип для обработки ответа
+
+const API_URL = `${BASE_URL}/api/v1/`;
 
 export const apiLightType = createApi({
     reducerPath: 'apiLightType',
     baseQuery: fetchBaseQuery({
-        baseUrl: 'http://localhost:8080/api/v1/', // Убедитесь, что это соответствует вашему серверу
+        baseUrl: API_URL, // Убедитесь, что это соответствует вашему серверу
         prepareHeaders: (headers, { getState }) => {
             headers.set('Content-Type', 'application/json');
-            const token = (getState() as any).auth?.token;
+            const token = Cookies.get('jwt');
             if (token) {
                 headers.set('Authorization', `Bearer ${token}`);
             }

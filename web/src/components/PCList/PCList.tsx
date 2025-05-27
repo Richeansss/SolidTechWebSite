@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { useGetVideocardsQuery } from '../../store/api/apiVideoCard';
 import { useNavigate } from "react-router-dom"; // Импортируем useNavigate
-import './CardList.css';
+import styles from './CardList.module.css';
 import {useGetPCsQuery} from "../../store/api/apiPC";
 
-const PCList = () => {
+export const PCList: React.FC = () => {
     const { data, isLoading, isError } = useGetPCsQuery(); // Получаем данные о видеокартах
 
     const [videocards, setVideocards] = useState<any[]>([]);
@@ -16,7 +15,7 @@ const PCList = () => {
             const formattedPCs = data.map((pc) => ({
                 id: pc.id,
                 price: pc.price,
-                case_pc: pc.casePc,
+                case_pc: pc.case_pc,
                 videocard: pc.videocard,
                 motherBoard: pc.motherBoard,
                 storageDevice: pc.storageDevice,
@@ -39,42 +38,42 @@ const PCList = () => {
 
 
     return (
-        <div className="videocard-list">
+        <div className={styles.pcList}>
             {videocards.map((pc) => (
-                <div key={pc.id} className="videocard-card">
-                    <div className="image-container-main" onClick={() => navigate(`/pc/${pc.id}`)}>
+                <div key={pc.id} className={styles.pcCard}>
+                    <div className={styles.mainImageContainer} onClick={() => navigate(`/pc/${pc.id}`)}>
                         {pc.imagesUrl.length > 0 ? (
                             <>
                                 <img
                                     src={`http://localhost:3000${pc.imagesUrl[0]}`} // Используем первое изображение
                                     alt={`{pc}`}
-                                    className="pc-image-main"
+                                    className={styles.mainPcImage}
                                 />
                             </>
                         ) : (
                             <p>Изображения отсутствуют</p>
                         )}
                     </div>
-                    <div className="text-container">
+                    <div className={styles.textContainer}>
                         <h3>{pc.price} ₽</h3>
-                        <div className="info-box">
-                            <img src="/icons/gpu.png" alt="GPU" className="icon"/>
+                        <div className={styles.infoBox}>
+                            <img src="/icons/gpu.png" alt="GPU" className={styles.iconImage}/>
                             <span>Видеокарта<br/> {pc.videocard.name} GB</span>
                         </div>
-                        <div className="info-box">
-                            <img src="/icons/cpu.png" alt="CPU" className="icon"/>
+                        <div className={styles.infoBox}>
+                            <img src="/icons/cpu.png" alt="CPU" className={styles.iconImage}/>
                             <span>Процессор<br/> {pc.processor.name}</span>
                         </div>
-                        <div className="info-box">
-                            <img src="/icons/motherboard.png" alt="Motherboard" className="icon"/>
+                        <div className={styles.infoBox}>
+                            <img src="/icons/motherboard.png" alt="Motherboard" className={styles.iconImage}/>
                             <span>Материнская плата<br/> {pc.motherBoard.name}</span>
                         </div>
-                        <div className="info-box">
-                            <img src="/icons/ram.png" alt="RAM" className="icon"/>
+                        <div className={styles.infoBox}>
+                            <img src="/icons/ram.png" alt="RAM" className={styles.iconImage}/>
                             <span>Оперативная память<br/> {pc.ram.amountRam * pc.ram.moduleCapacity}GB {pc.ram.name}</span>
                         </div>
-                        <div className="info-box">
-                            <img src="/icons/ssd.png" alt="HDD" className="icon"/>
+                        <div className={styles.infoBox}>
+                            <img src="/icons/ssd.png" alt="HDD" className={styles.iconImage}/>
                             <span>Накопитель<br/> {pc.storageDevice.capacityGb}GB {pc.storageDevice.name}</span>
                         </div>
                     </div>
@@ -83,5 +82,3 @@ const PCList = () => {
         </div>
     );
 };
-
-export default PCList;

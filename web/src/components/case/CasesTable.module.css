@@ -1,0 +1,87 @@
+/* Основной контейнер для таблицы */
+.tableContainer {
+    width: 100%;
+    height: 400px;
+    background-color: #f5f5f5;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+}
+
+.deleteButton {
+    background-color: #f44336;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    font-size: 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    display: inline-block;
+    text-align: center;
+    line-height: 1.5;
+}
+
+.deleteButton:hover {
+    background-color: #d32f2f;
+}
+
+.deleteButton:active {
+    background-color: #b71c1c;
+}
+
+.loading,
+.error {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    font-size: 18px;
+    color: #555;
+}
+
+.MuiDataGridRoot {
+    border: none;
+    background-color: #ffffff;
+    flex-grow: 1;
+    overflow: auto;
+}
+
+.pagination {
+    background-color: #f7f7f7;
+    border-radius: 8px;
+    padding: 10px;
+    margin-top: auto;
+}
+
+.MuiDataGridCell {
+    padding: 12px;
+    font-size: 14px;
+    color: #333;
+    background-color: #fff;
+    border-bottom: 1px solid #ddd;
+}
+
+.MuiDataGridColumnHeader {
+    background-color: #3f51b5;
+    color: #fff;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.MuiPaginationItemRoot {
+    color: #3f51b5;
+}
+
+.MuiPaginationItemRoot.Mui-selected {
+    background-color: #3f51b5;
+    color: white;
+}
+
+.MuiDataGridRow:hover {
+    background-color: #f1f1f1;
+    cursor: pointer;
+}
