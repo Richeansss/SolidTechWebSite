@@ -33,6 +33,12 @@ public class PCComponent {
         AVITO, OZON, DNS, ONLINETRADE, ALIEXPRESS, CITILINK;
     }
 
+    @Column(unique = true)
+    private String serialNumber;
+
+    private String eanCode;
+
+
     /**
      * Проверяет, находится ли компонент на складе (если не привязан к PC).
      */

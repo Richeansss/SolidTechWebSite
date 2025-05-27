@@ -23,3 +23,5 @@ spring:
       max-request-size: 10MB
       enabled: true
 
+jwt:
+  secret: R9u2eUoP3aJv7bYzT1xLkNhMqWeYtGhZ0pAsDfGvHtMnBcXq
