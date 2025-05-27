@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useCreateBrandMutation, useSearchBrandsByNameQuery } from '../../store/api/apiBrand';
 import { Brand } from '../../types/Brand';
 import styles from '../case/CreateCase.module.css';
+import LoadingButton from "../LoadingButton/LoadingButton.tsx";
 
 const AddBrandComponent: React.FC = () => {
     const [newBrand, setNewBrand] = useState<Partial<Brand>>({
@@ -111,9 +112,10 @@ const AddBrandComponent: React.FC = () => {
                     />
                     {newBrand.name && renderSuggestions()}
                 </div>
-                <button className={styles.buttonPrimary} type="submit" disabled={isLoading}>
-                    {isLoading ? 'Загружается...' : 'Добавить бренд'}
-                </button>
+                <LoadingButton
+                    isLoading={isLoading}
+                    text="Добавить бренд"
+                />
             </form>
 
             {renderMessage()}

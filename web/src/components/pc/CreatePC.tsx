@@ -3,6 +3,7 @@ import Select from "react-select";
 import { useCreatePCMutation, useUploadImagesMutation } from "../../store/api/apiPC";
 import { useGetPCComponentsByTypeQuery } from "../../store/api/apiPCComponent";
 import { PCComponent } from "../../types/PCComponent";
+import LoadingButton from "../LoadingButton/LoadingButton.tsx";
 
 const AddPCComponent: React.FC = () => {
     const [newPC, setNewPC] = useState({
@@ -147,9 +148,10 @@ const AddPCComponent: React.FC = () => {
                     />
                 </div>
 
-                <button type="submit" disabled={isLoading || isUploading} className="button-primary">
-                    {isLoading ? "Добавление..." : "Добавить ПК"}
-                </button>
+                <LoadingButton
+                    isLoading={isLoading || isUploading}
+                    text="Добавить ПК"
+                />
 
                 {isSuccess && <p>ПК успешно добавлен!</p>}
                 {isError && <p>Ошибка при добавлении ПК!</p>}

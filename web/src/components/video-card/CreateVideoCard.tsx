@@ -6,6 +6,7 @@ import { useUploadImageMutation } from "../../store/api/apiVideoCard"; // Имп
 import { useGetBrandsQuery } from "../../store/api/apiBrand";
 import { useGetLightTypesQuery } from "../../store/api/apiLighttype";
 import { LightType } from "../../types/LightType";
+import LoadingButton from "../LoadingButton/LoadingButton.tsx";
 
 const AddVideocardComponent: React.FC = () => {
     const [newVideocard, setNewVideocard] = useState<Partial<Videocard>>({
@@ -284,9 +285,10 @@ const AddVideocardComponent: React.FC = () => {
                         onChange={handleImageChange}
                     />
                 </div>
-                <button className="button-primary" type="submit" disabled={isLoading}>
-                    {isLoading || isUploading ? "Добавление..." : "Добавить видеокарту"}
-                </button>
+                <LoadingButton
+                    isLoading={isLoading || isUploading}
+                    text="Добавить видеокарту"
+                />
             </form>
         </div>
     );

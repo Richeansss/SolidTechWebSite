@@ -10,6 +10,7 @@ import "../case/CreateCase.module.css";
 import {useGetCoolersQuery} from "../../store/api/apiCooler.ts";
 import {useGetCasesQuery} from "../../store/api/apiCase.ts";
 import {useGetPowerSuppliesQuery} from "../../store/api/apiPowerSupply.ts";
+import LoadingButton from "../LoadingButton/LoadingButton.tsx";
 
 const AddPCComponent: React.FC = () => {
     const [newComponent, setNewComponent] = useState<PCComponent>({
@@ -192,9 +193,10 @@ const AddPCComponent: React.FC = () => {
                         placeholder="Выберите магазин"
                     />
                 </div>
-                <button className="button-primary" type="submit" disabled={isLoading}>
-                    {isLoading ? "Добавление..." : "Добавить компонент"}
-                </button>
+                <LoadingButton
+                    isLoading={isLoading}
+                    text="Добавить компонент"
+                />
             </form>
         </div>
     );

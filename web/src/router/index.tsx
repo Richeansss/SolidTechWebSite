@@ -9,9 +9,7 @@ import RoleProtectedRoute from './RoleProtectedRoute'
 export const routes = [
   {
     path: '/',
-    element: (
-      <RoleProtectedRoute element={<MainPage />} allowedRoles={['ADMIN', 'MODERATOR', 'USER']} />
-    ),
+    element: <MainPage />, // ✅ Доступна всем
   },
   {
     path: '/create',

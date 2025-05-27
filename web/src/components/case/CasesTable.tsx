@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { DataGrid, GridColDef, GridRowsProp, GridActionsCellItem } from '@mui/x-data-grid';
 import { useGetCasesQuery, useDeleteCaseMutation } from '../../store/api/apiCase';
-import styles from './CasesTable.module.css'; // модульный стиль
+import styles from './CasesTable.module.css';
+import Checkbox from "@mui/material/Checkbox"; // модульный стиль
 
 const CasesTable = () => {
     const { data, isLoading, isError } = useGetCasesQuery();
@@ -20,6 +21,7 @@ const CasesTable = () => {
                 funConnector: caseItem.funConnector || 'Not specified',
                 color: caseItem.color || 'Not specified',
                 glassType: caseItem.glassType || 'Not specified',
+                hasHub: caseItem.hasHub !== undefined ? caseItem.hasHub : false,
                 imageUrl: caseItem.imageUrl,
             }));
             setRows(formattedRows);
@@ -65,6 +67,16 @@ const CasesTable = () => {
         { field: 'color', headerName: 'Цвет', width: 180 },
         { field: 'glassType', headerName: 'Тип стекла', width: 180 },
         {
+            field: 'hasHub',
+            headerName: 'ARGB разъем',
+            width: 120,
+            renderCell: (params: any) => (
+                <Checkbox
+                    checked={params.value}
+                    disabled
+                />
+            )
+        },        {
             field: 'actions',
             headerName: 'Actions',
             width: 120,

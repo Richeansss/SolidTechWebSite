@@ -43,6 +43,8 @@ public class Case {
     @Column(name = "glass_type", nullable = false)
     private GlassType glassType;
 
+    private Boolean hasHub;
+
     @Column(name = "image_url")
     private String imageUrl;
 

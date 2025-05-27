@@ -8,6 +8,7 @@ import { useGetLightTypesQuery } from "../../store/api/apiLighttype";
 import styles from '../case/CreateCase.module.css';
 import {LightType} from "../../types/LightType";
 import {useUploadImageMutation} from "../../store/api/apiCooler";
+import LoadingButton from "../LoadingButton/LoadingButton.tsx";
 
 const AddCoolerComponent: React.FC = () => {
     const [newCooler, setNewCooler] = useState<Partial<Cooler>>({
@@ -196,9 +197,10 @@ const AddCoolerComponent: React.FC = () => {
                     <label>Изображение</label>
                     <input type="file" accept="image/*" onChange={handleImageChange}/>
                 </div>
-                <button className="button-primary" type="submit" disabled={isLoading || isUploading}>
-                    {isLoading ? "Добавление..." : "Добавить кулер"}
-                </button>
+                <LoadingButton
+                    isLoading={isLoading || isUploading}
+                    text="Добавить кулер"
+                />
             </form>
         </div>
     );

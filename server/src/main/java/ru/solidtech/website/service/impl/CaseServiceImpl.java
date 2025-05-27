@@ -76,7 +76,6 @@ public class CaseServiceImpl implements CaseService {
 
     @Override
     public String saveImage(Long id, MultipartFile file) throws IOException {
-        // Получаем видеокарту по ID
         Case casePc = findCaseById(id);
 
         if (casePc == null) {
@@ -92,7 +91,7 @@ public class CaseServiceImpl implements CaseService {
                 : "unknown_card"; // Если имя видеокарты null, использовать "unknown_card"
 
         // Название папки для сохранения
-        Path folderPath = Paths.get("src/main/resources/static/public/images/case_pc/" + casePcName);
+        Path folderPath = Paths.get("web/public/images/case_pc/" + casePcName);
 
         // Создание папки, если её ещё нет
         if (!Files.exists(folderPath)) {

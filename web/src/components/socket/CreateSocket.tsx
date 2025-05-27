@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Socket } from "../../types/Socket";
 import { useCreateSocketMutation } from "../../store/api/apiSocket";
+import LoadingButton from "../LoadingButton/LoadingButton.tsx";
 
 const AddSocketComponent: React.FC = () => {
     const [newSocket, setNewSocket] = useState<Partial<Socket>>({ name: "" });
@@ -46,9 +47,10 @@ const AddSocketComponent: React.FC = () => {
                         required
                     />
                 </div>
-                <button className="button-primary" type="submit" disabled={isLoading}>
-                    {isLoading ? "Добавление..." : "Добавить сокет"}
-                </button>
+                <LoadingButton
+                    isLoading={isLoading}
+                    text="Добавить сокет"
+                />
             </form>
         </div>
     );

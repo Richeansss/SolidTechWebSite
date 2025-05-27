@@ -5,7 +5,7 @@ import { useCreatePowerSupplyMutation } from "../../store/api/apiPowerSupply";
 import { useGetBrandsQuery } from "../../store/api/apiBrand";
 import "../case/CreateCase.module.css";
 import {useUploadImageMutation} from "../../store/api/apiPowerSupply";
-import styles from '../case/CreateCase.module.css';
+import LoadingButton from "../LoadingButton/LoadingButton.tsx";
 
 const AddPowerSupplyComponent: React.FC = () => {
     const [newPowerSupply, setNewPowerSupply] = useState<Partial<PowerSupply>>({
@@ -163,9 +163,10 @@ const AddPowerSupplyComponent: React.FC = () => {
                     <label>Изображение</label>
                     <input type="file" accept="image/*" onChange={handleImageChange}/>
                 </div>
-                <button className={styles.buttonPrimary} type="submit" disabled={isLoading || isUploading}>
-                    {isLoading ? "Добавление..." : "Добавить блок питания"}
-                </button>
+                <LoadingButton
+                    isLoading={isLoading || isUploading}
+                    text="Добавить блок питания"
+                />
             </form>
         </div>
     );

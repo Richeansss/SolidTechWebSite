@@ -3,7 +3,7 @@ import Select from "react-select";
 import {FormFactor, InterfaceType, StorageDevice, StorageType} from "../../types/StorageDevice"; // Тип StorageDevice
 import {useCreateStorageDeviceMutation, useUploadImageMutation} from "../../store/api/apiStorageDevice";
 import { useGetBrandsQuery } from "../../store/api/apiBrand";
-import styles from '../case/CreateCase.module.css';
+import LoadingButton from "../LoadingButton/LoadingButton.tsx";
 
 const AddStorageDeviceComponent: React.FC = () => {
     const [newStorageDevice, setNewStorageDevice] = useState<Partial<StorageDevice>>({
@@ -224,11 +224,10 @@ const AddStorageDeviceComponent: React.FC = () => {
                     <label>Изображение</label>
                     <input type="file" accept="image/*" onChange={handleImageChange}/>
                 </div>
-                <div>
-                    <button className="button-primary" type="submit" disabled={isLoading || isUploading}>
-                        {isLoading || isUploading ? "Добавление..." : "Добавить накопитель"}
-                    </button>
-                </div>
+                <LoadingButton
+                    isLoading={isLoading || isUploading}
+                    text="Добавить устройство хранения"
+                />
             </form>
         </div>
     );

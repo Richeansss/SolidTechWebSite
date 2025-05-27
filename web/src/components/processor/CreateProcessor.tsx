@@ -5,9 +5,9 @@ import { useCreateProcessorMutation } from "../../store/api/apiProcessor";
 import { useGetBrandsQuery } from "../../store/api/apiBrand";
 import { useGetSocketsQuery } from "../../store/api/apiSocket";
 //todo
-import styles from '../case/CreateCase.module.css';
 import {RamType} from "../../types/Ram";
 import {useUploadImageMutation} from "../../store/api/apiProcessor";
+import LoadingButton from "../LoadingButton/LoadingButton.tsx";
 
 const AddProcessorComponent: React.FC = () => {
     const [newProcessor, setNewProcessor] = useState<Partial<Processor>>({
@@ -198,9 +198,10 @@ const AddProcessorComponent: React.FC = () => {
                     <label>Изображение</label>
                     <input type="file" accept="image/*" onChange={handleImageChange}/>
                 </div>
-                <button className="button-primary" type="submit" disabled={isLoading || isUploading}>
-                    {isLoading ? "Добавление..." : "Добавить процессор"}
-                </button>
+                <LoadingButton
+                    isLoading={isLoading || isUploading}
+                    text="Добавить процессор"
+                />
             </form>
         </div>
     );

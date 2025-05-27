@@ -8,6 +8,7 @@ import { useGetSocketsQuery } from "../../store/api/apiSocket";
 import { useGetChipsetsQuery } from "../../store/api/apiChipset";
 import styles from '../case/CreateCase.module.css';
 import {useUploadImageMutation} from "../../store/api/apiMotherBoard";
+import LoadingButton from "../LoadingButton/LoadingButton.tsx";
 
 const AddMotherBoardComponent: React.FC = () => {
     // @ts-ignore
@@ -248,9 +249,13 @@ const AddMotherBoardComponent: React.FC = () => {
                     <label>Изображение</label>
                     <input type="file" accept="image/*" onChange={handleImageChange}/>
                 </div>
-                <button className={styles.buttonPrimary} type="submit" disabled={isLoading || isUploading}>
-                    {isLoading ? "Добавление..." : "Добавить материнскую плату"}
-                </button>
+                <LoadingButton
+                    isLoading={isLoading || isUploading}
+                    text="Добавить корпус"
+                    loadingText="Загружается..."
+                    type="submit"
+                    className={styles.buttonPrimary}
+                />
             </form>
         </div>
     );

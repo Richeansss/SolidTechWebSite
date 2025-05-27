@@ -6,6 +6,7 @@ import {Case} from '../../types/Case';
 import styles from './CreateCase.module.css';
 import Select from "react-select";
 import {LightType} from "../../types/LightType";
+import LoadingButton from "../LoadingButton/LoadingButton.tsx";
 
 const AddCaseComponent: React.FC = () => {
     const [newCase, setNewCase] = useState<Partial<Case>>({
@@ -17,6 +18,7 @@ const AddCaseComponent: React.FC = () => {
         funConnector: 0,
         color: undefined,
         glassType: undefined,
+        hasHub: false,
     });
     const [image, setImage] = useState<File | null>(null);
     const [uploadImage, {isLoading: isUploading}] = useUploadImageMutation();
@@ -235,6 +237,21 @@ const AddCaseComponent: React.FC = () => {
                         value={glassTypeOptions.find(opt => opt.value === newCase.glassType) || null}
                         onChange={opt => handleChange("glassType", opt?.value)}
                         placeholder="Выберите тип стекла"/>
+                <div>
+                    <label>Подсветка ARGB</label>
+                    <input
+                        type="checkbox"
+                        name="has_argb"
+                        checked={newCase.hasHub || false}
+                        onChange={(e) => {
+                            setNewCase((prev) => ({
+                                ...prev,
+                                hasHub: e.target.checked,
+                            }));
+                        }}
+                        className={styles.checkboxStyled}
+                    />
+                </div>
                 <label>Изображение</label>
                 <div
                     className={styles.imageDropzone}
@@ -258,9 +275,10 @@ const AddCaseComponent: React.FC = () => {
                         style={{display: 'none'}}
                     />
                 </div>
-                <button className={styles.buttonPrimary} type="submit" disabled={isLoading || isUploading}>
-                    {isLoading ? 'Загружается...' : 'Добавить корпус'}
-                </button>
+                <LoadingButton
+                    isLoading={isLoading || isUploading}
+                    text="Добавить корпус"
+                />
             </form>
             {message && <p>{message}</p>}
         </div>

@@ -5,8 +5,8 @@ import {useCreateRamMutation, useUploadImageMutation} from "../../store/api/apiR
 import { useGetBrandsQuery } from "../../store/api/apiBrand";
 import { useGetLightTypesQuery } from "../../store/api/apiLighttype";
 //todo
-import styles from '../case/CreateCase.module.css';
 import { LightType } from "../../types/LightType";
+import LoadingButton from "../LoadingButton/LoadingButton.tsx";
 
 
 const AddRamComponent: React.FC = () => {
@@ -216,11 +216,10 @@ const AddRamComponent: React.FC = () => {
                     <label>Изображение</label>
                     <input type="file" accept="image/*" onChange={handleImageChange}/>
                 </div>
-                <div>
-                    <button className="button-primary" type="submit" disabled={isLoading || isUploading}>
-                        {isLoading ? "Добавление..." : "Добавить оперативную память"}
-                    </button>
-                </div>
+                <LoadingButton
+                    isLoading={isLoading || isUploading}
+                    text="Добавить оперативную память"
+                />
             </form>
         </div>
     );

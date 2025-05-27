@@ -3,6 +3,7 @@ import { Chipset } from "../../types/Chipset";
 import { useCreateChipsetMutation } from "../../store/api/apiChipset";
 import {useGetSocketsQuery} from "../../store/api/apiSocket";
 import Select from "react-select";
+import LoadingButton from "../LoadingButton/LoadingButton.tsx";
 
 const AddChipsetComponent: React.FC = () => {
     const [newChipset, setNewChipset] = useState<Partial<Chipset>>({ name: "" });
@@ -83,9 +84,10 @@ const AddChipsetComponent: React.FC = () => {
                         placeholder="Выберите сокет"
                     />
                 </div>
-                <button className="button-primary" type="submit" disabled={isLoading}>
-                    {isLoading ? "Добавление..." : "Добавить чипсет"}
-                </button>
+                <LoadingButton
+                    isLoading={isLoading}
+                    text="Добавить чипсет"
+                />
             </form>
         </div>
     );

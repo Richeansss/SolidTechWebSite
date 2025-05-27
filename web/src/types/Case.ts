@@ -11,5 +11,6 @@ export interface Case {
     color: string;
     glassType: string;
     imageUrl?: string;
+    hasHub: boolean;
     [key: string]: any; // Для добавления дополнительных полей, если потребуется
 }
