@@ -39,7 +39,10 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     // Публичные эндпоинты (должны совпадать с SecurityConfig)
     private static final String[] PUBLIC_ENDPOINTS = {
             "/api/v3/auth/*",
+            "/images/**"
     };
+
+
 
 
     @Override
@@ -47,6 +50,11 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         String requestURI = request.getRequestURI();
+
+        if ("GET".equals(request.getMethod()) && "/api/v1/pc".equals(request.getRequestURI())) {
+            chain.doFilter(request, response);
+            return;
+        }
 
         // Пропускаем публичные эндпоинты без проверки JWT
         if (isPublicEndpoint(requestURI)) {
