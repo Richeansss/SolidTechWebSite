@@ -45,7 +45,7 @@ export const PCList: React.FC = () => {
                         {pc.imagesUrl.length > 0 ? (
                             <>
                                 <img
-                                    src={`http://localhost:3000${pc.imagesUrl[0]}`} // Используем первое изображение
+                                    src={`http://localhost:5173${pc.imagesUrl}`} // Используем первое изображение
                                     alt={`{pc}`}
                                     className={styles.mainPcImage}
                                 />
@@ -58,23 +58,23 @@ export const PCList: React.FC = () => {
                         <h3>{pc.price} ₽</h3>
                         <div className={styles.infoBox}>
                             <img src="/icons/gpu.png" alt="GPU" className={styles.iconImage}/>
-                            <span>Видеокарта<br/> {pc.videocard.name} GB</span>
+                            <span>Видеокарта<br/> {pc.videocard.details.name} GB</span>
                         </div>
                         <div className={styles.infoBox}>
                             <img src="/icons/cpu.png" alt="CPU" className={styles.iconImage}/>
-                            <span>Процессор<br/> {pc.processor.name}</span>
+                            <span>Процессор<br/> {pc.processor.details.name}</span>
                         </div>
                         <div className={styles.infoBox}>
                             <img src="/icons/motherboard.png" alt="Motherboard" className={styles.iconImage}/>
-                            <span>Материнская плата<br/> {pc.motherBoard.name}</span>
+                            <span>Материнская плата<br/> {pc.motherBoard.details.name}</span>
                         </div>
                         <div className={styles.infoBox}>
                             <img src="/icons/ram.png" alt="RAM" className={styles.iconImage}/>
-                            <span>Оперативная память<br/> {pc.ram.amountRam * pc.ram.moduleCapacity}GB {pc.ram.name}</span>
+                            <span>Оперативная память<br/> {pc.ram.details.amountRam * pc.ram.details.moduleCapacity}GB {pc.ram.name}</span>
                         </div>
                         <div className={styles.infoBox}>
                             <img src="/icons/ssd.png" alt="HDD" className={styles.iconImage}/>
-                            <span>Накопитель<br/> {pc.storageDevice.capacityGb}GB {pc.storageDevice.name}</span>
+                            <span>Накопитель<br/> {pc.storageDevice.details.capacityGb}GB {pc.storageDevice.name}</span>
                         </div>
                     </div>
                 </div>
