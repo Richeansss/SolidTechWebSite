@@ -6,5 +6,11 @@ export default defineConfig({
   plugins: [react()],
   server: {
     host: true, // или '0.0.0.0'
+    // allowedHosts: ['solid-tech-tomsk.ru'],
+    // hmr: {
+    //   host: 'solid-tech-tomsk.ru',
+    //   protocol: 'ws', // или 'wss' если HTTPS
+    //   port: 5173
+    // }
   },
 })
