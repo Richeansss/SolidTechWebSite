@@ -18,4 +18,5 @@ public interface RamService {
     void deleteRam(Long id);
 
     String saveImage(Long id, MultipartFile file) throws IOException;
+
 }

@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -45,7 +46,8 @@ public class SecurityConfig {
     // Пути, доступные всем (в том числе неавторизованным)
     private static final String[] PUBLIC_ENDPOINTS = {
             "/api/v3/auth/*",
-            "/error"
+            "/error",
+            "/images/**"
     };
 
     // Доступ только ADMIN и MODERATOR
@@ -95,6 +97,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers(HttpMethod.GET, "/api/v1/pc").permitAll()
                         .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
                         .requestMatchers(ADMIN_MODERATOR_ENDPOINTS).hasAnyRole("ADMIN", "MODERATOR")
                         .requestMatchers(AUTHENTICATED_ENDPOINTS).hasAnyRole("ADMIN", "MODERATOR", "USER")

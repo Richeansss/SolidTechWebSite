@@ -1,7 +1,6 @@
 package ru.solidtech.website.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.solidtech.website.dto.PCDto;
@@ -28,14 +27,6 @@ public class PCServiceImpl implements PCService {
 
     private final PCComponentRepository pcComponentRepository;
     private final PCRepository pcRepository;
-    private final MotherBoardRepository motherBoardRepository;
-    private final ProcessorRepository processorRepository;
-    private final RamRepository ramRepository;
-    private final CoolerRepository coolerRepository;
-    private final CaseRepository caseRepository;
-    private final VideocardRepository videocardRepository;
-    private final StorageDeviceRepository storageDeviceRepository;
-    private final PowerSupplyRepository powerSupplyRepository;
     private final ImageRepository imageRepository;
 
     public List<PCDto> findAllPCs() {
@@ -162,7 +153,7 @@ public class PCServiceImpl implements PCService {
         }
 
         List<String> imageUrls = new ArrayList<>();
-        Path folderPath = Paths.get("src/main/resources/static/public/images/pc/" + pcId);
+        Path folderPath = Paths.get("web/public/images/pc/" + pcId);
         Files.createDirectories(folderPath);
 
         for (MultipartFile file : files) {
