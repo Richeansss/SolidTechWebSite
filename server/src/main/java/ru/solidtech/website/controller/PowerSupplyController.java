@@ -3,14 +3,18 @@ package ru.solidtech.website.controller;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.solidtech.website.model.PowerSupply;
+import ru.solidtech.website.repository.PowerSupplyRepository;
 import ru.solidtech.website.response.ResponseBuilder;
 import ru.solidtech.website.service.PowerSupplyService;
+import ru.solidtech.website.service.util.ImageService;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -21,6 +25,10 @@ public class PowerSupplyController {
 
     private static final Logger logger = LoggerFactory.getLogger(PowerSupplyController.class);
     private final PowerSupplyService powerSupplyService;
+    private final PowerSupplyRepository powerSupplyRepository;
+
+    @Autowired
+    private ImageService imageService;
 
     @GetMapping
     public ResponseEntity<Map<String, Object>> findAllPowerSupplies() {
@@ -73,15 +81,18 @@ public class PowerSupplyController {
     }
 
     @PostMapping("/{id}/upload-image")
-    public ResponseEntity<Map<String, Object>> uploadImage(
-            @PathVariable Long id,
-            @RequestParam("file") MultipartFile file) {
+    public ResponseEntity<Map<String, Object>> uploadImage(@PathVariable Long id, @RequestParam MultipartFile file) {
         try {
-            String imageUrl = powerSupplyService.saveImage(id, file);
+            String imageUrl = imageService.saveImage(
+                    id,
+                    file,
+                    powerSupplyRepository::findById,
+                    PowerSupply::setImageUrl,
+                    powerSupplyRepository::save,
+                    "power-supply"
+            );
             return ResponseBuilder.buildResponse(HttpStatus.OK, "Изображение успешно загружено", imageUrl);
-        } catch (Exception e) {
-            logger.error("Ошибка при загрузке изображения для видеокарты с ID: {}", id, e);
-            return ResponseBuilder.buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Не удалось загрузить изображение");
-        }
+        } catch (IOException e) {
+            return ResponseBuilder.buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Не удалось загрузить изображение");        }
     }
 }
