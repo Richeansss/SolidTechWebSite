@@ -7,7 +7,7 @@ import LoadingButton from "../LoadingButton/LoadingButton.tsx";
 
 const AddChipsetComponent: React.FC = () => {
     const [newChipset, setNewChipset] = useState<Partial<Chipset>>({ name: "" });
-    const [createChipset, { isLoading, isSuccess, isError }] = useCreateChipsetMutation();
+    const [createChipset, { isLoading}] = useCreateChipsetMutation();
     const { data: existingSockets } = useGetSocketsQuery();
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {

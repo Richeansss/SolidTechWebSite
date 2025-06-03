@@ -23,12 +23,12 @@ const AddCaseComponent: React.FC = () => {
     const [image, setImage] = useState<File | null>(null);
     const [uploadImage, {isLoading: isUploading}] = useUploadImageMutation();
 
-    const [createCase, {isLoading, isSuccess, isError, error}] = useCreateCaseMutation();
+    const [createCase, {isLoading,}] = useCreateCaseMutation();
 
     const [message, setMessage] = useState<string | null>(null);
 
     const {data: existingBrands} = useGetBrandsQuery();
-    const {data: lightTypes, isLoading: isLoadingLightTypes} = useGetLightTypesQuery();
+    const {data: lightTypes} = useGetLightTypesQuery();
 
     const colorOptions = [
         {value: "BLACK", label: "Черный"},

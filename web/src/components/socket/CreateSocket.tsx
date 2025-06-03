@@ -5,7 +5,7 @@ import LoadingButton from "../LoadingButton/LoadingButton.tsx";
 
 const AddSocketComponent: React.FC = () => {
     const [newSocket, setNewSocket] = useState<Partial<Socket>>({ name: "" });
-    const [createSocket, { isLoading, isSuccess, isError }] = useCreateSocketMutation();
+    const [createSocket, { isLoading }] = useCreateSocketMutation();
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;

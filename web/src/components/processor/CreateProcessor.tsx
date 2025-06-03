@@ -4,8 +4,6 @@ import { Processor } from "../../types/Processor"; // Импортируем и�
 import { useCreateProcessorMutation } from "../../store/api/apiProcessor";
 import { useGetBrandsQuery } from "../../store/api/apiBrand";
 import { useGetSocketsQuery } from "../../store/api/apiSocket";
-//todo
-import {RamType} from "../../types/Ram";
 import {useUploadImageMutation} from "../../store/api/apiProcessor";
 import LoadingButton from "../LoadingButton/LoadingButton.tsx";
 
@@ -22,9 +20,9 @@ const AddProcessorComponent: React.FC = () => {
 
     const [image, setImage] = useState<File | null>(null);
 
-    const [createProcessor, { isLoading, isSuccess, isError}] = useCreateProcessorMutation();
+    const [createProcessor, { isLoading}] = useCreateProcessorMutation();
     const { data: existingBrands } = useGetBrandsQuery();
-    const { data: socketTypes, isLoading: isSearchingSockets } = useGetSocketsQuery();
+    const { data: socketTypes,  } = useGetSocketsQuery();
     const [uploadImage, { isLoading: isUploading }] = useUploadImageMutation(); // Мутация для загрузки изображения
 
     const brandOptions = useMemo(() =>
@@ -39,14 +37,6 @@ const AddProcessorComponent: React.FC = () => {
             value: socket.id,
             label: socket.name,
         })), [socketTypes]
-    );
-
-    const ramOptions = useMemo(() =>
-            Object.values(RamType).map((ramType) => ({
-                value: ramType,
-                label: ramType,
-            })),
-        []
     );
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -71,15 +61,6 @@ const AddProcessorComponent: React.FC = () => {
             setNewProcessor((prevProcessor) => ({
                 ...prevProcessor,
                 socket: { id: selectedOption.value, name: selectedOption.label },
-            }));
-        }
-    };
-
-    const handleRamTypeChange = (selectedOption: { value: RamType; label: string } | null) => {
-        if (selectedOption) {
-            setNewProcessor((prevProcessor) => ({
-                ...prevProcessor,
-                typeRam: selectedOption.value,
             }));
         }
     };

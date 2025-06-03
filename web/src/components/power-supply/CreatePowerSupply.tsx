@@ -17,7 +17,7 @@ const AddPowerSupplyComponent: React.FC = () => {
     });
     const [image, setImage] = useState<File | null>(null);
 
-    const [createPowerSupply, { isLoading, isSuccess, isError }] = useCreatePowerSupplyMutation();
+    const [createPowerSupply, { isLoading}] = useCreatePowerSupplyMutation();
     const { data: existingBrands } = useGetBrandsQuery();
     const [uploadImage, { isLoading: isUploading }] = useUploadImageMutation(); // Мутация для загрузки изображения
 

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useCreateLightTypeMutation, useSearchLightTypeByNameQuery } from '../../store/api/apiLighttype';
 import { LightType } from '../../types/LightType';
-import styles from '../case/CreateCase.module.css';
 import LoadingButton from "../LoadingButton/LoadingButton.tsx";
+
 const AddLightTypeComponent: React.FC = () => {
     const [newLightType, setNewLightType] = useState<Partial<LightType>>({
         name: '',

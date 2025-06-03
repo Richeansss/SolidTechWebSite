@@ -4,8 +4,6 @@ import { Cooler } from "../../types/Cooler";
 import { useCreateCoolerMutation } from "../../store/api/apiCooler";
 import { useGetBrandsQuery } from "../../store/api/apiBrand";
 import { useGetLightTypesQuery } from "../../store/api/apiLighttype";
-//todo
-import styles from '../case/CreateCase.module.css';
 import {LightType} from "../../types/LightType";
 import {useUploadImageMutation} from "../../store/api/apiCooler";
 import LoadingButton from "../LoadingButton/LoadingButton.tsx";
@@ -28,8 +26,8 @@ const AddCoolerComponent: React.FC = () => {
         }
     };
 
-    const [createCooler, { isLoading, isSuccess, isError }] = useCreateCoolerMutation();
-    const { data: lightTypes, isLoading: isLoadingLightTypes } = useGetLightTypesQuery();
+    const [createCooler, { isLoading }] = useCreateCoolerMutation();
+    const { data: lightTypes, } = useGetLightTypesQuery();
     const { data: existingBrands } = useGetBrandsQuery();
 
     // Мемоизация списка брендов

@@ -25,7 +25,7 @@ const AddVideocardComponent: React.FC = () => {
     // Стейт для загрузки изображения
     const [image, setImage] = useState<File | null>(null);
 
-    const [createVideocard, { isLoading, isSuccess, isError }] = useCreateVideocardMutation();
+    const [createVideocard, { isLoading }] = useCreateVideocardMutation();
     const { data: existingBrands } = useGetBrandsQuery();
     const { data: lightTypes } = useGetLightTypesQuery();
     const [uploadImage, { isLoading: isUploading }] = useUploadImageMutation(); // Мутация для загрузки изображения

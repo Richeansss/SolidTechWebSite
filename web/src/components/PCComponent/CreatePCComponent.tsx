@@ -6,11 +6,11 @@ import { useGetProcessorsQuery } from "../../store/api/apiProcessor";
 import { useGetRamsQuery } from "../../store/api/apiRam";
 import { useGetMotherBoardsQuery } from "../../store/api/apiMotherBoard";
 import { useGetStorageDevicesQuery } from "../../store/api/apiStorageDevice";
-import "../case/CreateCase.module.css";
 import {useGetCoolersQuery} from "../../store/api/apiCooler.ts";
 import {useGetCasesQuery} from "../../store/api/apiCase.ts";
 import {useGetPowerSuppliesQuery} from "../../store/api/apiPowerSupply.ts";
 import LoadingButton from "../LoadingButton/LoadingButton.tsx";
+import {useGetVideocardsQuery} from "../../store/api/apiVideoCard.ts";
 
 const AddPCComponent: React.FC = () => {
     const [newComponent, setNewComponent] = useState<PCComponent>({
@@ -31,9 +31,12 @@ const AddPCComponent: React.FC = () => {
     const { data: coolers } = useGetCoolersQuery();
     const { data: cases } = useGetCasesQuery();
     const { data: powerSupplies } = useGetPowerSuppliesQuery();
+    const { data: videocards } = useGetVideocardsQuery();
 
     const componentData = useMemo(() => {
         switch (newComponent.componentType) {
+            case ComponentType.VIDEOCARD:
+                return videocards;
             case ComponentType.PROCESSOR:
                 return processors;
             case ComponentType.RAM:

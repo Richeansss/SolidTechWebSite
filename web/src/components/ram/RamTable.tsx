@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { DataGrid, GridColDef, GridRowsProp, GridActionsCellItem } from '@mui/x-data-grid';
 import { useGetRamsQuery, useDeleteRamMutation } from '../../store/api/apiRam';
+import styles from "../case/CasesTable.module.css";
 
 const RamTable = () => {
     const { data, isLoading, isError } = useGetRamsQuery(); // Получаем данные о RAM
@@ -51,22 +52,23 @@ const RamTable = () => {
         { field: 'brand', headerName: 'Бренд', width: 150 },
         { field: 'amountRam', headerName: 'Кол-во модулей', width: 150 },
         { field: 'moduleCapacity', headerName: 'Память одного модуля (GB)', width: 250 },
-        { field: 'brand', headerName: 'Бренд', width: 150 },
         { field: 'typeRam', headerName: 'Тип памяти', width: 150 },
         { field: 'jdek', headerName: 'Частота (MHz)', width: 180 },
         { field: 'timing', headerName: 'Тайминги', width: 180 },
         { field: 'lightType', headerName: 'Тип подсветки', width: 180,  },
         {
             field: 'actions',
+            type: 'actions',
             headerName: 'Actions',
-            width: 120,
-            renderCell: (params) => (
+            width: 100,
+            getActions: (params) => [
                 <GridActionsCellItem
-                    icon={<button className="delete-button">Delete</button>}
+                    icon={<span className={styles.deleteButton}>🗑️</span>}
                     label="Delete"
                     onClick={() => handleDelete(params.row.id)}
+                    showInMenu={false}
                 />
-            ),
+            ]
         },
     ];
 
@@ -93,6 +95,7 @@ const RamTable = () => {
                 rows={rows}
                 columns={columns}
                 pagination
+                className={styles.dataGrid}
             />
         </div>
     );

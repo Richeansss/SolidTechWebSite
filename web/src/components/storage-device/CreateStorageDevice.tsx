@@ -70,7 +70,7 @@ const AddStorageDeviceComponent: React.FC = () => {
         }));
     };
 
-    const [createStorageDevice, { isLoading, isSuccess, isError }] = useCreateStorageDeviceMutation();
+    const [createStorageDevice, { isLoading }] = useCreateStorageDeviceMutation();
     const [uploadImage, { isLoading: isUploading }] = useUploadImageMutation(); // Мутация для загрузки изображения
     const { data: existingBrands } = useGetBrandsQuery();
 

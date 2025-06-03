@@ -4,7 +4,6 @@ import { Ram, RamType } from "../../types/Ram"; // Импортируем инт
 import {useCreateRamMutation, useUploadImageMutation} from "../../store/api/apiRam";
 import { useGetBrandsQuery } from "../../store/api/apiBrand";
 import { useGetLightTypesQuery } from "../../store/api/apiLighttype";
-//todo
 import { LightType } from "../../types/LightType";
 import LoadingButton from "../LoadingButton/LoadingButton.tsx";
 
@@ -23,7 +22,7 @@ const AddRamComponent: React.FC = () => {
 
     const [image, setImage] = useState<File | null>(null);
 
-    const [createRam, { isLoading, isSuccess, isError }] = useCreateRamMutation();
+    const [createRam, { isLoading }] = useCreateRamMutation();
     const { data: existingBrands } = useGetBrandsQuery();
     const { data: lightTypes } = useGetLightTypesQuery();
     const [uploadImage, { isLoading: isUploading }] = useUploadImageMutation(); // Мутация для загрузки изображения

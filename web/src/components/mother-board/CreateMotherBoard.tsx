@@ -27,10 +27,10 @@ const AddMotherBoardComponent: React.FC = () => {
     const [image, setImage] = useState<File | null>(null);
     const [uploadImage, { isLoading: isUploading }] = useUploadImageMutation(); // Мутация для загрузки изображения
 
-    const [createMotherBoard, { isLoading, isSuccess, isError }] = useCreateMotherBoardMutation();
+    const [createMotherBoard, { isLoading }] = useCreateMotherBoardMutation();
     const { data: existingBrands } = useGetBrandsQuery();
-    const { data: socketTypes, isLoading: isSearchingSockets } = useGetSocketsQuery();
-    const { data: chipsetTypes, isLoading: isSearchingChipsets } = useGetChipsetsQuery();
+    const { data: socketTypes } = useGetSocketsQuery();
+    const { data: chipsetTypes } = useGetChipsetsQuery();
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files ? e.target.files[0] : null;
@@ -252,8 +252,6 @@ const AddMotherBoardComponent: React.FC = () => {
                 <LoadingButton
                     isLoading={isLoading || isUploading}
                     text="Добавить корпус"
-                    loadingText="Загружается..."
-                    type="submit"
                     className={styles.buttonPrimary}
                 />
             </form>
