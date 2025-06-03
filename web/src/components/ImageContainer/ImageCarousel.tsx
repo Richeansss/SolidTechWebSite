@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { FastAverageColor } from 'fast-average-color';
 import styles from './ImageCarousel.module.css';
 
 interface ImageCarouselProps {
@@ -8,7 +9,20 @@ interface ImageCarouselProps {
 
 const ImageCarousel: React.FC<ImageCarouselProps> = ({ images, interval = 15000 }) => {
     const [currentIndex, setCurrentIndex] = useState(0);
+    const [bgColor, setBgColor] = useState('#000');
     const intervalRef = useRef<NodeJS.Timeout | null>(null);
+
+    useEffect(() => {
+        const fac = new FastAverageColor();
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        img.src = images[currentIndex].src;
+
+        img.onload = () => {
+            const color = fac.getColor(img);
+            setBgColor(color.hex);
+        };
+    }, [currentIndex, images]);
 
     useEffect(() => {
         const changeImage = () => {
@@ -44,7 +58,19 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({ images, interval = 15000 
                 style={{ transform: `translateX(-${currentIndex * 100}%)` }}
             >
                 {images.map((image, index) => (
-                    <div key={index} className={styles.carouselImage}>
+                    <div
+                        key={index}
+                        className={styles.carouselImage}
+                        style={{ backgroundColor: bgColor }}
+                    >
+                        {/* Размытие фона */}
+                        <div
+                            className={styles.imageBackground}
+                            style={{
+                                backgroundImage: `url(${image.src})`,
+                                filter: 'blur(25px)',
+                            }}
+                        />
                         <img src={image.src} alt={`Slide ${index + 1}`} />
                         <div className={styles.carouselText}>
                             <h2>{image.caption}</h2>

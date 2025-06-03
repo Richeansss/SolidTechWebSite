@@ -9,7 +9,7 @@ import RoleProtectedRoute from './RoleProtectedRoute'
 export const routes = [
   {
     path: '/',
-    element: <MainPage />, // ✅ Доступна всем
+    element: <MainPage />,
   },
   {
     path: '/create',
