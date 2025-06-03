@@ -6,11 +6,11 @@ import Cookies from "js-cookie"; // Тип для стандартного от�
 
 const API_URL = `${BASE_URL}/api/v1/`;
 
-export const apiStorageDevice = createApi({
-    reducerPath: 'apiStorageDevice',
+export const storageDeviceApi = createApi({
+    reducerPath: 'storageDeviceApi',
     baseQuery: fetchBaseQuery({
         baseUrl: API_URL, // URL вашего API
-        prepareHeaders: (headers, { getState }) => {
+        prepareHeaders: (headers) => {
             const token = Cookies.get('jwt');
             if (token) {
                 headers.set('Authorization', `Bearer ${token}`);
@@ -28,7 +28,7 @@ export const apiStorageDevice = createApi({
         getStorageDeviceById: builder.query<StorageDevice, number>({
             query: (id) => `storage-devices/${id}`,
             transformResponse: (response: ApiResponse<StorageDevice>) => response.data as StorageDevice,
-            providesTags: (result, error, id) => [{ type: 'StorageDevice', id }],
+            providesTags: (_result, _error, id) => [{ type: 'StorageDevice', id }],
         }),
         createStorageDevice: builder.mutation<StorageDevice, Partial<StorageDevice>>({
             query: (newStorageDevice) => ({
@@ -46,14 +46,14 @@ export const apiStorageDevice = createApi({
                 body: updatedStorageDevice,
             }),
             transformResponse: (response: ApiResponse<StorageDevice>) => response.data as StorageDevice,
-            invalidatesTags: (result, error, { id }) => [{ type: 'StorageDevice', id }],
+            invalidatesTags: (_result, _error, { id }) => [{ type: 'StorageDevice', id }],
         }),
         deleteStorageDevice: builder.mutation<void, number>({
             query: (id) => ({
                 url: `storage-devices/${id}`,
                 method: 'DELETE',
             }),
-            invalidatesTags: (result, error, id) => [{ type: 'StorageDevice', id }],
+            invalidatesTags: (_result, _error, id) => [{ type: 'StorageDevice', id }],
         }),
         uploadImage: builder.mutation<string, { id: number; file: File }>({
             query: ({ id, file }) => {
@@ -68,7 +68,7 @@ export const apiStorageDevice = createApi({
                 };
             },
             transformResponse: (response: ApiResponse<string>) => response.data as string,
-            invalidatesTags: (result, error, { id }) => [{ type: 'StorageDevice', id }],
+            invalidatesTags: (_result, _error, { id }) => [{ type: 'StorageDevice', id }],
         }),
     }),
 });
@@ -80,4 +80,4 @@ export const {
     useUpdateStorageDeviceMutation,
     useDeleteStorageDeviceMutation,
     useUploadImageMutation
-} = apiStorageDevice;
+} = storageDeviceApi;

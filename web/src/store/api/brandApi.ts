@@ -6,11 +6,11 @@ import Cookies from 'js-cookie';
 
 const API_URL = `${BASE_URL}/api/v1/`;
 
-export const apiBrand = createApi({
-    reducerPath: 'apiBrand',
+export const brandApi = createApi({
+    reducerPath: 'brandApi',
     baseQuery: fetchBaseQuery({
         baseUrl: API_URL,
-        prepareHeaders: (headers, { getState }) => {
+        prepareHeaders: (headers) => {
             headers.set('Content-Type', 'application/json');
             // Пример добавления токена (если есть авторизация)
             const token = Cookies.get('jwt');
@@ -30,7 +30,7 @@ export const apiBrand = createApi({
         getBrandById: builder.query<Brand, number>({
             query: (id) => `brand/${id}`,
             transformResponse: (response: ApiResponse<Brand>) => response.data as Brand, // Убедитесь, что data не null
-            providesTags: (result, error, id) => [{ type: 'Brand', id }],
+            providesTags: (_result, _error, id) => [{ type: 'Brand', id }],
         }),
         createBrand: builder.mutation<Brand, Partial<Brand>>({
             query: (newBrand) => ({
@@ -48,14 +48,14 @@ export const apiBrand = createApi({
                 body: updatedBrand,
             }),
             transformResponse: (response: ApiResponse<Brand>) => response.data as Brand,
-            invalidatesTags: (result, error, { id }) => [{ type: 'Brand', id }],
+            invalidatesTags: (_result, _error, { id }) => [{ type: 'Brand', id }],
         }),
         deleteBrand: builder.mutation<void, number>({
             query: (id) => ({
                 url: `brand/${id}`,
                 method: 'DELETE',
             }),
-            invalidatesTags: (result, error, id) => [{ type: 'Brand', id }],
+            invalidatesTags: (_result, _error, id) => [{ type: 'Brand', id }],
         }),
         // Новый эндпоинт для поиска брендов по имени
         searchBrandsByName: builder.query<Brand[], string>({
@@ -73,4 +73,4 @@ export const {
     useUpdateBrandMutation,
     useDeleteBrandMutation,
     useSearchBrandsByNameQuery,  // Экспортируем хук для поиска
-} = apiBrand;
+} = brandApi;

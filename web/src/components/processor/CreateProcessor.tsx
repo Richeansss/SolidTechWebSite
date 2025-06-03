@@ -1,10 +1,10 @@
 import React, { useState, useMemo } from "react";
 import Select from "react-select";
 import { Processor } from "../../types/Processor"; // Импортируем интерфейс Processor и RamType
-import { useCreateProcessorMutation } from "../../store/api/apiProcessor";
-import { useGetBrandsQuery } from "../../store/api/apiBrand";
-import { useGetSocketsQuery } from "../../store/api/apiSocket";
-import {useUploadImageMutation} from "../../store/api/apiProcessor";
+import { useCreateProcessorMutation } from "../../store/api/processorApi.ts";
+import { useGetBrandsQuery } from "../../store/api/brandApi.ts";
+import { useGetSocketsQuery } from "../../store/api/socketApi.ts";
+import {useUploadImageMutation} from "../../store/api/processorApi.ts";
 import LoadingButton from "../LoadingButton/LoadingButton.tsx";
 
 const AddProcessorComponent: React.FC = () => {

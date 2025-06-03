@@ -6,11 +6,11 @@ import Cookies from 'js-cookie';
 
 const API_URL = `${BASE_URL}/api/v1/`;
 
-export const apiCase = createApi({
-    reducerPath: 'apiCase',  // Уникальное имя для apiCase
+export const caseApi = createApi({
+    reducerPath: 'caseApi',  // Уникальное имя для caseApi
     baseQuery: fetchBaseQuery({
         baseUrl: API_URL, // Убедитесь, что это соответствует вашему серверу
-        prepareHeaders: (headers, { getState }) => {
+        prepareHeaders: (headers) => {
             // Пример добавления токена (если есть авторизация)
             const token = Cookies.get('jwt');
             if (token) {
@@ -29,7 +29,7 @@ export const apiCase = createApi({
         getCaseById: builder.query<Case, number>({
             query: (id) => `case/${id}`,
             transformResponse: (response: ApiResponse<Case>) => response.data as Case, // Убедитесь, что data не null
-            providesTags: (result, error, id) => [{ type: 'Case', id }],
+            providesTags: (_result, _error, id) => [{ type: 'Case', id }],
         }),
         createCase: builder.mutation<Case, Partial<Case>>({
             query: (newCase) => ({
@@ -47,14 +47,14 @@ export const apiCase = createApi({
                 body: updatedCase,
             }),
             transformResponse: (response: ApiResponse<Case>) => response.data as Case,
-            invalidatesTags: (result, error, { id }) => [{ type: 'Case', id }],
+            invalidatesTags: (_result, _error, { id }) => [{ type: 'Case', id }],
         }),
         deleteCase: builder.mutation<void, number>({
             query: (id) => ({
                 url: `case/${id}`,
                 method: 'DELETE',
             }),
-            invalidatesTags: (result, error, id) => [{ type: 'Case', id }],
+            invalidatesTags: (_result, _error, id) => [{ type: 'Case', id }],
         }),
         uploadImage: builder.mutation<string, { id: number; file: File }>({
             query: ({ id, file }) => {
@@ -69,7 +69,7 @@ export const apiCase = createApi({
                 };
             },
             transformResponse: (response: ApiResponse<string>) => response.data as string,
-            invalidatesTags: (result, error, { id }) => [{ type: 'Case', id }],
+            invalidatesTags: (_result, _error, { id }) => [{ type: 'Case', id }],
         }),
     }),
 });
@@ -81,4 +81,4 @@ export const {
     useUpdateCaseMutation,
     useDeleteCaseMutation,
     useUploadImageMutation
-} = apiCase;
+} = caseApi;

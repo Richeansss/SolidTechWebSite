@@ -6,11 +6,11 @@ import Cookies from "js-cookie"; // Тип для стандартного от�
 
 const API_URL = `${BASE_URL}/api/v1/chipset`;
 
-export const apiChipset = createApi({
-    reducerPath: 'apiChipset',
+export const chipsetApi = createApi({
+    reducerPath: 'chipsetApi',
     baseQuery: fetchBaseQuery({
         baseUrl: API_URL,
-        prepareHeaders: (headers, { getState }) => {
+        prepareHeaders: (headers) => {
             const token = Cookies.get('jwt');
             // Добавьте токен, если необходима авторизация
             if (token) {
@@ -29,7 +29,7 @@ export const apiChipset = createApi({
         getChipsetById: builder.query<Chipset, number>({
             query: (id) => `${id}`,
             transformResponse: (response: ApiResponse<Chipset>) => response.data as Chipset,
-            providesTags: (result, error, id) => [{ type: 'Chipset', id }],
+            providesTags: (_result, _error, id) => [{ type: 'Chipset', id }],
         }),
         createChipset: builder.mutation<Chipset, Partial<Chipset>>({
             query: (newChipset) => ({
@@ -47,14 +47,14 @@ export const apiChipset = createApi({
                 body: updatedChipset,
             }),
             transformResponse: (response: ApiResponse<Chipset>) => response.data as Chipset,
-            invalidatesTags: (result, error, { id }) => [{ type: 'Chipset', id }],
+            invalidatesTags: (_result, _error, { id }) => [{ type: 'Chipset', id }],
         }),
         deleteChipset: builder.mutation<void, number>({
             query: (id) => ({
                 url: `${id}`,
                 method: 'DELETE',
             }),
-            invalidatesTags: (result, error, id) => [{ type: 'Chipset', id }],
+            invalidatesTags: (_result, _error, id) => [{ type: 'Chipset', id }],
         }),
     }),
 });
@@ -65,4 +65,4 @@ export const {
     useCreateChipsetMutation,
     useUpdateChipsetMutation,
     useDeleteChipsetMutation,
-} = apiChipset;
+} = chipsetApi;

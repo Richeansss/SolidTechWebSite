@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { DataGrid, GridColDef, GridRowsProp, GridActionsCellItem } from '@mui/x-data-grid';
-import { useGetCoolersQuery, useDeleteCoolerMutation } from '../../store/api/apiCooler';
+import { useGetCoolersQuery, useDeleteCoolerMutation } from '../../store/api/coolerApi.ts';
 import styles from '../case/CasesTable.module.css'; // модульный стиль
 
 const CoolersTable = () => {

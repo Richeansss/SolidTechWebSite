@@ -1,11 +1,11 @@
 import React, { useState, useMemo } from "react";
 import Select from "react-select";
 import { Cooler } from "../../types/Cooler";
-import { useCreateCoolerMutation } from "../../store/api/apiCooler";
-import { useGetBrandsQuery } from "../../store/api/apiBrand";
-import { useGetLightTypesQuery } from "../../store/api/apiLighttype";
+import { useCreateCoolerMutation } from "../../store/api/coolerApi.ts";
+import { useGetBrandsQuery } from "../../store/api/brandApi.ts";
+import { useGetLightTypesQuery } from "../../store/api/lightTypeApi.ts";
 import {LightType} from "../../types/LightType";
-import {useUploadImageMutation} from "../../store/api/apiCooler";
+import {useUploadImageMutation} from "../../store/api/coolerApi.ts";
 import LoadingButton from "../LoadingButton/LoadingButton.tsx";
 
 const AddCoolerComponent: React.FC = () => {

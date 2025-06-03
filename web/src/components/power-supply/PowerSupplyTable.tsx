@@ -1,6 +1,6 @@
 import  { useEffect, useState } from 'react';
 import { DataGrid, GridColDef, GridRowsProp, GridActionsCellItem } from '@mui/x-data-grid';
-import { useGetPowerSuppliesQuery, useDeletePowerSupplyMutation } from '../../store/api/apiPowerSupply';
+import { useGetPowerSuppliesQuery, useDeletePowerSupplyMutation } from '../../store/api/powerSupplyApi.ts';
 import '../case/CasesTable.module.css'; // Импортируем CSS
 
 const PowerSuppliesTable = () => {

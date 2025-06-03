@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styles from "./PCDetails.module.css";
 import { useParams } from "react-router-dom";
-import { useGetPCsQuery } from "../store/api/apiPC";
+import { useGetPCsQuery } from "../store/api/pcApi";
 
 const PCDetails: React.FC = () => {
     const { id } = useParams<{ id: string }>();

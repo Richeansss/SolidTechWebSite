@@ -6,11 +6,11 @@ import Cookies from "js-cookie"; // Тип для стандартного от�
 
 const API_URL = `${BASE_URL}/api/v1/ram`;
 
-export const apiRam = createApi({
-    reducerPath: 'apiRam',
+export const ramApi = createApi({
+    reducerPath: 'ramApi',
     baseQuery: fetchBaseQuery({
         baseUrl: API_URL,
-        prepareHeaders: (headers, { getState }) => {
+        prepareHeaders: (headers) => {
             const token = Cookies.get('jwt');
             if (token) {
                 headers.set('Authorization', `Bearer ${token}`);
@@ -28,7 +28,7 @@ export const apiRam = createApi({
         getRamById: builder.query<Ram, number>({
             query: (id) => `${id}`,
             transformResponse: (response: ApiResponse<Ram>) => response.data as Ram,
-            providesTags: (result, error, id) => [{ type: 'Ram', id }],
+            providesTags: (_result, _error, id) => [{ type: 'Ram', id }],
         }),
         createRam: builder.mutation<Ram, Partial<Ram>>({
             query: (newRam) => ({
@@ -46,14 +46,14 @@ export const apiRam = createApi({
                 body: updatedRam,
             }),
             transformResponse: (response: ApiResponse<Ram>) => response.data as Ram,
-            invalidatesTags: (result, error, { id }) => [{ type: 'Ram', id }],
+            invalidatesTags: (_result, _error, { id }) => [{ type: 'Ram', id }],
         }),
         deleteRam: builder.mutation<void, number>({
             query: (id) => ({
                 url: `${id}`,
                 method: 'DELETE',
             }),
-            invalidatesTags: (result, error, id) => [{ type: 'Ram', id }],
+            invalidatesTags: (_result, _error, id) => [{ type: 'Ram', id }],
         }),
         uploadImage: builder.mutation<string, { id: number; file: File }>({
             query: ({ id, file }) => {
@@ -68,7 +68,7 @@ export const apiRam = createApi({
                 };
             },
             transformResponse: (response: ApiResponse<string>) => response.data as string,
-            invalidatesTags: (result, error, { id }) => [{ type: 'Ram', id }],
+            invalidatesTags: (_result, _error, { id }) => [{ type: 'Ram', id }],
         }),
     }),
 });
@@ -80,4 +80,4 @@ export const {
     useUpdateRamMutation,
     useDeleteRamMutation,
     useUploadImageMutation
-} = apiRam;
+} = ramApi;

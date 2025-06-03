@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { DataGrid, GridColDef, GridRowsProp, GridActionsCellItem } from '@mui/x-data-grid';
-import { useGetPCsQuery, useDeletePCMutation } from '../../store/api/apiPC'; // Assuming the necessary API hooks are created
+import { useGetPCsQuery, useDeletePCMutation } from '../../store/api/pcApi.ts'; // Assuming the necessary API hooks are created
 
 const PCTable = () => {
     const { data, isLoading, isError } = useGetPCsQuery(); // Fetching PC data

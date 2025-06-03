@@ -1,9 +1,9 @@
 import React, { useState, useMemo } from "react";
 import Select from "react-select";
 import { Ram, RamType } from "../../types/Ram"; // Импортируем интерфейсы
-import {useCreateRamMutation, useUploadImageMutation} from "../../store/api/apiRam";
-import { useGetBrandsQuery } from "../../store/api/apiBrand";
-import { useGetLightTypesQuery } from "../../store/api/apiLighttype";
+import {useCreateRamMutation, useUploadImageMutation} from "../../store/api/ramApi.ts";
+import { useGetBrandsQuery } from "../../store/api/brandApi.ts";
+import { useGetLightTypesQuery } from "../../store/api/lightTypeApi.ts";
 import { LightType } from "../../types/LightType";
 import LoadingButton from "../LoadingButton/LoadingButton.tsx";
 

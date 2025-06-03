@@ -1,39 +1,39 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import { apiCase } from './api/apiCase';
-import { apiBrand } from './api/apiBrand';
-import { apiLightType } from './api/apiLighttype';
-import { apiCooler} from "./api/apiCooler";
-import { apiPowerSupply } from "./api/apiPowerSupply";
-import { apiStorageDevice} from "./api/apiStorageDevice";
-import {apiRam} from "./api/apiRam";
-import {apiVideocard} from "./api/apiVideoCard";
-import {apiProcessor} from "./api/apiProcessor";
-import {apiSocket} from "./api/apiSocket";
-import {apiChipset} from "./api/apiChipset";
-import {apiMotherBoard} from "./api/apiMotherBoard";
-import {apiPC} from "./api/apiPC";
-import {apiPCComponent} from "./api/apiPCComponent";
+import { caseApi } from './api/caseApi.ts';
+import { brandApi } from './api/brandApi.ts';
+import { lightTypeApi } from './api/lightTypeApi.ts';
+import { coolerApi} from "./api/coolerApi.ts";
+import { powerSupplyApi } from "./api/powerSupplyApi.ts";
+import { storageDeviceApi} from "./api/storageDeviceApi.ts";
+import {ramApi} from "./api/ramApi.ts";
+import {videocardApi} from "./api/videocardApi.ts";
+import {processorApi} from "./api/processorApi.ts";
+import {socketApi} from "./api/socketApi.ts";
+import {chipsetApi} from "./api/chipsetApi.ts";
+import {motherboardApi} from "./api/motherboardApi.ts";
+import {pcApi} from "./api/pcApi.ts";
+import {pcComponentApi} from "./api/pcComponentApi.ts";
 import authReducer from './slice/authSlice';
 import {authApi} from "./api/authApi.ts"; // путь к твоему authSlice
 
 
 // Объединение редьюсеров
 const rootReducer = combineReducers({
-    [apiCase.reducerPath]: apiCase.reducer,
-    [apiBrand.reducerPath]: apiBrand.reducer,
-    [apiLightType.reducerPath]: apiLightType.reducer,
+    [caseApi.reducerPath]: caseApi.reducer,
+    [brandApi.reducerPath]: brandApi.reducer,
+    [lightTypeApi.reducerPath]: lightTypeApi.reducer,
     auth: authReducer,[authApi.reducerPath]: authApi.reducer,
-    [apiCooler.reducerPath]: apiCooler.reducer,
-    [apiPowerSupply.reducerPath]: apiPowerSupply.reducer,
-    [apiStorageDevice.reducerPath]: apiStorageDevice.reducer,
-    [apiRam.reducerPath]: apiRam.reducer,
-    [apiVideocard.reducerPath]: apiVideocard.reducer,
-    [apiProcessor.reducerPath]: apiProcessor.reducer,
-    [apiSocket.reducerPath]: apiSocket.reducer,
-    [apiChipset.reducerPath]: apiChipset.reducer,
-    [apiMotherBoard.reducerPath]: apiMotherBoard.reducer,
-    [apiPC.reducerPath]: apiPC.reducer,
-    [apiPCComponent.reducerPath]: apiPCComponent.reducer
+    [coolerApi.reducerPath]: coolerApi.reducer,
+    [powerSupplyApi.reducerPath]: powerSupplyApi.reducer,
+    [storageDeviceApi.reducerPath]: storageDeviceApi.reducer,
+    [ramApi.reducerPath]: ramApi.reducer,
+    [videocardApi.reducerPath]: videocardApi.reducer,
+    [processorApi.reducerPath]: processorApi.reducer,
+    [socketApi.reducerPath]: socketApi.reducer,
+    [chipsetApi.reducerPath]: chipsetApi.reducer,
+    [motherboardApi.reducerPath]: motherboardApi.reducer,
+    [pcApi.reducerPath]: pcApi.reducer,
+    [pcComponentApi.reducerPath]: pcComponentApi.reducer
 });
 
 export const store = configureStore({
@@ -41,20 +41,20 @@ export const store = configureStore({
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware()
             .concat(authApi.middleware)
-            .concat(apiCase.middleware)  // Добавляем middleware для apiCase
-            .concat(apiBrand.middleware)
-            .concat(apiLightType.middleware)
-            .concat(apiCooler.middleware)// Добавляем middleware для apiBra
-            .concat(apiPowerSupply.middleware)
-            .concat(apiStorageDevice.middleware)
-            .concat(apiRam.middleware)
-            .concat(apiVideocard.middleware)
-            .concat(apiProcessor.middleware)
-            .concat(apiSocket.middleware)
-            .concat(apiChipset.middleware)
-            .concat(apiMotherBoard.middleware)
-            .concat(apiPC.middleware)
-            .concat(apiPCComponent.middleware)
+            .concat(caseApi.middleware)  // Добавляем middleware для caseApi
+            .concat(brandApi.middleware)
+            .concat(lightTypeApi.middleware)
+            .concat(coolerApi.middleware)// Добавляем middleware для apiBra
+            .concat(powerSupplyApi.middleware)
+            .concat(storageDeviceApi.middleware)
+            .concat(ramApi.middleware)
+            .concat(videocardApi.middleware)
+            .concat(processorApi.middleware)
+            .concat(socketApi.middleware)
+            .concat(chipsetApi.middleware)
+            .concat(motherboardApi.middleware)
+            .concat(pcApi.middleware)
+            .concat(pcComponentApi.middleware)
 });
 
 // Типы для Store

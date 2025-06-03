@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { DataGrid, GridColDef, GridRowsProp, GridActionsCellItem } from '@mui/x-data-grid';
-import { useGetChipsetsQuery, useDeleteChipsetMutation } from '../../store/api/apiChipset';
+import { useGetChipsetsQuery, useDeleteChipsetMutation } from '../../store/api/chipsetApi.ts';
 
 const ChipsetTable = () => {
     const { data, isLoading, isError } = useGetChipsetsQuery(); // Получаем данные о чипсетах

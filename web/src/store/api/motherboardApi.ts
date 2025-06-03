@@ -6,11 +6,11 @@ import Cookies from "js-cookie"; // Тип для стандартного от�
 
 const API_URL = `${BASE_URL}/api/v1/motherboard`;
 
-export const apiMotherBoard = createApi({
-    reducerPath: 'apiMotherBoard',
+export const motherboardApi = createApi({
+    reducerPath: 'motherboardApi',
     baseQuery: fetchBaseQuery({
         baseUrl: API_URL,
-        prepareHeaders: (headers, { getState }) => {
+        prepareHeaders: (headers) => {
             // Добавьте токен, если необходима авторизация
             const token = Cookies.get('jwt');
             if (token) {
@@ -29,7 +29,7 @@ export const apiMotherBoard = createApi({
         getMotherBoardById: builder.query<MotherBoard, number>({
             query: (id) => `${id}`,
             transformResponse: (response: ApiResponse<MotherBoard>) => response.data as MotherBoard,
-            providesTags: (result, error, id) => [{ type: 'MotherBoard', id }],
+            providesTags: (_result, _error, id) => [{ type: 'MotherBoard', id }],
         }),
         createMotherBoard: builder.mutation<MotherBoard, Partial<MotherBoard>>({
             query: (newMotherBoard) => ({
@@ -47,14 +47,14 @@ export const apiMotherBoard = createApi({
                 body: updatedMotherBoard,
             }),
             transformResponse: (response: ApiResponse<MotherBoard>) => response.data as MotherBoard,
-            invalidatesTags: (result, error, { id }) => [{ type: 'MotherBoard', id }],
+            invalidatesTags: (_result, _error, { id }) => [{ type: 'MotherBoard', id }],
         }),
         deleteMotherBoard: builder.mutation<void, number>({
             query: (id) => ({
                 url: `${id}`,
                 method: 'DELETE',
             }),
-            invalidatesTags: (result, error, id) => [{ type: 'MotherBoard', id }],
+            invalidatesTags: (_result, _error, id) => [{ type: 'MotherBoard', id }],
         }),
         uploadImage: builder.mutation<string, { id: number; file: File }>({
             query: ({ id, file }) => {
@@ -69,7 +69,7 @@ export const apiMotherBoard = createApi({
                 };
             },
             transformResponse: (response: ApiResponse<string>) => response.data as string,
-            invalidatesTags: (result, error, { id }) => [{ type: 'MotherBoard', id }],
+            invalidatesTags: (_result, _error, { id }) => [{ type: 'MotherBoard', id }],
         }),
     }),
 });
@@ -81,4 +81,4 @@ export const {
     useUpdateMotherBoardMutation,
     useDeleteMotherBoardMutation,
     useUploadImageMutation
-} = apiMotherBoard;
+} = motherboardApi;

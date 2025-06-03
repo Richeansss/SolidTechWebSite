@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom"; // Импортируем useNavigate
 import styles from './CardList.module.css';
-import {useGetPCsQuery} from "../../store/api/apiPC";
+import {useGetPCsQuery} from "../../store/api/pcApi.ts";
 
 export const PCList: React.FC = () => {
     const { data, isLoading, isError } = useGetPCsQuery(); // Получаем данные о видеокартах

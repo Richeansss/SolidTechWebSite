@@ -7,11 +7,11 @@ import Cookies from "js-cookie"; // Тип для стандартного от�
 const API_URL = `${BASE_URL}/api/v1/`;
 
 
-export const apiPowerSupply = createApi({
-    reducerPath: 'apiPowerSupply',
+export const powerSupplyApi = createApi({
+    reducerPath: 'powerSupplyApi',
     baseQuery: fetchBaseQuery({
         baseUrl: API_URL,
-        prepareHeaders: (headers, { getState }) => {
+        prepareHeaders: (headers) => {
             // Добавьте токен, если необходима авторизация
             const token = Cookies.get('jwt');
             if (token) {
@@ -30,7 +30,7 @@ export const apiPowerSupply = createApi({
         getPowerSupplyById: builder.query<PowerSupply, number>({
             query: (id) => `power-supply/${id}`,
             transformResponse: (response: ApiResponse<PowerSupply>) => response.data as PowerSupply,
-            providesTags: (result, error, id) => [{ type: 'PowerSupply', id }],
+            providesTags: (_result, _error, id) => [{ type: 'PowerSupply', id }],
         }),
         createPowerSupply: builder.mutation<PowerSupply, Partial<PowerSupply>>({
             query: (newPowerSupply) => ({
@@ -48,14 +48,14 @@ export const apiPowerSupply = createApi({
                 body: updatedPowerSupply,
             }),
             transformResponse: (response: ApiResponse<PowerSupply>) => response.data as PowerSupply,
-            invalidatesTags: (result, error, { id }) => [{ type: 'PowerSupply', id }],
+            invalidatesTags: (_result, _error, { id }) => [{ type: 'PowerSupply', id }],
         }),
         deletePowerSupply: builder.mutation<void, number>({
             query: (id) => ({
                 url: `power-supply/${id}`,
                 method: 'DELETE',
             }),
-            invalidatesTags: (result, error, id) => [{ type: 'PowerSupply', id }],
+            invalidatesTags: (_result, _error, id) => [{ type: 'PowerSupply', id }],
         }),
         uploadImage: builder.mutation<string, { id: number; file: File }>({
             query: ({ id, file }) => {
@@ -70,7 +70,7 @@ export const apiPowerSupply = createApi({
                 };
             },
             transformResponse: (response: ApiResponse<string>) => response.data as string,
-            invalidatesTags: (result, error, { id }) => [{ type: 'PowerSupply', id }],
+            invalidatesTags: (_result, _error, { id }) => [{ type: 'PowerSupply', id }],
         }),
     }),
 });
@@ -82,4 +82,4 @@ export const {
     useUpdatePowerSupplyMutation,
     useDeletePowerSupplyMutation,
     useUploadImageMutation
-} = apiPowerSupply;
+} = powerSupplyApi;

@@ -3,11 +3,11 @@ import { Cooler } from '../../types/Cooler'; // Определите тип Cool
 import { ApiResponse } from '../../types/Response';
 import Cookies from "js-cookie"; // Тип для стандартного ответа API
 
-export const apiCooler = createApi({
-    reducerPath: 'apiCooler',
+export const coolerApi = createApi({
+    reducerPath: 'coolerApi',
     baseQuery: fetchBaseQuery({
         baseUrl: 'http://localhost:8080/api/v1/',
-        prepareHeaders: (headers, { getState }) => {
+        prepareHeaders: (headers) => {
             const token = Cookies.get('jwt');
             if (token) {
                 headers.set('Authorization', `Bearer ${token}`);
@@ -25,7 +25,7 @@ export const apiCooler = createApi({
         getCoolerById: builder.query<Cooler, number>({
             query: (id) => `cooler/${id}`,
             transformResponse: (response: ApiResponse<Cooler>) => response.data as Cooler,
-            providesTags: (result, error, id) => [{ type: 'Cooler', id }],
+            providesTags: (_result, _error, id) => [{ type: 'Cooler', id }],
         }),
         createCooler: builder.mutation<Cooler, Partial<Cooler>>({
             query: (newCooler) => ({
@@ -43,14 +43,14 @@ export const apiCooler = createApi({
                 body: updatedCooler,
             }),
             transformResponse: (response: ApiResponse<Cooler>) => response.data as Cooler,
-            invalidatesTags: (result, error, { id }) => [{ type: 'Cooler', id }],
+            invalidatesTags: (_result, _error, { id }) => [{ type: 'Cooler', id }],
         }),
         deleteCooler: builder.mutation<void, number>({
             query: (id) => ({
                 url: `cooler/${id}`,
                 method: 'DELETE',
             }),
-            invalidatesTags: (result, error, id) => [{ type: 'Cooler', id }],
+            invalidatesTags: (_result, _error, id) => [{ type: 'Cooler', id }],
         }),
         uploadImage: builder.mutation<string, { id: number; file: File }>({
             query: ({ id, file }) => {
@@ -65,7 +65,7 @@ export const apiCooler = createApi({
                 };
             },
             transformResponse: (response: ApiResponse<string>) => response.data as string,
-            invalidatesTags: (result, error, { id }) => [{ type: 'Cooler', id }],
+            invalidatesTags: (_result, _error, { id }) => [{ type: 'Cooler', id }],
         }),
     }),
 });
@@ -77,4 +77,4 @@ export const {
     useUpdateCoolerMutation,
     useDeleteCoolerMutation,
     useUploadImageMutation
-} = apiCooler;
+} = coolerApi;

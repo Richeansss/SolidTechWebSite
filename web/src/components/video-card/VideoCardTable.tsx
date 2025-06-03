@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { DataGrid, GridColDef, GridRowsProp, GridActionsCellItem } from '@mui/x-data-grid';
-import { useGetVideocardsQuery, useDeleteVideocardMutation } from '../../store/api/apiVideoCard';
+import { useGetVideocardsQuery, useDeleteVideocardMutation } from '../../store/api/videocardApi.ts';
 
 const VideocardTable = () => {
     const { data, isLoading, isError } = useGetVideocardsQuery(); // Получаем данные о видеокартах

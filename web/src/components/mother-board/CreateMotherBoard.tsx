@@ -2,12 +2,12 @@ import React, { useState, useMemo } from "react";
 import Select from "react-select";
 import { MotherBoard } from "../../types/MotherBoard";
 import { RamType } from "../../types/Ram";
-import { useCreateMotherBoardMutation } from "../../store/api/apiMotherBoard";
-import { useGetBrandsQuery } from "../../store/api/apiBrand";
-import { useGetSocketsQuery } from "../../store/api/apiSocket";
-import { useGetChipsetsQuery } from "../../store/api/apiChipset";
+import { useCreateMotherBoardMutation } from "../../store/api/motherboardApi.ts";
+import { useGetBrandsQuery } from "../../store/api/brandApi.ts";
+import { useGetSocketsQuery } from "../../store/api/socketApi.ts";
+import { useGetChipsetsQuery } from "../../store/api/chipsetApi.ts";
 import styles from '../case/CreateCase.module.css';
-import {useUploadImageMutation} from "../../store/api/apiMotherBoard";
+import {useUploadImageMutation} from "../../store/api/motherboardApi.ts";
 import LoadingButton from "../LoadingButton/LoadingButton.tsx";
 
 const AddMotherBoardComponent: React.FC = () => {

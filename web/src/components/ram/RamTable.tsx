@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { DataGrid, GridColDef, GridRowsProp, GridActionsCellItem } from '@mui/x-data-grid';
-import { useGetRamsQuery, useDeleteRamMutation } from '../../store/api/apiRam';
+import { useGetRamsQuery, useDeleteRamMutation } from '../../store/api/ramApi.ts';
 import styles from "../case/CasesTable.module.css";
 
 const RamTable = () => {

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useCreateLightTypeMutation, useSearchLightTypeByNameQuery } from '../../store/api/apiLighttype';
+import { useCreateLightTypeMutation, useSearchLightTypeByNameQuery } from '../../store/api/lightTypeApi.ts';
 import { LightType } from '../../types/LightType';
 import LoadingButton from "../LoadingButton/LoadingButton.tsx";
 

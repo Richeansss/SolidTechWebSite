@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Select from "react-select";
-import { useGetPCComponentsByTypeQuery } from "../../store/api/apiPCComponent";
+import { useGetPCComponentsByTypeQuery } from "../../store/api/pcComponentApi.ts";
 
 interface ComponentOption {
     value: string;

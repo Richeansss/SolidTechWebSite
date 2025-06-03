@@ -6,11 +6,11 @@ import Cookies from "js-cookie"; // Тип для стандартного от�
 
 const API_URL = `${BASE_URL}/api/v1/processor`;
 
-export const apiProcessor = createApi({
-    reducerPath: 'apiProcessor',
+export const processorApi = createApi({
+    reducerPath: 'processorApi',
     baseQuery: fetchBaseQuery({
         baseUrl: API_URL,
-        prepareHeaders: (headers, { getState }) => {
+        prepareHeaders: (headers) => {
             // Добавьте токен, если необходима авторизация
             const token = Cookies.get('jwt');
             if (token) {
@@ -29,7 +29,7 @@ export const apiProcessor = createApi({
         getProcessorById: builder.query<Processor, number>({
             query: (id) => `${id}`,
             transformResponse: (response: ApiResponse<Processor>) => response.data as Processor,
-            providesTags: (result, error, id) => [{ type: 'Processor', id }],
+            providesTags: (_result, _error, id) => [{ type: 'Processor', id }],
         }),
         createProcessor: builder.mutation<Processor, Partial<Processor>>({
             query: (newProcessor) => ({
@@ -47,14 +47,14 @@ export const apiProcessor = createApi({
                 body: updatedProcessor,
             }),
             transformResponse: (response: ApiResponse<Processor>) => response.data as Processor,
-            invalidatesTags: (result, error, { id }) => [{ type: 'Processor', id }],
+            invalidatesTags: (_result, _error, { id }) => [{ type: 'Processor', id }],
         }),
         deleteProcessor: builder.mutation<void, number>({
             query: (id) => ({
                 url: `${id}`,
                 method: 'DELETE',
             }),
-            invalidatesTags: (result, error, id) => [{ type: 'Processor', id }],
+            invalidatesTags: (_result, _error, id) => [{ type: 'Processor', id }],
         }),
         uploadImage: builder.mutation<string, { id: number; file: File }>({
             query: ({ id, file }) => {
@@ -69,7 +69,7 @@ export const apiProcessor = createApi({
                 };
             },
             transformResponse: (response: ApiResponse<string>) => response.data as string,
-            invalidatesTags: (result, error, { id }) => [{ type: 'Processor', id }],
+            invalidatesTags: (_result, _error, { id }) => [{ type: 'Processor', id }],
         }),
     }),
 });
@@ -81,4 +81,4 @@ export const {
     useUpdateProcessorMutation,
     useDeleteProcessorMutation,
     useUploadImageMutation
-} = apiProcessor;
+} = processorApi;

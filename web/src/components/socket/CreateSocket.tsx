@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Socket } from "../../types/Socket";
-import { useCreateSocketMutation } from "../../store/api/apiSocket";
+import { useCreateSocketMutation } from "../../store/api/socketApi.ts";
 import LoadingButton from "../LoadingButton/LoadingButton.tsx";
 
 const AddSocketComponent: React.FC = () => {

@@ -6,11 +6,11 @@ import Cookies from "js-cookie"; // Тип для стандартного от�
 
 const API_URL = `${BASE_URL}/api/v1/videocard`;
 
-export const apiVideocard = createApi({
-    reducerPath: 'apiVideocard',
+export const videocardApi = createApi({
+    reducerPath: 'videocardApi',
     baseQuery: fetchBaseQuery({
         baseUrl: API_URL,
-        prepareHeaders: (headers, { getState }) => {
+        prepareHeaders: (headers) => {
             const token = Cookies.get('jwt');
             if (token) {
                 headers.set('Authorization', `Bearer ${token}`);
@@ -28,7 +28,7 @@ export const apiVideocard = createApi({
         getVideocardById: builder.query<Videocard, number>({
             query: (id) => `${id}`,
             transformResponse: (response: ApiResponse<Videocard>) => response.data as Videocard,
-            providesTags: (result, error, id) => [{ type: 'Videocard', id }],
+            providesTags: (_result, _error, id) => [{ type: 'Videocard', id }],
         }),
         createVideocard: builder.mutation<Videocard, Partial<Videocard>>({
             query: (newVideocard) => ({
@@ -46,14 +46,14 @@ export const apiVideocard = createApi({
                 body: updatedVideocard,
             }),
             transformResponse: (response: ApiResponse<Videocard>) => response.data as Videocard,
-            invalidatesTags: (result, error, { id }) => [{ type: 'Videocard', id }],
+            invalidatesTags: (_result, _error, { id }) => [{ type: 'Videocard', id }],
         }),
         deleteVideocard: builder.mutation<void, number>({
             query: (id) => ({
                 url: `${id}`,
                 method: 'DELETE',
             }),
-            invalidatesTags: (result, error, id) => [{ type: 'Videocard', id }],
+            invalidatesTags: (_result, _error, id) => [{ type: 'Videocard', id }],
         }),
         uploadImage: builder.mutation<string, { id: number; file: File }>({
             query: ({ id, file }) => {
@@ -68,7 +68,7 @@ export const apiVideocard = createApi({
                 };
             },
             transformResponse: (response: ApiResponse<string>) => response.data as string,
-            invalidatesTags: (result, error, { id }) => [{ type: 'Videocard', id }],
+            invalidatesTags: (_result, _error, { id }) => [{ type: 'Videocard', id }],
         }),
     }),
 });
@@ -80,4 +80,4 @@ export const {
     useUpdateVideocardMutation,
     useDeleteVideocardMutation,
     useUploadImageMutation,
-} = apiVideocard;
+} = videocardApi;

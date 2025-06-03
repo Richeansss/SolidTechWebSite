@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Select from "react-select";
-import { useCreatePCMutation, useUploadImagesMutation } from "../../store/api/apiPC";
-import { useGetPCComponentsByTypeQuery } from "../../store/api/apiPCComponent";
+import { useCreatePCMutation, useUploadImagesMutation } from "../../store/api/pcApi.ts";
+import { useGetPCComponentsByTypeQuery } from "../../store/api/pcComponentApi.ts";
 import { PCComponent } from "../../types/PCComponent";
 import LoadingButton from "../LoadingButton/LoadingButton.tsx";
 

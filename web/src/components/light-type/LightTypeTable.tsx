@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { DataGrid, GridColDef, GridRowsProp, GridActionsCellItem } from '@mui/x-data-grid';
-import { useGetLightTypesQuery, useDeleteLightTypeMutation } from '../../store/api/apiLighttype'; // Импорт хука для работы с Light Types
+import { useGetLightTypesQuery, useDeleteLightTypeMutation } from '../../store/api/lightTypeApi.ts'; // Импорт хука для работы с Light Types
 
 const LightTypeTable = () => {
     const { data, isLoading, isError } = useGetLightTypesQuery(); // Получение данных через Redux Toolkit Query

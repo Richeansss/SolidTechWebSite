@@ -6,11 +6,11 @@ import Cookies from "js-cookie"; // Тип для обработки ответ�
 
 const API_URL = `${BASE_URL}/api/v1/`;
 
-export const apiLightType = createApi({
-    reducerPath: 'apiLightType',
+export const lightTypeApi = createApi({
+    reducerPath: 'lightTypeApi',
     baseQuery: fetchBaseQuery({
         baseUrl: API_URL, // Убедитесь, что это соответствует вашему серверу
-        prepareHeaders: (headers, { getState }) => {
+        prepareHeaders: (headers) => {
             headers.set('Content-Type', 'application/json');
             const token = Cookies.get('jwt');
             if (token) {
@@ -29,7 +29,7 @@ export const apiLightType = createApi({
         getLightTypeById: builder.query<LightType, number>({
             query: (id) => `light-type/${id}`,
             transformResponse: (response: ApiResponse<LightType>) => response.data as LightType,
-            providesTags: (result, error, id) => [{ type: 'LightType', id }],
+            providesTags: (_result, _error, id) => [{ type: 'LightType', id }],
         }),
         createLightType: builder.mutation<LightType, Partial<LightType>>({
             query: (newLightType) => ({
@@ -47,14 +47,14 @@ export const apiLightType = createApi({
                 body: updatedLightType,
             }),
             transformResponse: (response: ApiResponse<LightType>) => response.data as LightType,
-            invalidatesTags: (result, error, { id }) => [{ type: 'LightType', id }],
+            invalidatesTags: (_result, _error, { id }) => [{ type: 'LightType', id }],
         }),
         deleteLightType: builder.mutation<void, number>({
             query: (id) => ({
                 url: `light-type/${id}`,
                 method: 'DELETE',
             }),
-            invalidatesTags: (result, error, id) => [{ type: 'LightType', id }],
+            invalidatesTags: (_result, _error, id) => [{ type: 'LightType', id }],
         }),
         // Новый эндпоинт для поиска брендов по имени
         searchLightTypeByName: builder.query<LightType[], string>({
@@ -72,4 +72,4 @@ export const {
     useUpdateLightTypeMutation,
     useDeleteLightTypeMutation,
     useSearchLightTypeByNameQuery,
-} = apiLightType;
+} = lightTypeApi;

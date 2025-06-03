@@ -1,10 +1,10 @@
 import React, { useState, useMemo } from "react";
 import Select from "react-select";
 import { PowerSupply } from "../../types/PowerSupply"; // Тип PowerSupply
-import { useCreatePowerSupplyMutation } from "../../store/api/apiPowerSupply";
-import { useGetBrandsQuery } from "../../store/api/apiBrand";
+import { useCreatePowerSupplyMutation } from "../../store/api/powerSupplyApi.ts";
+import { useGetBrandsQuery } from "../../store/api/brandApi.ts";
 import "../case/CreateCase.module.css";
-import {useUploadImageMutation} from "../../store/api/apiPowerSupply";
+import {useUploadImageMutation} from "../../store/api/powerSupplyApi.ts";
 import LoadingButton from "../LoadingButton/LoadingButton.tsx";
 
 const AddPowerSupplyComponent: React.FC = () => {

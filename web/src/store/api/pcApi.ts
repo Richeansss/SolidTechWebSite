@@ -6,11 +6,11 @@ import Cookies from "js-cookie"; // Тип для стандартного от�
 
 const API_URL = `${BASE_URL}/api/v1/pc`;
 
-export const apiPC = createApi({
-    reducerPath: 'apiPC',
+export const pcApi = createApi({
+    reducerPath: 'pcApi',
     baseQuery: fetchBaseQuery({
         baseUrl: API_URL,
-        prepareHeaders: (headers, { getState }) => {
+        prepareHeaders: (headers) => {
             // Добавьте токен, если необходима авторизация
             const token = Cookies.get('jwt');
             if (token) {
@@ -29,7 +29,7 @@ export const apiPC = createApi({
         getPCById: builder.query<PC, number>({
             query: (id) => `${id}`,
             transformResponse: (response: ApiResponse<PC>) => response.data as PC,
-            providesTags: (result, error, id) => [{ type: 'PC', id }],
+            providesTags: (_result, _error, id) => [{ type: 'PC', id }],
         }),
         createPC: builder.mutation<PC, Partial<PC>>({
             query: (newPC) => ({
@@ -47,14 +47,14 @@ export const apiPC = createApi({
                 body: updatedPC,
             }),
             transformResponse: (response: ApiResponse<PC>) => response.data as PC,
-            invalidatesTags: (result, error, { id }) => [{ type: 'PC', id }],
+            invalidatesTags: (_result, _error, { id }) => [{ type: 'PC', id }],
         }),
         deletePC: builder.mutation<void, number>({
             query: (id) => ({
                 url: `${id}`,
                 method: 'DELETE',
             }),
-            invalidatesTags: (result, error, id) => [{ type: 'PC', id }],
+            invalidatesTags: (_result, _error, id) => [{ type: 'PC', id }],
         }),
         uploadImage: builder.mutation<string, { id: number; file: File }>({
             query: ({ id, file }) => {
@@ -69,7 +69,7 @@ export const apiPC = createApi({
                 };
             },
             transformResponse: (response: ApiResponse<string>) => response.data as string,
-            invalidatesTags: (result, error, { id }) => [{ type: 'PC', id }],
+            invalidatesTags: (_result, _error, { id }) => [{ type: 'PC', id }],
         }),
         uploadImages: builder.mutation<string[], { id: number; files: File[] }>(
             {
@@ -84,7 +84,7 @@ export const apiPC = createApi({
                     };
                 },
                 transformResponse: (response: ApiResponse<string[]>) => response.data as string[],
-                invalidatesTags: (result, error, { id }) => [{ type: 'PC', id }],
+                invalidatesTags: (_result, _error, { id }) => [{ type: 'PC', id }],
             }
         ),
     }),
@@ -98,4 +98,4 @@ export const {
     useDeletePCMutation,
     useUploadImageMutation,
     useUploadImagesMutation
-} = apiPC;
+} = pcApi;

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { DataGrid, GridColDef, GridRowsProp, GridActionsCellItem } from '@mui/x-data-grid';
-import { useGetBrandsQuery, useDeleteBrandMutation } from '../../store/api/apiBrand'; // Импорт хука для получения данных брендов
+import { useGetBrandsQuery, useDeleteBrandMutation } from '../../store/api/brandApi.ts'; // Импорт хука для получения данных брендов
 
 const BrandTable = () => {
     const { data, isLoading, isError } = useGetBrandsQuery(); // Получение данных с помощью Redux Toolkit Query

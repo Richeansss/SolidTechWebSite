@@ -1,8 +1,8 @@
 import React, { useState, useMemo } from "react";
 import Select from "react-select";
 import {FormFactor, InterfaceType, StorageDevice, StorageType} from "../../types/StorageDevice"; // Тип StorageDevice
-import {useCreateStorageDeviceMutation, useUploadImageMutation} from "../../store/api/apiStorageDevice";
-import { useGetBrandsQuery } from "../../store/api/apiBrand";
+import {useCreateStorageDeviceMutation, useUploadImageMutation} from "../../store/api/storageDeviceApi.ts";
+import { useGetBrandsQuery } from "../../store/api/brandApi.ts";
 import LoadingButton from "../LoadingButton/LoadingButton.tsx";
 
 const AddStorageDeviceComponent: React.FC = () => {

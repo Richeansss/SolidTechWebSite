@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { DataGrid, GridColDef, GridRowsProp, GridActionsCellItem } from '@mui/x-data-grid';
-import { useGetStorageDevicesQuery, useDeleteStorageDeviceMutation } from '../../store/api/apiStorageDevice';
+import { useGetStorageDevicesQuery, useDeleteStorageDeviceMutation } from '../../store/api/storageDeviceApi.ts';
 
 const StorageDevicesTable = () => {
     const { data, isLoading, isError } = useGetStorageDevicesQuery(); // Fetch data using Redux Toolkit Query

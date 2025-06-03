@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { DataGrid, GridColDef, GridRowsProp, GridActionsCellItem } from '@mui/x-data-grid';
-import { useGetCasesQuery, useDeleteCaseMutation } from '../../store/api/apiCase';
+import { useGetCasesQuery, useDeleteCaseMutation } from '../../store/api/caseApi.ts';
 import styles from './CasesTable.module.css';
 import Checkbox from "@mui/material/Checkbox"; // модульный стиль
 

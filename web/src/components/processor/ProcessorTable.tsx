@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { DataGrid, GridColDef, GridRowsProp, GridActionsCellItem } from '@mui/x-data-grid';
-import { useGetProcessorsQuery, useDeleteProcessorMutation } from '../../store/api/apiProcessor';
+import { useGetProcessorsQuery, useDeleteProcessorMutation } from '../../store/api/processorApi.ts';
 
 const ProcessorTable = () => {
     const { data, isLoading, isError } = useGetProcessorsQuery(); // Получаем данные о процессорах

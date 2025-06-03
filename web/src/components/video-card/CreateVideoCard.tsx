@@ -1,10 +1,10 @@
 import React, { useState, useMemo } from "react";
 import Select from "react-select";
 import { Videocard } from "../../types/VideoCard"; // Импортируем интерфейсы
-import { useCreateVideocardMutation } from "../../store/api/apiVideoCard";
-import { useUploadImageMutation } from "../../store/api/apiVideoCard"; // Импортируем мутацию загрузки изображения
-import { useGetBrandsQuery } from "../../store/api/apiBrand";
-import { useGetLightTypesQuery } from "../../store/api/apiLighttype";
+import { useCreateVideocardMutation } from "../../store/api/videocardApi.ts";
+import { useUploadImageMutation } from "../../store/api/videocardApi.ts"; // Импортируем мутацию загрузки изображения
+import { useGetBrandsQuery } from "../../store/api/brandApi.ts";
+import { useGetLightTypesQuery } from "../../store/api/lightTypeApi.ts";
 import { LightType } from "../../types/LightType";
 import LoadingButton from "../LoadingButton/LoadingButton.tsx";
 

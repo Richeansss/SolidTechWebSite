@@ -1,7 +1,7 @@
 import React, {useMemo, useState} from "react";
 import { Chipset } from "../../types/Chipset";
-import { useCreateChipsetMutation } from "../../store/api/apiChipset";
-import {useGetSocketsQuery} from "../../store/api/apiSocket";
+import { useCreateChipsetMutation } from "../../store/api/chipsetApi.ts";
+import {useGetSocketsQuery} from "../../store/api/socketApi.ts";
 import Select from "react-select";
 import LoadingButton from "../LoadingButton/LoadingButton.tsx";
 

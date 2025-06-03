@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { DataGrid, GridColDef, GridRowsProp, GridActionsCellItem } from '@mui/x-data-grid';
-import { useGetMotherBoardsQuery, useDeleteMotherBoardMutation } from '../../store/api/apiMotherBoard';
+import { useGetMotherBoardsQuery, useDeleteMotherBoardMutation } from '../../store/api/motherboardApi.ts';
 import Checkbox from '@mui/material/Checkbox';
 
 

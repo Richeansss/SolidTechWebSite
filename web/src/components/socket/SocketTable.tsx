@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { DataGrid, GridColDef, GridRowsProp, GridActionsCellItem } from '@mui/x-data-grid';
-import { useGetSocketsQuery, useDeleteSocketMutation } from '../../store/api/apiSocket';
+import { useGetSocketsQuery, useDeleteSocketMutation } from '../../store/api/socketApi.ts';
 
 const SocketTable = () => {
     const { data, isLoading, isError } = useGetSocketsQuery(); // Получаем данные о сокетах

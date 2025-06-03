@@ -1,16 +1,16 @@
 import React, { useState, useMemo } from "react";
 import Select, { SingleValue } from "react-select";
 import { ComponentType, TypeStore, PCComponent } from "../../types/PCComponent";
-import { useCreatePCComponentMutation } from "../../store/api/apiPCComponent";
-import { useGetProcessorsQuery } from "../../store/api/apiProcessor";
-import { useGetRamsQuery } from "../../store/api/apiRam";
-import { useGetMotherBoardsQuery } from "../../store/api/apiMotherBoard";
-import { useGetStorageDevicesQuery } from "../../store/api/apiStorageDevice";
-import {useGetCoolersQuery} from "../../store/api/apiCooler.ts";
-import {useGetCasesQuery} from "../../store/api/apiCase.ts";
-import {useGetPowerSuppliesQuery} from "../../store/api/apiPowerSupply.ts";
+import { useCreatePCComponentMutation } from "../../store/api/pcComponentApi.ts";
+import { useGetProcessorsQuery } from "../../store/api/processorApi.ts";
+import { useGetRamsQuery } from "../../store/api/ramApi.ts";
+import { useGetMotherBoardsQuery } from "../../store/api/motherboardApi.ts";
+import { useGetStorageDevicesQuery } from "../../store/api/storageDeviceApi.ts";
+import {useGetCoolersQuery} from "../../store/api/coolerApi.ts";
+import {useGetCasesQuery} from "../../store/api/caseApi.ts";
+import {useGetPowerSuppliesQuery} from "../../store/api/powerSupplyApi.ts";
 import LoadingButton from "../LoadingButton/LoadingButton.tsx";
-import {useGetVideocardsQuery} from "../../store/api/apiVideoCard.ts";
+import {useGetVideocardsQuery} from "../../store/api/videocardApi.ts";
 
 const AddPCComponent: React.FC = () => {
     const [newComponent, setNewComponent] = useState<PCComponent>({

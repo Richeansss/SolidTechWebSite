@@ -1,7 +1,7 @@
 import React, {useMemo, useState} from 'react';
-import {useCreateCaseMutation, useUploadImageMutation} from '../../store/api/apiCase';
-import {useGetBrandsQuery} from '../../store/api/apiBrand';
-import {useGetLightTypesQuery} from '../../store/api/apiLighttype';
+import {useCreateCaseMutation, useUploadImageMutation} from '../../store/api/caseApi.ts';
+import {useGetBrandsQuery} from '../../store/api/brandApi.ts';
+import {useGetLightTypesQuery} from '../../store/api/lightTypeApi.ts';
 import {Case} from '../../types/Case';
 import styles from './CreateCase.module.css';
 import Select from "react-select";

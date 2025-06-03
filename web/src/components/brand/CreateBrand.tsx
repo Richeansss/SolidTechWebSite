@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useCreateBrandMutation, useSearchBrandsByNameQuery } from '../../store/api/apiBrand';
+import { useCreateBrandMutation, useSearchBrandsByNameQuery } from '../../store/api/brandApi.ts';
 import { Brand } from '../../types/Brand';
 import styles from '../case/CreateCase.module.css';
 import LoadingButton from "../LoadingButton/LoadingButton.tsx";
