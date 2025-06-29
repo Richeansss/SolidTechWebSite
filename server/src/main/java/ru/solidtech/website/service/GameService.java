@@ -10,5 +10,4 @@ public interface GameService {
     Game findGameByName(String game);
     Game updateGame(Game game);
     void deleteGame(Long id);
-    Game findGameById(Long id);
 }

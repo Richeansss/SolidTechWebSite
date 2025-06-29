@@ -94,58 +94,6 @@ public class PCServiceImpl implements PCService {
         pcRepository.delete(pc);
     }
 
-    @Override
-    public String saveImage(Long id, MultipartFile file) throws IOException {
-        // Получаем видеокарту по ID
-        PC pc = findPCById(id);
-
-        if (pc == null) {
-            throw new IllegalArgumentException("Видеокарта с указанным ID не найдена");
-        }
-
-        // Получаем имя бренда и имя видеокарты (проверка на null и замена пробелов)
-        String pcID = pc.getId() != 0
-                ? String.valueOf(pc.getId())
-                : "unknown_id"; // Если ID равен 0, использовать "unknown_id"
-
-        // Название папки для сохранения
-        Path folderPath = Paths.get("src/main/resources/static/public/images/pc/" + pcID);
-
-        // Создание папки, если её ещё нет
-        if (!Files.exists(folderPath)) {
-            Files.createDirectories(folderPath);
-        }
-
-        // Получаем оригинальное имя файла
-        String originalFileName = file.getOriginalFilename();
-        if (originalFileName == null || originalFileName.isEmpty()) {
-            throw new IllegalArgumentException("Оригинальное имя файла отсутствует");
-        }
-
-        // Извлечение формата файла (расширения)
-        String fileExtension;
-        int dotIndex = originalFileName.lastIndexOf('.');
-        if (dotIndex != -1 && dotIndex < originalFileName.length() - 1) {
-            fileExtension = originalFileName.substring(dotIndex);
-        } else {
-            throw new IllegalArgumentException("Формат файла отсутствует");
-        }
-
-        // Генерация уникального имени файла (brandName + cardName)
-        String fileName = pcID + fileExtension;
-        Path filePath = folderPath.resolve(fileName);
-
-        // Сохранение файла
-        Files.write(filePath, file.getBytes());
-
-        // Сохранение ссылки на изображение в БД
-        String imageUrl = "/images/pc/" + pcID + "/" + fileName;
-        pc.setImageUrl(imageUrl);
-        pcRepository.save(pc);
-
-        return imageUrl;
-    }
-
     public List<String> saveImages(Long pcId, MultipartFile[] files) throws IOException {
         PC pc = findPCById(pcId);
         if (pc == null) {

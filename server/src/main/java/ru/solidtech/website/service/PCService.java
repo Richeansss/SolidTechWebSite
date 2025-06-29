@@ -18,7 +18,5 @@ public interface PCService {
 
     void deletePC(Long id);
 
-    String saveImage(Long id, MultipartFile file) throws IOException;
-
     List<String> saveImages(Long pcId, MultipartFile[] files) throws IOException;
 }
