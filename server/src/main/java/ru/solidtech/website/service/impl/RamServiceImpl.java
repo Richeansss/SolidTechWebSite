@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import ru.solidtech.website.model.Processor;
 import ru.solidtech.website.model.Ram;
 import ru.solidtech.website.repository.BrandRepository;
 import ru.solidtech.website.repository.LightTypeRepository;
