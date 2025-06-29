@@ -57,6 +57,7 @@ const AddPCComponent: React.FC = () => {
         e.preventDefault();
 
         try {
+            // @ts-ignore
             const createdPC = await createPC(newPC).unwrap();
 
             for (const file of images) {
@@ -92,13 +93,14 @@ const AddPCComponent: React.FC = () => {
         return (
             <div className="form-group mb-4">
                 <label><strong>{label}</strong></label>
-                <Select
+                <Select<{ value: number; label: string }>
                     options={options}
                     isDisabled={isFetching}
                     placeholder={isFetching ? "Загрузка..." : `Выберите ${label.toLowerCase()}`}
                     onChange={(selected) => handleSelectChange(field, selected)}
                     isClearable
                 />
+
             </div>
         );
     };

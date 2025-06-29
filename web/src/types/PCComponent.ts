@@ -20,7 +20,6 @@ export enum TypeStore {
     CITILINK = "CITILINK",
 }
 
-
 export interface PCComponent {
     id: number;
     pc?: PC | null; // Может быть null, если на складе
@@ -30,6 +29,7 @@ export interface PCComponent {
     store: TypeStore;
     details?: {
         name: string;
+        imageUrl?: string;
     };
 }
 

@@ -1,7 +1,15 @@
 import React, { useState } from "react";
 import styles from "./PCDetails.module.css";
 import { useParams } from "react-router-dom";
-import { useGetPCsQuery } from "../store/api/pcApi";
+import { useGetPCsQuery } from "../../store/api/pcApi";
+import { Videocard } from "../../types/VideoCard";
+import { Processor } from "../../types/Processor";
+import { MotherBoard } from "../../types/MotherBoard";
+import { Ram } from "../../types/Ram";
+import { StorageDevice } from "../../types/StorageDevice";
+import { Cooler } from "../../types/Cooler";
+import { Case } from "../../types/Case";
+import { PowerSupply } from "../../types/PowerSupply";
 
 const PCDetails: React.FC = () => {
     const { id } = useParams<{ id: string }>();
@@ -29,29 +37,39 @@ const PCDetails: React.FC = () => {
         );
     };
 
-    const InfoText: React.FC<{ label: string; value: string; extra?: string | string[] }> = ({ label, value, extra }) => {
-        return (
-            <div className={styles.infoText}>
-                <span className={styles.label}>{label}</span>
-                <span className={styles.value}>{value}</span>
-                {extra && (
-                    <span className={styles.extra}>
-                        {Array.isArray(extra) ? extra.map((line, index) => <div key={index}>{line}</div>) : extra}
-                    </span>
-                )}
-            </div>
-        );
-    };
+    const InfoText: React.FC<{ label: string; value?: string; extra?: string | string[] }> = ({ label, value, extra }) => (
+        <div className={styles.infoText}>
+            <span className={styles.label}>{label}</span>
+            <span className={styles.value}>{value ?? "—"}</span>
+            {extra && (
+                <span className={styles.extra}>
+                    {Array.isArray(extra)
+                        ? extra.map((line, index) => <div key={index}>{line}</div>)
+                        : extra}
+                </span>
+            )}
+        </div>
+    );
+
+    const videocard = pc.videocard?.details as Videocard | undefined;
+    const processor = pc.processor?.details as Processor | undefined;
+    const motherboard = pc.motherBoard?.details as MotherBoard | undefined;
+    const ram = pc.ram?.details as Ram | undefined;
+    const storage = pc.storageDevice?.details as StorageDevice | undefined;
+    const cooler = pc.cooler?.details as Cooler | undefined;
+    const casePc = pc.case_pc?.details as Case | undefined;
+    const power = pc.powerSupply?.details as PowerSupply | undefined;
 
     return (
         <div className={styles.pcDetails}>
-            <h2>{pc.casePc.name} ({pc.price} ₽)</h2>
+            <h2>{casePc?.name ?? "Без корпуса"} ({pc.price} ₽)</h2>
+
             <div className={styles.imageContainer}>
                 {pc.imagesUrl.length > 0 ? (
                     <>
                         <img
                             src={`http://localhost:3000${pc.imagesUrl[currentImageIndex]}`}
-                            alt={`${pc.casePc.name} ${currentImageIndex + 1}`}
+                            alt={`${casePc?.name ?? "PC"} ${currentImageIndex + 1}`}
                             className={styles.pcImage}
                         />
                         <button className="carousel-button prev" onClick={prevImage}>&lt;</button>
@@ -61,108 +79,121 @@ const PCDetails: React.FC = () => {
                     <p>Изображения отсутствуют</p>
                 )}
             </div>
+
             <div className={styles.specs}>
-                <div className={styles.leftInfoBox}>
-                    <img src={pc.videocard.imageUrl} alt={pc.casePc.name} className={styles.imageIcon} />
-                    <InfoText
-                        label="Видеокарта"
-                        value={pc.videocard.name}
-                        extra={[
-                            `Объем видеопамяти: ${pc.videocard.vram} GB`,
-                            `Тип памяти: ${pc.videocard.typeOfVram}`,
-                            `Частота видеочипа: ${pc.videocard.boostClock} МГц`,
-                            `Разрядность шины памяти: ${pc.videocard.memoryBus} Бит`,
-                            `Интерфейс подключения: PCIe ${pc.videocard.pci}.0`,
-                        ]}
-                    />
-                </div>
-                <div className={styles.rightInfoBox}>
-                    <InfoText
-                        label="Процессор"
-                        value={pc.processor.name}
-                        extra={[
-                            `${pc.processor.core} ядер`,
-                            `${pc.processor.threads} потоков`,
-                            `${pc.processor.socket.name} сокет`,
-                            `${pc.processor.turbo_bust} ГГц (турбо)`,
-                        ]}
-                    />
-                    <img src={pc.processor.imageUrl} alt={pc.casePc.name} className={styles.imageIcon} />
-                </div>
-                <div className={styles.leftInfoBox}>
-                    <img src={pc.motherBoard.imageUrl} alt={pc.casePc.name} className={styles.imageIcon} />
-                    <InfoText
-                        label="Материнская плата"
-                        value={pc.motherBoard.name}
-                        extra={[
-                            `Сокет: ${pc.motherBoard.socket.name}`,
-                            `Чипсет: ${pc.motherBoard.chipset.name}`,
-                            `Версия PCIe: ${pc.motherBoard.pci}.0`,
-                            `Кол-во разъемов M.2: ${pc.motherBoard.amount_of_m2}`,
-                        ]}
-                    />
-                </div>
-                <div className={styles.rightInfoBox}>
-                    <InfoText
-                        label="Оперативная память"
-                        value={pc.ram.name}
-                        extra={[
-                            `Общий объем: ${pc.ram.amountRam * pc.ram.moduleCapacity} GB`,
-                            `Кол-во планок памяти: ${pc.ram.amountRam}`,
-                            `Объем одной планки памяти: ${pc.ram.moduleCapacity} GB`,
-                            `Тип памяти: ${pc.ram.typeRam}`,
-                            `Частота: ${pc.ram.jdek}`,
-                            `Таймнг: CL-${pc.ram.timing}`,
-                        ]}
-                    />
-                    <img src={pc.ram.imageUrl} alt={pc.casePc.name} className={styles.imageIcon} />
-                </div>
-                <div className={styles.leftInfoBox}>
-                    <img src={pc.storageDevice.imageUrl} alt={pc.casePc.name} className={styles.imageIcon} />
-                    <InfoText
-                        label="Накопитель"
-                        value={pc.storageDevice.name}
-                        extra={[
-                            `Объем: ${pc.storageDevice.capacityGb} GB`,
-                            `Скорость чтения: ${pc.storageDevice.readSpeedMbps} Мбайт/сек`,
-                            `Скорость записи: ${pc.storageDevice.writeSpeedMbps} Мбайт/сек`,
-                            `Разъем подключения: ${pc.storageDevice.interfaceType}`,
-                            `Форм-фактор: ${pc.storageDevice.formFactor.replace("FORM_", "").replace("_", ".")}`,
-                        ]}
-                    />
-                </div>
-                <div className={styles.rightInfoBox}>
-                    <InfoText
-                        label="Охлаждение"
-                        value={pc.cooler.name}
-                        extra={[
-                            `TDP: ${pc.cooler.tdp}`,
-                            `Коннектор вентилятора: ${pc.cooler.funConnector} pin`,
-                            `Размер вентилятора: ${pc.cooler.funSize.replace("SIZE_", "")}`,
-                        ]}
-                    />
-                    <img src={pc.cooler.imageUrl} alt={pc.cooler.name} className={styles.imageIcon} />
-                </div>
-                <div className={styles.leftInfoBox}>
-                    <img src={pc.casePc.imageUrl} alt={pc.casePc.name} className={styles.imageIcon} />
-                    <InfoText
-                        label="Корпус"
-                        value={pc.casePc.name}
-                        extra={[
-                            `TDP: ${pc.casePc.formFactor}`,
-                            `Коннектор вентилятора: ${pc.cooler.funConnector} pin`,
-                            `Размер вентилятора: ${pc.cooler.funSize.replace("SIZE_", "")}`,
-                        ]}
-                    />
-                </div>
-                <div className={styles.rightInfoBox}>
-                    <InfoText
-                        label="Блок питания"
-                        value={pc.powerSupply.name}
-                        extra={`${pc.ram.amountRam * pc.ram.moduleCapacity} GB`}
-                    />
-                    <img src={pc.powerSupply.imageUrl} alt={pc.cooler.name} className={styles.imageIcon} />
-                </div>
+                {videocard && (
+                    <div className={styles.leftInfoBox}>
+                        <img src={videocard.imageUrl} alt={videocard.name} className={styles.imageIcon} />
+                        <InfoText
+                            label="Видеокарта"
+                            value={videocard.name}
+                            extra={[
+                                `Объем видеопамяти: ${videocard.vram} GB`,
+                                `Тип памяти: ${videocard.typeOfVram}`,
+                                `Частота видеочипа: ${videocard.boostClock} МГц`,
+                                `Разрядность шины памяти: ${videocard.memoryBus} Бит`,
+                                `Интерфейс подключения: PCIe ${videocard.pci}.0`,
+                            ]}
+                        />
+                    </div>
+                )}
+                {processor && (
+                    <div className={styles.rightInfoBox}>
+                        <InfoText
+                            label="Процессор"
+                            value={processor.name}
+                            extra={[
+                                `${processor.core} ядер`,
+                                `${processor.threads} потоков`,
+                                `${processor.socket.name} сокет`,
+                                `${processor.turbo_bust} ГГц (турбо)`,
+                            ]}
+                        />
+                        <img src={processor.imageUrl} alt={processor.name} className={styles.imageIcon} />
+                    </div>
+                )}
+                {motherboard && (
+                    <div className={styles.leftInfoBox}>
+                        <img src={motherboard.imageUrl} alt={motherboard.name} className={styles.imageIcon} />
+                        <InfoText
+                            label="Материнская плата"
+                            value={motherboard.name}
+                            extra={[
+                                `Сокет: ${motherboard.socket.name}`,
+                                `Чипсет: ${motherboard.chipset.name}`,
+                                `Версия PCIe: ${motherboard.pci}.0`,
+                                `Кол-во разъемов M.2: ${motherboard.amount_of_m2}`,
+                            ]}
+                        />
+                    </div>
+                )}
+                {ram && (
+                    <div className={styles.rightInfoBox}>
+                        <InfoText
+                            label="Оперативная память"
+                            value={ram.name}
+                            extra={[
+                                `Общий объем: ${ram.amountRam * ram.moduleCapacity} GB`,
+                                `Кол-во планок памяти: ${ram.amountRam}`,
+                                `Объем одной планки памяти: ${ram.moduleCapacity} GB`,
+                                `Тип памяти: ${ram.typeRam}`,
+                                `Частота: ${ram.jdek}`,
+                                `Тайминг: CL-${ram.timing}`,
+                            ]}
+                        />
+                        <img src={ram.imageUrl} alt={ram.name} className={styles.imageIcon} />
+                    </div>
+                )}
+                {storage && (
+                    <div className={styles.leftInfoBox}>
+                        <img src={storage.imageUrl} alt={storage.name} className={styles.imageIcon} />
+                        <InfoText
+                            label="Накопитель"
+                            value={storage.name}
+                            extra={[
+                                `Объем: ${storage.capacityGb} GB`,
+                                `Скорость чтения: ${storage.readSpeedMbps} Мбайт/сек`,
+                                `Скорость записи: ${storage.writeSpeedMbps} Мбайт/сек`,
+                                `Разъем подключения: ${storage.interfaceType}`,
+                                `Форм-фактор: ${storage.formFactor.replace("FORM_", "").replace("_", ".")}`,
+                            ]}
+                        />
+                    </div>
+                )}
+                {cooler && (
+                    <div className={styles.rightInfoBox}>
+                        <InfoText
+                            label="Охлаждение"
+                            value={cooler.name}
+                            extra={[
+                                `TDP: ${cooler.tdp}`,
+                                `Коннектор вентилятора: ${cooler.funConnector} pin`,
+                                `Размер вентилятора: ${cooler.funSize.replace("SIZE_", "")}`,
+                            ]}
+                        />
+                        <img src={cooler.imageUrl} alt={cooler.name} className={styles.imageIcon} />
+                    </div>
+                )}
+                {casePc && (
+                    <div className={styles.leftInfoBox}>
+                        <img src={casePc.imageUrl} alt={casePc.name} className={styles.imageIcon} />
+                        <InfoText
+                            label="Корпус"
+                            value={casePc.name}
+                            extra={[`Форм-фактор: ${casePc.formFactor}`]}
+                        />
+                    </div>
+                )}
+                {power && (
+                    <div className={styles.rightInfoBox}>
+                        <InfoText
+                            label="Блок питания"
+                            value={power.name}
+                            extra={`Мощность: ${power.power} Вт`}
+                        />
+                        <img src={power.imageUrl} alt={power.name} className={styles.imageIcon} />
+                    </div>
+                )}
             </div>
         </div>
     );

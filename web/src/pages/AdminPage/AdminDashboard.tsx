@@ -23,7 +23,6 @@ import CasesTable from "../../components/case/CasesTable";
 import styles from './Page.module.css';
 import BarChart from "../../components/chart/BarChart";
 import CreatePCComponent from "../../components/PCComponent/CreatePCComponent";
-import PCComponentSelector from "../../components/pc/TestCreatPC";
 
 export const AdminDashboard: React.FC = () => {
     const [activeTabIndex, setActiveTabIndex] = useState<number>(() => {

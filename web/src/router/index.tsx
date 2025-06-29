@@ -5,11 +5,16 @@ import {
   MainPage,
 } from '../pages'
 import RoleProtectedRoute from './RoleProtectedRoute'
+import PCDetails from "../pages/PCPage/PCDetails.tsx";
 
 export const routes = [
   {
     path: '/',
     element: <MainPage />,
+  },
+  {
+    path: "/pc/:id",
+    element: <PCDetails/>,
   },
   {
     path: '/create',
