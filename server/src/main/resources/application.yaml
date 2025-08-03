@@ -16,7 +16,7 @@ spring:
     static-path-pattern: /static/**
   web:
     resources:
-      static-locations: file:/server/data/images/
+      static-locations: file:/tmp/data/images/
   servlet:
     multipart:
       max-file-size: 10MB

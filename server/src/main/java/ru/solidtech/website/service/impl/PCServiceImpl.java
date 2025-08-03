@@ -101,7 +101,7 @@ public class PCServiceImpl implements PCService {
         }
 
         List<String> imageUrls = new ArrayList<>();
-        Path folderPath = Paths.get("web/public/images/pc/" + pcId);
+        Path folderPath = Paths.get("/tmp/data/images/pc/" + pcId);
         Files.createDirectories(folderPath);
 
         for (MultipartFile file : files) {

@@ -28,7 +28,7 @@ public class ImageService {
 
         String entityId = String.valueOf(id);
 
-        Path folderPath = Paths.get("server/data/images/" + folderPrefix + "/" + entityId);
+        Path folderPath = Paths.get("/tmp/data/images/" + folderPrefix + "/" + entityId);
         if (!Files.exists(folderPath)) {
             Files.createDirectories(folderPath);
         }
