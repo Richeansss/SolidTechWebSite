@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { DataGrid, GridColDef, GridRowsProp, GridActionsCellItem } from '@mui/x-data-grid';
 import { useGetCoolersQuery, useDeleteCoolerMutation } from '../../store/api/coolerApi.ts';
-import styles from '../case/CasesTable.module.css'; // модульный стиль
+import styles from '../case/CasesTable.module.css';
+import {BASE_URL} from "../../store/api/configApi.ts";
 
 const CoolersTable = () => {
     const { data, isLoading, isError } = useGetCoolersQuery(); // Fetch data using Redux Toolkit Query
@@ -19,7 +20,9 @@ const CoolersTable = () => {
                 funSize: cooler.funSize || 'Not specified',
                 funConnector: cooler.funConnector || 'Not specified',
                 lightType: cooler.lightType?.name || 'Not specified',
-                imageUrl: cooler.imageUrl, // Используем URL из базы данных
+                imageUrl: cooler.imageUrl
+                    ? `${BASE_URL}${cooler.imageUrl}`
+                    : undefined,
             }));
             setRows(formattedRows);
         }

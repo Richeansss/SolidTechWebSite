@@ -1,7 +1,8 @@
 import  { useEffect, useState } from 'react';
 import { DataGrid, GridColDef, GridRowsProp, GridActionsCellItem } from '@mui/x-data-grid';
 import { useGetPowerSuppliesQuery, useDeletePowerSupplyMutation } from '../../store/api/powerSupplyApi.ts';
-import '../case/CasesTable.module.css'; // Импортируем CSS
+import '../case/CasesTable.module.css';
+import {BASE_URL} from "../../store/api/configApi.ts";
 
 const PowerSuppliesTable = () => {
     const { data, isLoading, isError } = useGetPowerSuppliesQuery(); // Fetch data using Redux Toolkit Query
@@ -18,7 +19,9 @@ const PowerSuppliesTable = () => {
                 certificate: powerSupply.certificate || 'Not specified',
                 power: powerSupply.power || 'Not specified',
                 modular: powerSupply.modular ? 'Yes' : 'No',
-                imageUrl: powerSupply.imageUrl, // Используем URL из базы данных
+                imageUrl: powerSupply.imageUrl
+                    ? `${BASE_URL}${powerSupply.imageUrl}`
+                    : undefined,
             }));
             setRows(formattedRows);
         }

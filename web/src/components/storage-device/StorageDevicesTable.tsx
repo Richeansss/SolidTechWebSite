@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { DataGrid, GridColDef, GridRowsProp, GridActionsCellItem } from '@mui/x-data-grid';
 import { useGetStorageDevicesQuery, useDeleteStorageDeviceMutation } from '../../store/api/storageDeviceApi.ts';
+import { BASE_URL } from '../../store/api/configApi.ts';
 
 const StorageDevicesTable = () => {
     const { data, isLoading, isError } = useGetStorageDevicesQuery(); // Fetch data using Redux Toolkit Query
@@ -20,7 +21,9 @@ const StorageDevicesTable = () => {
                 interfaceType: storageDevice.interfaceType || 'Not specified',
                 readSpeedMbps: storageDevice.readSpeedMbps || 'Not specified',
                 writeSpeedMbps: storageDevice.writeSpeedMbps || 'Not specified',
-                imageUrl: storageDevice.imageUrl, // Используем URL из базы данных
+                imageUrl: storageDevice.imageUrl
+                    ? `${BASE_URL}${storageDevice.imageUrl}`
+                    : undefined,
             }));
             setRows(formattedRows);
         }

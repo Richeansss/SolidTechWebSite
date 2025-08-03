@@ -2,6 +2,8 @@ import React, { useEffect } from 'react';
 import { DataGrid, GridColDef, GridRowsProp, GridActionsCellItem } from '@mui/x-data-grid';
 import { useGetMotherBoardsQuery, useDeleteMotherBoardMutation } from '../../store/api/motherboardApi.ts';
 import Checkbox from '@mui/material/Checkbox';
+import {BASE_URL} from "../../store/api/configApi.ts";
+
 
 
 const MotherBoardTable = () => {
@@ -22,7 +24,9 @@ const MotherBoardTable = () => {
                 pci: motherBoard.pci,
                 amount_of_m2: motherBoard.amount_of_m2,
                 hasArgb: motherBoard.hasArgb,
-                imageUrl: motherBoard.imageUrl,
+                imageUrl: motherBoard.imageUrl
+                    ? `${BASE_URL}${motherBoard.imageUrl}`
+                    : undefined,
             }));
             setRows(formattedRows);
         }

@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { DataGrid, GridColDef, GridRowsProp, GridActionsCellItem } from '@mui/x-data-grid';
 import { useGetProcessorsQuery, useDeleteProcessorMutation } from '../../store/api/processorApi.ts';
+import {BASE_URL} from "../../store/api/configApi.ts";
 
 const ProcessorTable = () => {
     const { data, isLoading, isError } = useGetProcessorsQuery(); // Получаем данные о процессорах
@@ -19,7 +20,9 @@ const ProcessorTable = () => {
                 threads: processor.threads,
                 turboBust: processor.turbo_bust, 'Yes' : 'No',
                 tdp: processor.tdp,
-                imageUrl: processor.imageUrl, // Используем URL из базы данных
+                imageUrl: processor.imageUrl
+                    ? `${BASE_URL}${processor.imageUrl}`
+                    : undefined,
             }));
             setRows(formattedRows);
         }

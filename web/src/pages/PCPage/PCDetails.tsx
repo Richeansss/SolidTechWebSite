@@ -10,6 +10,7 @@ import { StorageDevice } from "../../types/StorageDevice";
 import { Cooler } from "../../types/Cooler";
 import { Case } from "../../types/Case";
 import { PowerSupply } from "../../types/PowerSupply";
+import {BASE_URL} from "../../store/api/configApi.ts";
 
 const PCDetails: React.FC = () => {
     const { id } = useParams<{ id: string }>();
@@ -57,7 +58,7 @@ const PCDetails: React.FC = () => {
     const ram = pc.ram?.details as Ram | undefined;
     const storage = pc.storageDevice?.details as StorageDevice | undefined;
     const cooler = pc.cooler?.details as Cooler | undefined;
-    const casePc = pc.case_pc?.details as Case | undefined;
+    const casePc = pc.casePc?.details as Case | undefined;
     const power = pc.powerSupply?.details as PowerSupply | undefined;
 
     return (
@@ -68,7 +69,7 @@ const PCDetails: React.FC = () => {
                 {pc.imagesUrl.length > 0 ? (
                     <>
                         <img
-                            src={`http://localhost:3000${pc.imagesUrl[currentImageIndex]}`}
+                            src={`${BASE_URL}${pc.imagesUrl[currentImageIndex]}`}
                             alt={`${casePc?.name ?? "PC"} ${currentImageIndex + 1}`}
                             className={styles.pcImage}
                         />
@@ -83,7 +84,11 @@ const PCDetails: React.FC = () => {
             <div className={styles.specs}>
                 {videocard && (
                     <div className={styles.leftInfoBox}>
-                        <img src={videocard.imageUrl} alt={videocard.name} className={styles.imageIcon} />
+                        <img
+                            src={videocard.imageUrl ? `${BASE_URL}${videocard.imageUrl}` : undefined}
+                            alt={videocard.name}
+                            className={styles.imageIcon}
+                        />
                         <InfoText
                             label="Видеокарта"
                             value={videocard.name}
@@ -109,12 +114,20 @@ const PCDetails: React.FC = () => {
                                 `${processor.turbo_bust} ГГц (турбо)`,
                             ]}
                         />
-                        <img src={processor.imageUrl} alt={processor.name} className={styles.imageIcon} />
+                        <img
+                            src={processor.imageUrl ? `${BASE_URL}${processor.imageUrl}` : undefined}
+                            alt={processor.name}
+                            className={styles.imageIcon}
+                        />
                     </div>
                 )}
                 {motherboard && (
                     <div className={styles.leftInfoBox}>
-                        <img src={motherboard.imageUrl} alt={motherboard.name} className={styles.imageIcon} />
+                        <img
+                            src={motherboard.imageUrl ? `${BASE_URL}${motherboard.imageUrl}` : undefined}
+                            alt={motherboard.name}
+                            className={styles.imageIcon}
+                        />
                         <InfoText
                             label="Материнская плата"
                             value={motherboard.name}
@@ -141,12 +154,20 @@ const PCDetails: React.FC = () => {
                                 `Тайминг: CL-${ram.timing}`,
                             ]}
                         />
-                        <img src={ram.imageUrl} alt={ram.name} className={styles.imageIcon} />
+                        <img
+                            src={ram.imageUrl ? `${BASE_URL}${ram.imageUrl}` : undefined}
+                            alt={ram.name}
+                            className={styles.imageIcon}
+                        />
                     </div>
                 )}
                 {storage && (
                     <div className={styles.leftInfoBox}>
-                        <img src={storage.imageUrl} alt={storage.name} className={styles.imageIcon} />
+                        <img
+                            src={storage.imageUrl ? `${BASE_URL}${storage.imageUrl}` : undefined}
+                            alt={storage.name}
+                            className={styles.imageIcon}
+                        />
                         <InfoText
                             label="Накопитель"
                             value={storage.name}
@@ -171,12 +192,20 @@ const PCDetails: React.FC = () => {
                                 `Размер вентилятора: ${cooler.funSize.replace("SIZE_", "")}`,
                             ]}
                         />
-                        <img src={cooler.imageUrl} alt={cooler.name} className={styles.imageIcon} />
+                        <img
+                            src={cooler.imageUrl ? `${BASE_URL}${cooler.imageUrl}` : undefined}
+                            alt={cooler.name}
+                            className={styles.imageIcon}
+                        />
                     </div>
                 )}
                 {casePc && (
                     <div className={styles.leftInfoBox}>
-                        <img src={casePc.imageUrl} alt={casePc.name} className={styles.imageIcon} />
+                        <img
+                            src={casePc.imageUrl ? `${BASE_URL}${casePc.imageUrl}` : undefined}
+                            alt={casePc.name}
+                            className={styles.imageIcon}
+                        />
                         <InfoText
                             label="Корпус"
                             value={casePc.name}
@@ -191,7 +220,11 @@ const PCDetails: React.FC = () => {
                             value={power.name}
                             extra={`Мощность: ${power.power} Вт`}
                         />
-                        <img src={power.imageUrl} alt={power.name} className={styles.imageIcon} />
+                        <img
+                            src={power.imageUrl ? `${BASE_URL}${power.imageUrl}` : undefined}
+                            alt={power.name}
+                            className={styles.imageIcon}
+                        />
                     </div>
                 )}
             </div>

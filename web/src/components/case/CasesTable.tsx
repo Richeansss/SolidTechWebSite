@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react';
 import { DataGrid, GridColDef, GridRowsProp, GridActionsCellItem } from '@mui/x-data-grid';
 import { useGetCasesQuery, useDeleteCaseMutation } from '../../store/api/caseApi.ts';
 import styles from './CasesTable.module.css';
-import Checkbox from "@mui/material/Checkbox"; // модульный стиль
+import Checkbox from "@mui/material/Checkbox";
+import { BASE_URL } from '../../store/api/configApi.ts';
 
 const CasesTable = () => {
     const { data, isLoading, isError } = useGetCasesQuery();
@@ -22,7 +23,9 @@ const CasesTable = () => {
                 color: caseItem.color || 'Not specified',
                 glassType: caseItem.glassType || 'Not specified',
                 hasHub: caseItem.hasHub !== undefined ? caseItem.hasHub : false,
-                imageUrl: caseItem.imageUrl,
+                imageUrl: caseItem.imageUrl
+                    ? `${BASE_URL}${caseItem.imageUrl}`
+                    : undefined,
             }));
             setRows(formattedRows);
         }

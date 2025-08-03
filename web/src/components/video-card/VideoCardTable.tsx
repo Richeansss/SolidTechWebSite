@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { DataGrid, GridColDef, GridRowsProp, GridActionsCellItem } from '@mui/x-data-grid';
 import { useGetVideocardsQuery, useDeleteVideocardMutation } from '../../store/api/videocardApi.ts';
+import { BASE_URL } from '../../store/api/configApi.ts';
 
 const VideocardTable = () => {
     const { data, isLoading, isError } = useGetVideocardsQuery(); // Получаем данные о видеокартах
@@ -22,8 +23,10 @@ const VideocardTable = () => {
                 pci: videocard.pci,
                 color: videocard.color,
                 lightType: videocard.lightType.name,
-                imageUrl: videocard.imageUrl, // Используем URL из базы данных
-            }));
+                imageUrl: videocard.imageUrl
+                    ? `${BASE_URL}${videocard.imageUrl}`
+                    : undefined,
+                }));
             setRows(formattedRows);
         }
     }, [data]);

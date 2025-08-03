@@ -6,7 +6,7 @@ export interface PC {
     processor: PCComponent;
     ram: PCComponent;
     cooler: PCComponent;
-    case_pc: PCComponent;
+    casePc: PCComponent;
     videocard: PCComponent;
     storageDevice: PCComponent;
     powerSupply: PCComponent;

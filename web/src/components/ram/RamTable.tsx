@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { DataGrid, GridColDef, GridRowsProp, GridActionsCellItem } from '@mui/x-data-grid';
 import { useGetRamsQuery, useDeleteRamMutation } from '../../store/api/ramApi.ts';
 import styles from "../case/CasesTable.module.css";
+import { BASE_URL } from '../../store/api/configApi.ts';
 
 const RamTable = () => {
     const { data, isLoading, isError } = useGetRamsQuery(); // Получаем данные о RAM
@@ -21,7 +22,9 @@ const RamTable = () => {
                 jdek: ram.jdek,
                 timing: ram.timing,
                 lightType: ram.lightType.name,
-                imageUrl: ram.imageUrl,
+                imageUrl: ram.imageUrl
+                    ? `${BASE_URL}${ram.imageUrl}`
+                    : undefined,
             }));
             setRows(formattedRows);
         }

@@ -23,7 +23,7 @@ const PCTable = () => {
             const formattedRows = data.map((pc) => ({
                 id: pc.id,
                 image: pc.imagesUrl?.[0] ? `http://localhost:3000${pc.imagesUrl[0]}` : "",
-                caseName: pc.case_pc?.details?.name,
+                caseName: pc.casePc?.details?.name,
                 processorName: pc.processor?.details?.name,
                 videocardName: pc.videocard?.details?.name,
                 ramName: pc.ram?.details?.name,

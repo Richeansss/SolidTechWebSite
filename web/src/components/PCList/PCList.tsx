@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom"; // Импортируем useNavigate
 import styles from './CardList.module.css';
 import {useGetPCsQuery} from "../../store/api/pcApi.ts";
+import {BASE_URL} from "../../store/api/configApi.ts";
+
 
 export const PCList: React.FC = () => {
     const { data, isLoading, isError } = useGetPCsQuery(); // Получаем данные о видеокартах
@@ -15,7 +17,7 @@ export const PCList: React.FC = () => {
             const formattedPCs = data.map((pc) => ({
                 id: pc.id,
                 price: pc.price,
-                case_pc: pc.case_pc,
+                case_pc: pc.casePc,
                 videocard: pc.videocard,
                 motherBoard: pc.motherBoard,
                 storageDevice: pc.storageDevice,
@@ -45,7 +47,7 @@ export const PCList: React.FC = () => {
                         {pc.imagesUrl.length > 0 ? (
                             <>
                                 <img
-                                    src={`http://localhost:5173${pc.imagesUrl}`} // Используем первое изображение
+                                    src={`${BASE_URL}${pc.imagesUrl}`} // Используем первое изображение
                                     alt={`{pc}`}
                                     className={styles.mainPcImage}
                                 />
