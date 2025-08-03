@@ -72,19 +72,6 @@ public class PCController {
         }
     }
 
-    @PostMapping("/{id}/upload-image")
-    public ResponseEntity<Map<String, Object>> uploadImage(
-            @PathVariable Long id,
-            @RequestParam("file") MultipartFile file) {
-        try {
-            String imageUrl = pcService.saveImage(id, file);
-            return ResponseBuilder.buildResponse(HttpStatus.OK, "Изображение успешно загружено", imageUrl);
-        } catch (Exception e) {
-            logger.error("Ошибка при загрузке изображения для видеокарты с ID: {}", id, e);
-            return ResponseBuilder.buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Не удалось загрузить изображение");
-        }
-    }
-
     @PostMapping("/{id}/upload-images")
     public ResponseEntity<Map<String, Object>> uploadImages(
             @PathVariable Long id,
