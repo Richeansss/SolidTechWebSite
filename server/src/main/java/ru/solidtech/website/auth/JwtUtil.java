@@ -2,7 +2,6 @@ package ru.solidtech.website.auth;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -77,9 +76,12 @@ public class JwtUtil {
      * @return все утверждения, извлеченные из токена
      */
     private Claims extractAllClaims(String token) {
-        return Jwts.parser().setSigningKey(secretKey).build().parseClaimsJws(token).getBody();
+        return Jwts.parser()
+                .verifyWith(secretKey)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
     }
-
     /**
      * Проверяет, истек ли срок действия JWT токена.
      *
@@ -110,11 +112,11 @@ public class JwtUtil {
      */
     private String createToken(String subject, List<String> roles) {
         return Jwts.builder()
-                .setSubject(subject)
+                .subject(subject)
                 .claim("roles", roles)  // Добавляем роли в утверждения токена
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))  // Срок действия 10 часов
-                .signWith(secretKey, SignatureAlgorithm.HS256)  // Подпись токена
+                .issuedAt(new Date(System.currentTimeMillis()))
+                .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))  // Срок действия 10 часов
+                .signWith(secretKey, Jwts.SIG.HS256)  // Подпись токена
                 .compact();
     }
     /**
@@ -140,6 +142,12 @@ public class JwtUtil {
      */
     public List<String> extractRoles(String token) {
         Claims claims = extractAllClaims(token);
-        return claims.get("roles", List.class);
+        Object rawRoles = claims.get("roles");
+        if (rawRoles instanceof List<?> list) {
+            return list.stream()
+                    .map(Object::toString)
+                    .toList();
+        }
+        return List.of();
     }
 }

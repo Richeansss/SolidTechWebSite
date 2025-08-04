@@ -1,12 +1,12 @@
 package ru.solidtech.website.auth;
 
+import io.micrometer.common.lang.NonNull;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
+import ru.solidtech.website.config.PublicEndpointsConfig;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -28,33 +29,22 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
     private static final Logger logger = LoggerFactory.getLogger(JwtRequestFilter.class);
     private static final AntPathMatcher pathMatcher = new AntPathMatcher();
+    private final UserDetailsService userDetailsService;
+    private final JwtUtil jwtUtil;
 
-    @Autowired
-    private JwtUtil jwtUtil;
-
-    @Autowired
-    private UserDetailsService userDetailsService;
-
-
-    // Публичные эндпоинты (должны совпадать с SecurityConfig)
-    private static final String[] PUBLIC_ENDPOINTS = {
-            "/api/v3/auth/*",
-            "/images/**"
-    };
-
+    public JwtRequestFilter(JwtUtil jwtUtil,
+                            UserDetailsService userDetailsService) {
+        this.jwtUtil = jwtUtil;
+        this.userDetailsService = userDetailsService;
+    }
 
 
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
+    protected void doFilterInternal(HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain chain)
             throws ServletException, IOException {
 
         String requestURI = request.getRequestURI();
-
-        if ("GET".equals(request.getMethod()) && "/api/v1/pc".equals(request.getRequestURI())) {
-            chain.doFilter(request, response);
-            return;
-        }
 
         // Пропускаем публичные эндпоинты без проверки JWT
         if (isPublicEndpoint(requestURI)) {
@@ -62,7 +52,6 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             return;
         }
 
-        // Проверка JWT для остальных запросов
         final String authHeader = request.getHeader("Authorization");
 
         if (StringUtils.hasText(authHeader) && authHeader.startsWith("Bearer ")) {
@@ -71,9 +60,9 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             try {
                 String username = jwtUtil.extractUsername(jwtToken);
 
-                if (StringUtils.hasText(username) &&
-                        SecurityContextHolder.getContext().getAuthentication() == null &&
-                        jwtUtil.validateToken(jwtToken)) {
+                if (StringUtils.hasText(username)
+                        && SecurityContextHolder.getContext().getAuthentication() == null
+                        && jwtUtil.validateToken(jwtToken)) {
 
                     UserDetails userDetails = userDetailsService.loadUserByUsername(username);
                     List<String> roles = jwtUtil.extractRoles(jwtToken);
@@ -83,11 +72,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                             .collect(Collectors.toList());
 
                     UsernamePasswordAuthenticationToken authToken =
-                            new UsernamePasswordAuthenticationToken(
-                                    userDetails,
-                                    null,
-                                    authorities
-                            );
+                            new UsernamePasswordAuthenticationToken(userDetails, null, authorities);
                     authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authToken);
 
@@ -108,7 +93,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     }
 
     private boolean isPublicEndpoint(String requestURI) {
-        for (String endpoint : PUBLIC_ENDPOINTS) {
+        for (String endpoint : PublicEndpointsConfig.PUBLIC_ENDPOINTS) {
             if (pathMatcher.match(endpoint, requestURI)) {
                 return true;
             }

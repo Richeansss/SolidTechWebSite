@@ -1,7 +1,6 @@
 package ru.solidtech.website.config;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -32,8 +31,11 @@ import java.util.List;
 @Slf4j
 public class SecurityConfig {
 
-    @Autowired
-    private JwtRequestFilter jwtRequestFilter;
+    private final JwtRequestFilter jwtRequestFilter;
+    public SecurityConfig(JwtRequestFilter jwtRequestFilter) {
+        this.jwtRequestFilter = jwtRequestFilter;
+    }
+
 
     /**
      * Кодировщик паролей (используется BCrypt).
@@ -97,22 +99,24 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(HttpMethod.GET, "/api/v1/pc").permitAll()
+                        .requestMatchers(HttpMethod.POST, PublicEndpointsConfig.PUBLIC_ENDPOINTS).permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/pc", "/proxy/**").permitAll()
+                        .requestMatchers("/images/**").permitAll()
                         .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
                         .requestMatchers(ADMIN_MODERATOR_ENDPOINTS).hasAnyRole("ADMIN", "MODERATOR")
                         .requestMatchers(AUTHENTICATED_ENDPOINTS).hasAnyRole("ADMIN", "MODERATOR", "USER")
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // Без сессий, т.к. JWT
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .exceptionHandling(handling -> handling
                         .accessDeniedHandler((request, response, accessDeniedException) -> {
-                            log.error("Access denied for path: {}", request.getRequestURI());
+                            log.error("Access denied for path: {}, reason: {}", request.getRequestURI(), accessDeniedException.getMessage());
                             response.sendError(403, "Access Denied");
                         })
                         .authenticationEntryPoint((request, response, authException) -> {
-                            log.error("Unauthorized for path: {}", request.getRequestURI());
+                            log.error("Unauthorized for path: {}, reason: {}", request.getRequestURI(), authException.getMessage());
                             response.sendError(401, "Unauthorized");
                         })
                 );
